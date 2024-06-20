@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Kords</string>
+    <string name="search_bar_text">Search for a chord …</string>
+    <string name="g_string">G</string>
+    <string name="c_string">C</string>
+    <string name="e_string">E</string>
+    <string name="a_string">A</string>
+</resources>
