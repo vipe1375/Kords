@@ -1,8 +1,9 @@
-package com.example.kordsjetpack
+package com.vipedev.kords.ui.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.vipedev.kords.R
 
 val manrope = FontFamily(
     Font(R.font.manrope_light, FontWeight.Light),

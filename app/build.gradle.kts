@@ -1,14 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.compose.compiler)
+
+    id("com.google.devtools.ksp") version "2.0.0-1.0.21"
 }
 
 android {
-    namespace = "com.example.kordsjetpack"
+    namespace = "com.vipedev.kords"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.kordsjetpack"
+        applicationId = "com.vipedev.kords"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -50,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -59,6 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,8 +70,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+    //implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
+
+    // Import the BoM for the Firebase platform
+    implementation(platform(libs.firebase.bom))
+
+    // Add the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation(libs.google.firebase.database)
+
+
+
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // ViewModel utilities for Compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //implementation(libs.androidx.datastore.preferences)
+    //implementation(libs.kotlinx.coroutines.android)
+
+
 
 }

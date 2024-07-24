@@ -1,4 +1,4 @@
-package com.example.kordsjetpack
+package com.vipedev.kords
 
 import org.junit.Test
 

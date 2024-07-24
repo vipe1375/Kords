@@ -1,8 +1,19 @@
 <resources>
-    <string name="app_name">Kords</string>
-    <string name="search_bar_text">Search for a chord …</string>
-    <string name="g_string">G</string>
-    <string name="c_string">C</string>
-    <string name="e_string">E</string>
-    <string name="a_string">A</string>
+    <string name="app_name" translatable="false">Kords</string>
+    <string name="search_bar_text">Search for a chord…</string>
+    <string name="g_string" translatable="false">G</string>
+    <string name="c_string" translatable="false">C</string>
+    <string name="e_string" translatable="false">E</string>
+    <string name="a_string" translatable="false">A</string>
+    <string name="visualize_button_text">Visualize</string>
+    <string name="or_spacer">or</string>
+    <string name="find_chord_text">Find a chord\'s name</string>
+    <string name="current_chord_text">Current chord : %s</string>
+    <string name="no_chord_found_name">No chord found with name %s</string>
+    <string name="no_chord_found_id">no chord found</string>
+    <plurals name="chord_found_name">
+        <item quantity="one">%d chord found with name %s</item>
+        <item quantity="other">%d chords found with name %s</item>
+    </plurals>
+
 </resources>

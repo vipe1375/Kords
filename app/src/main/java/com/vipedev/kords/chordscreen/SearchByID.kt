@@ -1,5 +1,6 @@
-package com.example.kordsjetpack
+package com.vipedev.kords.chordscreen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,12 +26,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.vipedev.kords.R
 
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun SearchByID(viewModel: ChordsViewModel) {
     val activeButtonSize: Dp = 66.dp
@@ -38,7 +41,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
     val buttonPadding: Dp = 5.dp
 
     var inputChord by remember {
-        mutableStateOf("")
+        mutableStateOf("0-2-3-2")
     }
 
     val currentChord = viewModel.currentChord
@@ -54,7 +57,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
             //        SEARCH TEXT       //
 
             Text(
-                text = "Find a chord's name",
+                text = stringResource(id = R.string.find_chord_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(8.dp)
@@ -64,7 +67,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
             val currentChordName: String = viewModel.currentChordName
             Text(
-                text = "Current chord : $currentChordName",
+                text = stringResource(id = R.string.current_chord_text, currentChordName),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
             )
@@ -124,25 +127,15 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
                         Row {
                             for (j in 0 until 4) {
-                                if (currentChord[j].toString() == i.toString()) {
+                                if (currentChord[j] == i.toString()) {
                                     Button(
                                         onClick =
                                         {
-                                            inputChord = when (j) {
-                                                0 -> "0" + currentChord.substring(1)
-                                                1 -> currentChord.substring(
-                                                    0,
-                                                    1
-                                                ) + "0" + currentChord.substring(2, 4)
-
-                                                2 -> currentChord.substring(
-                                                    0,
-                                                    2
-                                                ) + "0" + currentChord.substring(3, 4)
-
-                                                3 -> currentChord.substring(0, 3) + "0"
-                                                else -> currentChord
-                                            }; viewModel.changeCurrentChord(inputChord)
+                                            val inputChordList =
+                                                inputChord.split("-").toMutableList()
+                                            inputChordList[j] = "0"
+                                            inputChord = inputChordList.joinToString("-")
+                                            viewModel.changeCurrentChord(inputChordList)
                                         },
                                         shape = CircleShape,
                                         modifier = Modifier
@@ -154,21 +147,11 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                     FilledTonalButton(
                                         onClick =
                                         {
-                                            inputChord = when (j) {
-                                                0 -> i.toString() + currentChord.substring(1)
-                                                1 -> currentChord.substring(
-                                                    0,
-                                                    1
-                                                ) + i.toString() + currentChord.substring(2, 4)
-
-                                                2 -> currentChord.substring(
-                                                    0,
-                                                    2
-                                                ) + i.toString() + currentChord.substring(3, 4)
-
-                                                3 -> currentChord.substring(0, 3) + i.toString()
-                                                else -> currentChord
-                                            }; viewModel.changeCurrentChord(inputChord)
+                                            val inputChordList =
+                                                inputChord.split("-").toMutableList()
+                                            inputChordList[j] = i.toString()
+                                            inputChord = inputChordList.joinToString("-")
+                                            viewModel.changeCurrentChord(inputChordList)
                                         },
                                         shape = CircleShape,
                                         modifier = Modifier

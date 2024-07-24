@@ -1,4 +1,4 @@
-package com.example.kordsjetpack
+package com.vipedev.kords.chordscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,15 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-
+import com.vipedev.kords.R
 
 @Composable
 fun ChordScreen(viewModel: ChordsViewModel) {
 
-
-
-    Surface (
+    Surface(
         color = MaterialTheme.colorScheme.surface
     ) {
         // SEARCH BY NAME SURFACE
@@ -44,7 +43,7 @@ fun ChordScreen(viewModel: ChordsViewModel) {
 
 
             //          SEPARATOR         //
-            Separator(text = "or")
+            Separator(text = stringResource(id = R.string.or_spacer))
             Spacer(modifier = Modifier.height(12.dp))
 
 
@@ -57,24 +56,28 @@ fun ChordScreen(viewModel: ChordsViewModel) {
 
 @Composable
 fun Separator(text: String) {
-    Row (
+    Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 20.dp)
     ) {
-        Icon(painter = painterResource(id = R.drawable.barre3),
+        Icon(
+            painter = painterResource(id = R.drawable.barre3),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onTertiary,
             modifier = Modifier.size(width = 100.dp, height = 8.dp)
         )
 
-        Text(text = text,
+        Text(
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onTertiary)
+            color = MaterialTheme.colorScheme.onTertiary
+        )
 
-        Icon(painter = painterResource(id = R.drawable.barre3),
+        Icon(
+            painter = painterResource(id = R.drawable.barre3),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onTertiary,
             modifier = Modifier.size(width = 100.dp, height = 8.dp)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="or_spacer">ou</string>
+    <string name="search_bar_text">Cherchez un accord…</string>
+    <string name="visualize_button_text">Visualiser</string>
+    <string name="find_chord_text">Trouvez le nom d\'un accord</string>
+    <string name="current_chord_text">Accord actuel : %s</string>
+    <string name="no_chord_found_name">Accord %s introuvable</string>
+    <string name="no_chord_found_id">pas d\'accord trouvé</string>
+    <plurals name="chord_found_name">
+        <item quantity="one">%d accord trouvé avec le nom %s</item>
+        <item quantity="other">%d accords trouvés avec le nom %s</item>
+        <item quantity="many">%d accords trouvés avec le nom %s</item>
+    </plurals>
+</resources>

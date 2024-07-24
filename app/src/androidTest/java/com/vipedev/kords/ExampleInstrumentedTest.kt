@@ -1,4 +1,4 @@
-package com.example.kordsjetpack
+package com.vipedev.kords
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

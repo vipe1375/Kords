@@ -1,4 +1,4 @@
-package com.example.kordsjetpack.ui.theme
+package com.vipedev.kords.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -7,3 +7,23 @@
 gradlew
 gradlew.bat
 gradle
+ChordsDAO.kt
+app/google-services.json
+bipbop.json
+chords.json
+kords-cfd17-default-rtdb-export-2.json
+kords-cfd17-default-rtdb-export-3.json
+kords-cfd17-default-rtdb-export-5.json
+kords-cfd17-default-rtdb-export.json
+# Java class files
+*.class
+bin/
+gen/
+.iws
+.ipr
+.iml
+local.properties
+*.dex
+*.log
+*.db
+*.sqlite
