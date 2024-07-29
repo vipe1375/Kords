@@ -5,7 +5,10 @@
     <string name="c_string" translatable="false">C</string>
     <string name="e_string" translatable="false">E</string>
     <string name="a_string" translatable="false">A</string>
-    <string name="visualize_button_text">Visualize</string>
+    <plurals name="visualize_button_text">
+        <item quantity="one">Visualize</item>
+        <item quantity="other">Visualize (%d/%d)</item>
+    </plurals>
     <string name="or_spacer">or</string>
     <string name="find_chord_text">Find a chord\'s name</string>
     <string name="current_chord_text">Current chord : %s</string>
@@ -27,7 +30,7 @@
     <string name="use_dark_theme_off">The app will be in light theme</string>
     <string name="change_language_text">Change language</string>
     <string name="contact_nav_item">Contact</string>
-    <string name="contact_twitter">Twitter/X : @vipe1375</string>
-    <string name="contact_discord">Discord : vipe1375</string>
+    <string name="contact_twitter" translatable="false">Twitter/X : @vipe1375</string>
+    <string name="contact_discord" translatable="false">Discord : vipe1375</string>
 
 </resources>

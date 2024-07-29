@@ -2,7 +2,10 @@
 <resources>
     <string name="or_spacer">ou</string>
     <string name="search_bar_text">Cherchez un accord…</string>
-    <string name="visualize_button_text">Visualiser</string>
+    <plurals name="visualize_button_text">
+        <item quantity="one">Visualiser</item>
+        <item quantity="other">Visualiser (%d/%d)</item>
+    </plurals>
     <string name="find_chord_text">Trouvez le nom d\'un accord</string>
     <string name="current_chord_text">Accord actuel : %s</string>
     <string name="no_chord_found_name">Accord %s introuvable</string>

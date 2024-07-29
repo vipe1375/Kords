@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -25,7 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -89,7 +93,7 @@ fun SearchByName(viewModel: ChordsViewModel) {
                             modifier = Modifier.padding(horizontal = 30.dp)
                         ) {
                             items(matchingChords) { c ->
-                                ListButton(text = c.name, viewModel = viewModel)
+                                ListButton(text = c.name, viewModel = viewModel, focusManager = focusManager)
                             }
                         }
                     }
@@ -115,15 +119,44 @@ fun SearchByName(viewModel: ChordsViewModel) {
 
 
 
-                if (viewModel.chordFound) {
+                if (viewModel.showVisualizeButton) {
                     Spacer(modifier = Modifier.height(20.dp))
-                    Button(onClick = {
-                        viewModel.visualizeChord(viewModel.chordSearchedID)
-                        focusManager.clearFocus()
-                    },
-                        content = {
-                            Text(stringResource(id = R.string.visualize_button_text))
-                        })
+
+                    // change chord and visualize buttons
+                    Row {
+                        val nbResults = viewModel.searchResult.size
+                        if (nbResults > 1) {
+                            ChangeChordButton(viewModel = viewModel, right = false)
+                        }
+
+
+                        Button(modifier = Modifier
+                                .padding(horizontal = 20.dp),
+                            onClick = {
+                                if (nbResults > 1) {
+                                    val visualizedChord = viewModel.searchResult[viewModel.visualizedID - 1]
+                                    viewModel.visualizeChord(visualizedChord)
+
+                                }
+                                else {
+                                    viewModel.visualizeChord(viewModel.searchResult[0])
+
+                                }
+                                //focusManager.clearFocus()
+
+                            },
+                            content = {
+                                Text(LocalContext.current.resources.getQuantityString(R.plurals.visualize_button_text,
+                                    viewModel.searchResult.size,   // quantity
+                                    viewModel.visualizedID,   // arg1
+                                    viewModel.searchResult.size))  // arg2
+                            })
+
+                        if (viewModel.searchResult.size > 1) {
+                            ChangeChordButton(viewModel = viewModel, right = true)
+                        }
+                    }
+
                 }
 
             }
@@ -132,11 +165,12 @@ fun SearchByName(viewModel: ChordsViewModel) {
 }
 
 @Composable
-fun ListButton(text: String, viewModel: ChordsViewModel) {
+fun ListButton(text: String, viewModel: ChordsViewModel, focusManager: FocusManager) {
     FilledTonalButton(
         onClick = {
             viewModel.changeChordSearched(text)
             viewModel.searchChord()
+            focusManager.clearFocus()
         },
         shape = RectangleShape,
         modifier = Modifier
@@ -149,3 +183,17 @@ fun ListButton(text: String, viewModel: ChordsViewModel) {
 
 }
 
+@Composable
+fun ChangeChordButton(viewModel: ChordsViewModel, right: Boolean) {
+    Button(onClick = { viewModel.changeVisualizedChord(right = right) },
+        shape = CircleShape,
+
+    ) {
+        if (right) {
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+        } else {
+            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null)
+        }
+
+    }
+}
