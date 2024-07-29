@@ -1,4 +1,4 @@
-package com.vipedev.kords.chordscreen
+package com.vipedev.kords.chords.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -36,9 +36,10 @@ import com.vipedev.kords.R
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun SearchByID(viewModel: ChordsViewModel) {
-    val activeButtonSize: Dp = 66.dp
+    val activeButtonSize: Dp = 64.dp
     val inactiveButtonSize: Dp = 60.dp
-    val buttonPadding: Dp = 5.dp
+    val inactiveButtonPadding: Dp = 5.dp
+    val activeButtonPadding: Dp = 4.dp
 
     var inputChord by remember {
         mutableStateOf("0-2-3-2")
@@ -50,7 +51,8 @@ fun SearchByID(viewModel: ChordsViewModel) {
     Surface {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(bottom = 100.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -128,6 +130,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                         Row {
                             for (j in 0 until 4) {
                                 if (currentChord[j] == i.toString()) {
+                                    // active button
                                     Button(
                                         onClick =
                                         {
@@ -140,10 +143,11 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                         shape = CircleShape,
                                         modifier = Modifier
                                             .size(activeButtonSize)
-                                            .padding(buttonPadding)
+                                            .padding(activeButtonPadding)
                                     ) {
                                     }
                                 } else {
+                                    // inactive button
                                     FilledTonalButton(
                                         onClick =
                                         {
@@ -156,7 +160,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                         shape = CircleShape,
                                         modifier = Modifier
                                             .size(inactiveButtonSize)
-                                            .padding(buttonPadding)
+                                            .padding(inactiveButtonPadding)
                                     ) {
                                     }
                                 }

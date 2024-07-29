@@ -1,4 +1,4 @@
-package com.vipedev.kords.chordscreen
+package com.vipedev.kords.chords.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

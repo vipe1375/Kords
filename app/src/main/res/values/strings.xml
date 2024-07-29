@@ -15,5 +15,19 @@
         <item quantity="one">%d chord found with name %s</item>
         <item quantity="other">%d chords found with name %s</item>
     </plurals>
+    <string name="loading_text">Fetching chords…</string>
+    <string name="chords_nav_item">Chords</string>
+    <string name="songs_nav_item">Songs</string>
+    <string name="settings_nav_item">Settings</string>
+    <string name="use_system_theme">Use system theme</string>
+    <string name="use_system_theme_on">The app will be in same theme than system</string>
+    <string name="use_dark_theme">Use dark theme</string>
+    <string name="use_dark_theme_on">The app will be in dark theme</string>
+    <string name="use_system_theme_off">The app will use its own theme</string>
+    <string name="use_dark_theme_off">The app will be in light theme</string>
+    <string name="change_language_text">Change language</string>
+    <string name="contact_nav_item">Contact</string>
+    <string name="contact_twitter">Twitter/X : @vipe1375</string>
+    <string name="contact_discord">Discord : vipe1375</string>
 
 </resources>

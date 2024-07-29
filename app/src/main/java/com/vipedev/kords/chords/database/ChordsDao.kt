@@ -1,4 +1,4 @@
-package com.vipedev.kords.database
+package com.vipedev.kords.chords.database
 
 import com.google.firebase.database.DataSnapshot
 

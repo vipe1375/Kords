@@ -12,4 +12,16 @@
         <item quantity="other">%d accords trouvés avec le nom %s</item>
         <item quantity="many">%d accords trouvés avec le nom %s</item>
     </plurals>
+    <string name="loading_text">Téléchargement des accords…</string>
+    <string name="chords_nav_item">Accords</string>
+    <string name="songs_nav_item">Chansons</string>
+    <string name="settings_nav_item">Paramètres</string>
+    <string name="use_system_theme">Utiliser le thème du système</string>
+    <string name="use_system_theme_on">L\'application utilise le thème du système</string>
+    <string name="use_dark_theme">Utiliser le thème sombre</string>
+    <string name="use_dark_theme_on">L\'application utilise le thème sombre</string>
+    <string name="use_system_theme_off">L\'application utilise son propre thème</string>
+    <string name="use_dark_theme_off">L\'application utilise le thème clair</string>
+    <string name="change_language_text">Changer la langue</string>
+    <string name="contact_nav_item">Contact</string>
 </resources>

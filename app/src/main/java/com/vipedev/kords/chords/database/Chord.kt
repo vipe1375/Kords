@@ -1,4 +1,4 @@
-package com.vipedev.kords.database
+package com.vipedev.kords.chords.database
 
 data class Chord(
     val name: String = "",

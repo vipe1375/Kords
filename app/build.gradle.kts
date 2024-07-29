@@ -19,6 +19,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        resourceConfigurations.plus(listOf("en", "fr"))
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -63,6 +65,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.database)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,8 +89,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    //implementation(libs.androidx.datastore.preferences)
-    //implementation(libs.kotlinx.coroutines.android)
+
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+
+    // Datastore
+    implementation(libs.androidx.datastore.preferences)
 
 
 

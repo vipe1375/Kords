@@ -26,6 +26,7 @@ private val BlueDarkColorScheme = darkColorScheme(
     background = Blue400,
     onBackground = White,
     surface = Blue500,
+    scrim = Grey300
     //surfaceVariant = Blue500,
     /*
     onSurface: Color,
@@ -65,6 +66,7 @@ private val BlueLightColorScheme = lightColorScheme(
     background = Blue400,
     onBackground = Blue500,
     surface = White,
+    scrim = Grey700
 )
 
 /* Other default colors to override

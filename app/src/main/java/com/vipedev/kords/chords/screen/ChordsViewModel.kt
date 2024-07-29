@@ -1,14 +1,16 @@
-package com.vipedev.kords.chordscreen
+package com.vipedev.kords.chords.screen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.vipedev.kords.database.Chord
-import com.vipedev.kords.database.ChordsDao
+import com.vipedev.kords.chords.database.Chord
+import com.vipedev.kords.chords.database.ChordsDao
 import com.vipedev.kords.R
 
+@SuppressLint("MutableCollectionMutableState")
 class ChordsViewModel(
     private val chordsDao: ChordsDao,
     private val context: Context
