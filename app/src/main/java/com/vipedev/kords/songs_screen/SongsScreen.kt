@@ -26,11 +26,11 @@ fun SongsScreen() {
         ){
             Spacer(modifier = Modifier.height(50.dp))
 
-            Text(text = stringResource(id = R.string.contact_nav_item),
+            Text(text = stringResource(id = R.string.songs_nav_item),
                 modifier = Modifier.padding(20.dp))
 
 
-
+            /*
             Text(text = stringResource(R.string.contact_twitter),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(10.dp))
@@ -38,6 +38,7 @@ fun SongsScreen() {
             Text(text = stringResource(R.string.contact_discord),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(10.dp))
+            */
         }
     }
 }
