@@ -8,16 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,21 +22,25 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import com.vipedev.kords.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchByName(viewModel: ChordsViewModel) {
 
     val focusManager = LocalFocusManager.current
+
+    val composableScope = rememberCoroutineScope()
 
     Surface {
         Column(
@@ -58,7 +59,10 @@ fun SearchByName(viewModel: ChordsViewModel) {
                 Column {
                     OutlinedTextField(
                         value = viewModel.chordSearched,
-                        onValueChange = { viewModel.changeChordSearched(it) },
+                        onValueChange = {
+                            viewModel.changeChordSearched(it)
+                            composableScope.launch { viewModel.delaySuggestions() }
+                        },
                         label = {
                             Text(
                                 text = stringResource(id = R.string.search_bar_text),
@@ -81,21 +85,19 @@ fun SearchByName(viewModel: ChordsViewModel) {
 
                     // List of suggestions
 
-                    var matchingChords = viewModel.getSuggestions()
-                    println(matchingChords)
-                    if (matchingChords.size > 3) {
-                        matchingChords = matchingChords.subList(0, 3)
+                    // filtering suggestions (if 2 chords have the same name, show only 1 in the suggestions)
+                    val matchingChords = viewModel.getSuggestions()
+                    val uniqueMatchingChords : MutableList<String> = mutableListOf()
+                    matchingChords.forEach { chord ->
+                        if (!uniqueMatchingChords.contains(chord.name)) {
+                            uniqueMatchingChords.add(chord.name)
+                        }
                     }
 
                     if (viewModel.chordSearched.isNotEmpty() && !viewModel.searched) {
 
-                        LazyColumn(
-                            modifier = Modifier.padding(horizontal = 30.dp)
-                        ) {
-                            items(matchingChords) { c ->
-                                ListButton(text = c.name, viewModel = viewModel, focusManager = focusManager)
-                            }
-                        }
+                        Suggestions(viewModel = viewModel, matchingChords = uniqueMatchingChords.toMutableList(), focusManager = focusManager)
+
                     }
                 }
 
@@ -129,71 +131,42 @@ fun SearchByName(viewModel: ChordsViewModel) {
                             ChangeChordButton(viewModel = viewModel, right = false)
                         }
 
-
-                        Button(modifier = Modifier
-                                .padding(horizontal = 20.dp),
-                            onClick = {
-                                if (nbResults > 1) {
-                                    val visualizedChord = viewModel.searchResult[viewModel.visualizedID - 1]
-                                    viewModel.visualizeChord(visualizedChord)
-
-                                }
-                                else {
-                                    viewModel.visualizeChord(viewModel.searchResult[0])
-
-                                }
-                                //focusManager.clearFocus()
-
-                            },
-                            content = {
-                                Text(LocalContext.current.resources.getQuantityString(R.plurals.visualize_button_text,
-                                    viewModel.searchResult.size,   // quantity
-                                    viewModel.visualizedID,   // arg1
-                                    viewModel.searchResult.size))  // arg2
-                            })
+                        VisualizeButton(nbResults, viewModel)
 
                         if (viewModel.searchResult.size > 1) {
                             ChangeChordButton(viewModel = viewModel, right = true)
                         }
                     }
-
                 }
-
             }
         }
     }
 }
 
 @Composable
-fun ListButton(text: String, viewModel: ChordsViewModel, focusManager: FocusManager) {
-    FilledTonalButton(
-        onClick = {
-            viewModel.changeChordSearched(text)
-            viewModel.searchChord()
-            focusManager.clearFocus()
-        },
-        shape = RectangleShape,
+fun Suggestions(viewModel: ChordsViewModel, matchingChords: List<String>, focusManager: FocusManager) {
+
+    DropdownMenu(
+        expanded = viewModel.showSuggestions,
         modifier = Modifier
-            .width(140.dp)
-            .padding(0.dp)
-    )
-    {
-        Text(text = text)
-    }
-
-}
-
-@Composable
-fun ChangeChordButton(viewModel: ChordsViewModel, right: Boolean) {
-    Button(onClick = { viewModel.changeVisualizedChord(right = right) },
-        shape = CircleShape,
-
+            .width(190.dp)
+            .height(160.dp),
+        onDismissRequest = { viewModel.showSuggestions = false},
+        properties = PopupProperties(focusable = false),
+        offset = DpOffset(x = 5.dp, y = 0.dp)
     ) {
-        if (right) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
-        } else {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null)
+        matchingChords.forEach { chord ->
+            DropdownMenuItem(text = {
+                Text(text = chord)
+            }, onClick = {
+                viewModel.changeChordSearched(chord)
+                viewModel.searchChord()
+                focusManager.clearFocus()
+            })
         }
-
     }
+
+
 }
+
+

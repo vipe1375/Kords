@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.ChordsDao
 import com.vipedev.kords.R
+import kotlinx.coroutines.delay
 
 @SuppressLint("MutableCollectionMutableState")
 class ChordsViewModel(
@@ -49,6 +50,8 @@ class ChordsViewModel(
 
     var showVisualizeButton by mutableStateOf(false) // show visualized button or not when a chord is searched
 
+    var showSuggestions by mutableStateOf(false)
+
     fun changeCurrentChord(newChord: MutableList<String>) {
         /**
          * update currentChord ID to the given ID
@@ -75,6 +78,12 @@ class ChordsViewModel(
     fun changeChordSearched(newChord: String) {
         chordSearched = newChord
         searched = false
+    }
+
+    suspend fun delaySuggestions() {
+        showSuggestions = false
+        delay(500)
+        showSuggestions = true
     }
 
     fun resetChordSearched() {
