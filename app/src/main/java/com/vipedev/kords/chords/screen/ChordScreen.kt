@@ -61,7 +61,7 @@ fun Separator(text: String) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp)
+            .padding(vertical = 15.dp)
     ) {
         Icon(
             painter = painterResource(id = R.drawable.barre3),

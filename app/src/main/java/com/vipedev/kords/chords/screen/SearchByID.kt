@@ -58,11 +58,12 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
             //        SEARCH TEXT       //
 
+
             Text(
                 text = stringResource(id = R.string.find_chord_text),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(5.dp)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -114,7 +115,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                 for (i in 1 until 15) {
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 20.dp)
+                            .padding(vertical = 15.dp)
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -139,6 +140,8 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                             inputChordList[j] = "0"
                                             inputChord = inputChordList.joinToString("-")
                                             viewModel.changeCurrentChord(inputChordList)
+                                            viewModel.resetChordSearched()
+
                                         },
                                         shape = CircleShape,
                                         modifier = Modifier
@@ -156,6 +159,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                             inputChordList[j] = i.toString()
                                             inputChord = inputChordList.joinToString("-")
                                             viewModel.changeCurrentChord(inputChordList)
+                                            viewModel.resetChordSearched()
                                         },
                                         shape = CircleShape,
                                         modifier = Modifier

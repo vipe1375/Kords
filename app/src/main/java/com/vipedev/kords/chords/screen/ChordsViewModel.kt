@@ -42,18 +42,19 @@ class ChordsViewModel(
     var textState by mutableStateOf(value = "") // value of text
         private set
 
-    var searchResult by mutableStateOf(mutableListOf(Chord()))
+    var searchResult by mutableStateOf(mutableListOf(Chord())) // list of chords found by name
         private set
 
-    var visualizedID by mutableIntStateOf(1)
+    var visualizedID by mutableIntStateOf(1) // id of the currently visualized chord
 
-    var showVisualizeButton by mutableStateOf(false)
+    var showVisualizeButton by mutableStateOf(false) // show visualized button or not when a chord is searched
 
     fun changeCurrentChord(newChord: MutableList<String>) {
         /**
          * update currentChord ID to the given ID
          * @param newChord
          */
+        searched = false
         currentChord = newChord
 
         val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
@@ -76,7 +77,7 @@ class ChordsViewModel(
         searched = false
     }
 
-    private fun resetChordSearched() {
+    fun resetChordSearched() {
         chordSearched = ""
     }
 

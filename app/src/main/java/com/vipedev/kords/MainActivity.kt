@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -71,8 +72,12 @@ class MainActivity : ComponentActivity() {
             val dataStore = StorePreferences(LocalContext.current)
             val useSystemTheme : Boolean = dataStore.getUseSystemTheme.collectAsState(initial = true).value!!
             val useDarkTheme : Boolean = dataStore.getUseDarkTheme.collectAsState(initial = true).value!!
-
-            KordsJetpackTheme (darkTheme = (useSystemTheme || (!useSystemTheme && useDarkTheme))) {
+            val darkTheme: Boolean = if (useSystemTheme) {
+                isSystemInDarkTheme()
+            } else {
+                useDarkTheme
+            }
+            KordsJetpackTheme (darkTheme = darkTheme) {
                 val items = listOf(
                     BottomNavigationItem(title = stringResource(id = R.string.chords_nav_item),
                         selectedIcon = Icons.Filled.Home,
