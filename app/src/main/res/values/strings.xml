@@ -32,5 +32,12 @@
     <string name="contact_nav_item">Contact</string>
     <string name="contact_twitter" translatable="false">Twitter/X : @vipe1375</string>
     <string name="contact_discord" translatable="false">Discord : vipe1375</string>
+    <string name="auto_download">Enable automatic update of chords</string>
+    <string name="auto_download_on">Chords will be updated when the app is launched</string>
+    <string name="auto_download_off">Chords won\'t be updated when the app is launched</string>
+    <string name="appearance_options_header">Appearance</string>
+    <string name="language_options_header">Language</string>
+    <string name="auto_download_options_header">Chords updates</string>
+    <string name="update_chords_title">Update chords</string>
 
 </resources>

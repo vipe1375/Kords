@@ -10,9 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
@@ -20,24 +23,6 @@ import com.vipedev.kords.R
 
 @Composable
 fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
-
-    val systemThemeOption = ToggleOptionItem(title = stringResource(R.string.use_system_theme),
-        id = 0,
-        description_on = stringResource(R.string.use_system_theme_on),
-        description_off = stringResource(R.string.use_system_theme_off),
-        enabled = true)
-
-    val darkThemeOption = ToggleOptionItem(title = stringResource(R.string.use_dark_theme),
-        id = 1,
-        description_on = stringResource(R.string.use_dark_theme_on),
-        description_off = stringResource(R.string.use_dark_theme_off),
-        enabled = true )
-
-    val languageOption = ListOptionItem(title = stringResource(R.string.change_language_text),
-        description = "",
-        enabled = true,
-        listOf(LanguageItem("Français", "fr"), LanguageItem("English", "en"))
-    )
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -54,13 +39,48 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            ToggleOption(viewModel = viewModel, dataStore = dataStore, option = systemThemeOption)
+            // Appearance
+            Text(text = stringResource(R.string.appearance_options_header),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold
+            )
 
-            ToggleOption(viewModel = viewModel, dataStore = dataStore, option = darkThemeOption)
+            UseSystemThemeOption(viewModel = viewModel, dataStore = dataStore)
+
+            UseDarkThemeOption(viewModel = viewModel, dataStore = dataStore)
             
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            ListOption(viewModel = viewModel, option = languageOption)
+            // Language
+            Text(text = stringResource(R.string.language_options_header),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold
+            )
+
+            LanguageOption(viewModel = viewModel)
+
+            Spacer(modifier = Modifier.height(20.dp))
+/*
+            // Updates
+            Text(text = stringResource(R.string.auto_download_options_header),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold
+            )
+
+            AutoDownloadOption(dataStore = dataStore)
+
+            if (!dataStore.getAutoDownload.collectAsState(initial = true).value!!) {
+                DownloadOption(viewModel = viewModel, dataStore = dataStore)
+            }*/
         }
     }
 }

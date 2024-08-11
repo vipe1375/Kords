@@ -15,6 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import com.vipedev.kords.R
+import com.vipedev.kords.chords.database.fetchChordsData
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import java.util.Locale
 
@@ -22,7 +24,10 @@ class SettingsViewModel (
     dataStore: StorePreferences
 
 ){
+    val dataStore = dataStore
 
+    var isDownloading by mutableStateOf(false)
+        private set
 
     // list options
     var isDropdownVisible by mutableStateOf(false)
@@ -30,8 +35,17 @@ class SettingsViewModel (
 
     private val languagesList :Map<String, String> = mapOf("fr" to "Français", "en" to "English")
 
+    var autoDownload by mutableStateOf(true)
+        private set
+
     fun changeDropdownState(newState: Boolean) {
         isDropdownVisible = newState
+    }
+
+    suspend fun downloadChords() {
+        isDownloading = true
+        delay(1000)
+        isDownloading = false
     }
 
     fun localeSelection(context: Context, localeTag: String) {

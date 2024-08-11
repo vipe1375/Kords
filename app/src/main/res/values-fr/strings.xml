@@ -27,4 +27,11 @@
     <string name="use_dark_theme_off">L\'application utilise le thème clair</string>
     <string name="change_language_text">Changer la langue</string>
     <string name="contact_nav_item">Contact</string>
+    <string name="auto_download">Activer la mise à jour automatique des accords</string>
+    <string name="auto_download_on">Les accords sont mis à jour au lancement de l\'app</string>
+    <string name="auto_download_off">Les accords ne sont pas mis à jour au lancement de l\'app</string>
+    <string name="appearance_options_header">Apparence</string>
+    <string name="language_options_header">Langue</string>
+    <string name="auto_download_options_header">Mise à jour des accords</string>
+    <string name="update_chords_title">Mettre à jour les accords</string>
 </resources>

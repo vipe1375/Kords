@@ -93,6 +93,14 @@ class MainActivity : ComponentActivity() {
                         hasNews = true)
                 )
 
+
+/*
+
+                val autoDownload: Boolean = dataStore.getAutoDownload.collectAsState(initial = true).value!!
+                println(autoDownload)
+*/
+
+                // var isLoading by rememberSaveable { mutableStateOf(autoDownload) }
                 var isLoading by rememberSaveable { mutableStateOf(true) }
 
                 LaunchedEffect(isLoading) // Unit is the key which determines when the effect should be run
@@ -119,6 +127,7 @@ class MainActivity : ComponentActivity() {
                     val settingsViewModel = SettingsViewModel(dataStore = dataStore)
                     MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel)
                 }
+
 
             }
         }
