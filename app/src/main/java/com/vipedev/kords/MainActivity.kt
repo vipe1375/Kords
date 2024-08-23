@@ -31,6 +31,7 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
 import com.google.firebase.database.DataSnapshot
 import com.vipedev.kords.chords.screen.ChordsViewModel
 import com.vipedev.kords.loading_screen.LoadingScreen
@@ -39,6 +40,9 @@ import com.vipedev.kords.chords.database.convertToChords
 import com.vipedev.kords.chords.database.fetchChordsData
 import com.vipedev.kords.settings_screen.SettingsViewModel
 import com.vipedev.kords.settings_screen.StorePreferences
+import com.vipedev.kords.songs_screen.SongsViewModel
+import com.vipedev.kords.songs_screen.database.SongsDao
+import com.vipedev.kords.songs_screen.database.SongsDatabase
 import com.vipedev.kords.ui.theme.KordsJetpackTheme
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
@@ -46,8 +50,19 @@ import kotlin.time.Duration.Companion.seconds
 
 class MainActivity : ComponentActivity() {
 
+    // chords storing dao
     private val chordsDao: ChordsDao = ChordsDao()
-    private var updated: Boolean = false
+
+    // songs database dao
+    private val db by lazy {
+        Room.databaseBuilder(
+            applicationContext,
+            SongsDatabase::class.java,
+            "songs.db"
+        ).build()
+    }
+
+    private var updated: Boolean = false // if chords have been updated from firebase
 
     fun localeSelection(context: Context, localeTag: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -110,9 +125,10 @@ class MainActivity : ComponentActivity() {
                 if (isLoading) {
                     LoadingScreen()
                 } else {
-                    val viewModel: ChordsViewModel = viewModel(factory = MyViewModelFactory(chordsDao, this))
+                    val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory(chordsDao, this))
                     val settingsViewModel = SettingsViewModel(dataStore = dataStore)
-                    MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel)
+                    val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao))
+                    MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
                 }
 
             }
@@ -120,7 +136,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-class MyViewModelFactory(private val db: ChordsDao, private val context: Context) :
+class ChordsViewModelFactory(private val db: ChordsDao, private val context: Context) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(db, context) as T
+}
+
+class SongsViewModelFactory(private val db: SongsDao,) :
+    ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db) as T
 }

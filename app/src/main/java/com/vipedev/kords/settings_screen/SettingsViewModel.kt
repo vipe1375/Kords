@@ -14,14 +14,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
+import androidx.lifecycle.ViewModel
 import com.vipedev.kords.R
 import kotlinx.coroutines.flow.Flow
 import java.util.Locale
 
 class SettingsViewModel (
-    dataStore: StorePreferences
+    private val dataStore: StorePreferences
 
-){
+) : ViewModel() {
 
 
     // list options
