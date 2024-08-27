@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -119,7 +122,10 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                singleLine = true
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = {focusManager.clearFocus()}
+                )
             )
 
             //     ARTIST TEXT FIELD      //
@@ -144,22 +150,39 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                     unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
                 ),
-                singleLine = true
+                singleLine = true,
+                keyboardActions = KeyboardActions(
+                    onDone = {focusManager.clearFocus()}
+                )
             )
             //     EXISTING STRUCTURE ELEMENTS     //
             viewModel.struct.forEach { (type, chords) ->
-                Text(text = type)
-                Text(text = chords)
+                Text(
+                    text = type,
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp, vertical = 8.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = chords,
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             //     CURRENT STRUCTURE ELEMENT     //
             if (viewModel.currentStructType.isNotEmpty()) {
                 Text(
                     text = viewModel.currentStructType,
-                    modifier = Modifier.padding(20.dp)
+                    modifier = Modifier.padding(top = 16.dp, bottom = 5.dp, start = 20.dp)
                 )
 
-                OutlinedTextField(
+                TextField(
                     value = viewModel.currentChords,
                     onValueChange = { viewModel.updateCurrentChords(it) },
                     label = {
@@ -172,7 +195,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    shape = RectangleShape,
+                    shape = CircleShape,
                     textStyle = MaterialTheme.typography.labelLarge,
                     colors = OutlinedTextFieldDefaults.colors(
                         unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
@@ -182,9 +205,13 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     ),
                     singleLine = true,
                     keyboardActions = KeyboardActions(onDone = {
-                        viewModel.addStructItem(viewModel.currentStructType, viewModel.currentChords)
-                        viewModel.resetStructElement()
-                        focusManager.clearFocus()
+                        if (viewModel.currentChords.isNotBlank()) {
+                            viewModel.addStructItem()
+                            focusManager.clearFocus()
+                        }
+                        else {
+                            viewModel.displayToast(context = context, text = "No chords in the section !")
+                        }
                     })
                 )
             }
@@ -197,8 +224,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 onClick = { viewModel.updateStructDropdownState(true) },
                 modifier = Modifier
                     .padding(20.dp)
-                    .fillMaxWidth(),
-                shape = RectangleShape
+                    .fillMaxWidth()
             ) {
                 Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
 
@@ -224,6 +250,8 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

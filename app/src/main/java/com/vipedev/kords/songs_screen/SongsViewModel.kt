@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vipedev.kords.songs_screen.database.Song
@@ -33,7 +34,9 @@ class SongsViewModel (
 
     var struct : MutableMap<String, String> = mutableMapOf()
 
-    var songs : List<Song> = mutableListOf()
+    var songs : LiveData<List<Song>> = dao.getSongs_Artist()
+
+    private val duplicableStructTypes = mutableMapOf("Chorus" to 1, "Verse" to 1, "Solo" to 1, "Bridge" to 1)
 
     fun updateIsCreatingSong(value: Boolean) {
         isCreatingSong = value
@@ -55,21 +58,33 @@ class SongsViewModel (
         structDropdownState = value
     }
 
-    fun addStructItem(type: String, chords: String) {
-        struct[type] = chords
+    fun addStructItem() {
+
+        if (currentStructType in duplicableStructTypes.keys) {
+            // if the struct type is duplicable, adds a number after the struct type name
+            // ex : chorus -> chorus 1, 2...
+            struct["$currentStructType ${duplicableStructTypes[currentStructType]}"] = currentChords
+
+            // updating the number of the struct type
+            duplicableStructTypes[currentStructType] = duplicableStructTypes[currentStructType]!! + 1
+        }
+        else {
+            struct[currentStructType] = currentChords
+        }
+        currentChords = ""
+        currentStructType = ""
     }
 
     fun updateCurrentChords(value: String) {
         currentChords = value
     }
 
-    fun resetStructElement() {
+    private fun resetStructElement() {
         currentChords = ""
         currentStructType = ""
-        struct = mutableMapOf()
     }
 
-    private fun displayToast(context: Context, text: String) {
+    fun displayToast(context: Context, text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
@@ -97,29 +112,32 @@ class SongsViewModel (
         viewModelScope.launch {
             dao.deleteSong(song)
         }
-        updateSongs()
+        //updateSongs()
         displayToast(context = context, text = "Song deleted !")
     }
 
 
 
+/*
 
     fun getSavedSongs() : List<Song> {
         updateSongs()
         return songs
     }
+*/
 
-    private fun updateSongs() {
+    /*private fun updateSongs() {
         viewModelScope.launch {
             dao.getSongs_Title().collect {
                 songs = it
             }
         }
     }
-
+*/
 
     fun resetCreation() {
         resetStructElement()
+        struct = mutableMapOf()
         titleField = ""
         artistField = ""
     }
