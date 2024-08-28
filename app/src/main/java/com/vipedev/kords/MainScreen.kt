@@ -1,6 +1,9 @@
 package com.vipedev.kords
 
 import android.annotation.SuppressLint
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -18,6 +21,7 @@ import com.vipedev.kords.settings_screen.SettingsScreen
 import com.vipedev.kords.settings_screen.SettingsViewModel
 import com.vipedev.kords.settings_screen.StorePreferences
 import com.vipedev.kords.songs_screen.SongsScreen
+import com.vipedev.kords.songs_screen.SongsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -25,7 +29,8 @@ fun MainScreen(
     items: List<BottomNavigationItem>,
     viewModel: ChordsViewModel,
     dataStore: StorePreferences,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    songsViewModel: SongsViewModel
 ) {
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
@@ -50,11 +55,20 @@ fun MainScreen(
                     )
                 }
             }
+        },
+        floatingActionButton = {
+            if (selectedItemIndex == 1 && !songsViewModel.isCreatingSong) {
+                FloatingActionButton(
+                    onClick = { songsViewModel.updateIsCreatingSong(true) },
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = null)
+                }
+            }
         }
     ){
         when(selectedItemIndex) {
             0 -> ChordScreen(viewModel = viewModel)
-            1 -> SongsScreen()
+            1 -> SongsScreen(songsViewModel)
             2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
         }
     }

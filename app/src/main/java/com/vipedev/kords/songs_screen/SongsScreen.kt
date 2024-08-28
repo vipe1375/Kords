@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,28 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 
 @Composable
-fun SongsScreen() {
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column (
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Spacer(modifier = Modifier.height(50.dp))
+fun SongsScreen(viewModel: SongsViewModel) {
 
-            Text(text = stringResource(id = R.string.contact_nav_item),
-                modifier = Modifier.padding(20.dp))
+    if (viewModel.isCreatingSong) {
+        NewSongScreen(viewModel = viewModel)
+    }
 
-
-
-            Text(text = stringResource(R.string.contact_twitter),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(10.dp))
-
-            Text(text = stringResource(R.string.contact_discord),
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(10.dp))
-        }
+    else {
+        SongsListScreen(viewModel = viewModel)
     }
 }
