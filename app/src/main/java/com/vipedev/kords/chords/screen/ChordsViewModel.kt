@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.ChordsDao
-import com.vipedev.kords.R
 import kotlinx.coroutines.delay
 
 @SuppressLint("MutableCollectionMutableState")

@@ -1,7 +1,5 @@
 package com.vipedev.kords.songs_screen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,12 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.vipedev.kords.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,7 +77,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 }
 
                 Text(
-                    text = "Create a song",
+                    text = stringResource(R.string.create_song_header),
                     modifier = Modifier.padding(20.dp)
                 )
 
@@ -106,7 +105,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 onValueChange = { viewModel.updateTitleField(it) },
                 label = {
                     Text(
-                        text = "Title",
+                        text = stringResource(R.string.create_song_title),
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(bottom = 5.dp)
                     )
@@ -134,7 +133,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 onValueChange = { viewModel.updateArtistField(it) },
                 label = {
                     Text(
-                        text = "Artist",
+                        text = stringResource(R.string.create_song_artist_field),
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(bottom = 5.dp)
                     )
@@ -187,7 +186,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     onValueChange = { viewModel.updateCurrentChords(it) },
                     label = {
                         Text(
-                            text = "Type the chords, separated by a space",
+                            text = stringResource(R.string.create_song_type_chords),
                             style = MaterialTheme.typography.labelLarge,
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
@@ -210,7 +209,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                             focusManager.clearFocus()
                         }
                         else {
-                            viewModel.displayToast(context = context, text = "No chords in the section !")
+                            viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
                         }
                     })
                 )
@@ -230,7 +229,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
 
                 Spacer(modifier = Modifier.width(10.dp))
 
-                Text(text = "Choose a structure type")
+                Text(text = stringResource(R.string.create_song_choose_type))
 
                 DropdownMenu(
                     expanded = viewModel.structDropdownState,

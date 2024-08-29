@@ -2,20 +2,20 @@ package com.vipedev.kords.songs_screen
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vipedev.kords.R
 import com.vipedev.kords.songs_screen.database.Song
 import com.vipedev.kords.songs_screen.database.SongsDao
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class SongsViewModel (
     private val dao: SongsDao,
+    private val context: Context
 ) : ViewModel() {
 
     var isCreatingSong by mutableStateOf(false)
@@ -24,7 +24,13 @@ class SongsViewModel (
 
     var artistField by mutableStateOf("")
 
-    val structTypes: List<String> = mutableListOf("Intro", "Chorus", "Verse", "Solo", "Outro", "Bridge")
+    val structTypes: List<String> = mutableListOf(
+        context.getString(R.string.section_intro),
+        context.getString(R.string.section_chorus),
+        context.getString(R.string.section_verse),
+        context.getString(R.string.section_solo),
+        context.getString(R.string.section_outro),
+        context.getString(R.string.section_bridge))
 
     var currentStructType by mutableStateOf("")
 
@@ -36,7 +42,11 @@ class SongsViewModel (
 
     var songs : LiveData<List<Song>> = dao.getSongs_Artist()
 
-    private val duplicableStructTypes = mutableMapOf("Chorus" to 1, "Verse" to 1, "Solo" to 1, "Bridge" to 1)
+    private val duplicableStructTypes = mutableMapOf(
+        context.getString(R.string.section_chorus) to 1,
+        context.getString(R.string.section_verse) to 1,
+        context.getString(R.string.section_bridge) to 1,
+        context.getString(R.string.section_solo) to 1)
 
     fun updateIsCreatingSong(value: Boolean) {
         isCreatingSong = value
@@ -103,7 +113,7 @@ class SongsViewModel (
             resetCreation()
             updateIsCreatingSong(false)
         } else {
-            displayToast(context, "Missing informations !")
+            displayToast(context, context.getString(R.string.create_song_missing_informations))
         }
 
     }
@@ -113,27 +123,8 @@ class SongsViewModel (
             dao.deleteSong(song)
         }
         //updateSongs()
-        displayToast(context = context, text = "Song deleted !")
+        displayToast(context = context, text = context.getString(R.string.song_deleted))
     }
-
-
-
-/*
-
-    fun getSavedSongs() : List<Song> {
-        updateSongs()
-        return songs
-    }
-*/
-
-    /*private fun updateSongs() {
-        viewModelScope.launch {
-            dao.getSongs_Title().collect {
-                songs = it
-            }
-        }
-    }
-*/
 
     fun resetCreation() {
         resetStructElement()

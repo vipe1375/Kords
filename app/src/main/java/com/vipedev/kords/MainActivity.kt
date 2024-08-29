@@ -12,11 +12,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
@@ -34,11 +32,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.google.firebase.database.DataSnapshot
-import com.vipedev.kords.chords.screen.ChordsViewModel
-import com.vipedev.kords.loading_screen.LoadingScreen
 import com.vipedev.kords.chords.database.ChordsDao
 import com.vipedev.kords.chords.database.convertToChords
 import com.vipedev.kords.chords.database.fetchChordsData
+import com.vipedev.kords.chords.screen.ChordsViewModel
+import com.vipedev.kords.loading_screen.LoadingScreen
 import com.vipedev.kords.settings_screen.SettingsViewModel
 import com.vipedev.kords.settings_screen.StorePreferences
 import com.vipedev.kords.songs_screen.SongsViewModel
@@ -140,7 +138,7 @@ class MainActivity : ComponentActivity() {
                 } else {
                     val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory(chordsDao, this))
                     val settingsViewModel = SettingsViewModel(dataStore = dataStore)
-                    val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao))
+                    val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, this))
                     MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
                 }
 
@@ -155,7 +153,7 @@ class ChordsViewModelFactory(private val db: ChordsDao, private val context: Con
     override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(db, context) as T
 }
 
-class SongsViewModelFactory(private val db: SongsDao,) :
+class SongsViewModelFactory(private val db: SongsDao, private val context: Context) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, context) as T
 }

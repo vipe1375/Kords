@@ -34,4 +34,22 @@
     <string name="language_options_header">Langue</string>
     <string name="auto_download_options_header">Mise à jour des accords</string>
     <string name="update_chords_title">Mettre à jour les accords</string>
+    <string name="create_song_header">Créer une chanson</string>
+    <string name="create_song_title">Titre</string>
+    <string name="create_song_artist_field">Artiste</string>
+    <string name="create_song_type_chords">Tapez les accords, séparés par un espace</string>
+    <string name="create_song_no_chords">Pas d\'accords dans la section !</string>
+    <string name="create_song_choose_type">Choisissez un type de section</string>
+    <string name="section_intro">Intro</string>
+    <string name="section_chorus">Couplet</string>
+    <string name="section_verse">Refrain</string>
+    <string name="section_solo">Solo</string>
+    <string name="section_outro">Outro</string>
+    <string name="section_bridge">Pont</string>
+    <string name="create_song_missing_informations">Informations manquantes !</string>
+    <string name="song_deleted">Chanson supprimée !</string>
+    <string name="contact_options_header">Contact</string>
+    <string name="sourcecode_options_header">Code source</string>
+    <string name="sourcecode_gitlab">Voir le code source sur GitLab</string>
+    <string name="sourcecode_github">Voir le code source sur GitHub</string>
 </resources>

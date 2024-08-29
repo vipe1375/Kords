@@ -5,17 +5,13 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
-import com.vipedev.kords.R
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.ViewModel
 import java.util.Locale
 
 class SettingsViewModel (
