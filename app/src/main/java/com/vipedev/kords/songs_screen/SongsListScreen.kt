@@ -69,7 +69,7 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                 // list of songs
                 items(songs!!) { song ->
                     TextButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { viewModel.currentSong = song },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RectangleShape
                     ) {
@@ -110,7 +110,10 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                             ) {
                                 // edit icon
                                 TextButton(
-                                    onClick = {  },
+                                    onClick = {
+                                        viewModel.isEditingSong = true
+                                        viewModel.initCurrentSong(song)
+                                    },
                                     //modifier = Modifier.align(Alignment.CenterEnd)
                                 ) {
                                     Icon(Icons.Default.Edit,

@@ -13,4 +13,4 @@ Currently available only on Android, in French and English.
 
 ## What can I do if I spot a bug, or have an idea ?
 
-You can contact me on Discord at `vipe1375` on or X/Twitter at `@vipe1375`
+You can contact me by email at `vipe1375@disroot.org`, or leave an issue !

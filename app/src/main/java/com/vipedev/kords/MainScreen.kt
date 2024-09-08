@@ -20,7 +20,7 @@ import com.vipedev.kords.chords.screen.ChordsViewModel
 import com.vipedev.kords.settings_screen.SettingsScreen
 import com.vipedev.kords.settings_screen.SettingsViewModel
 import com.vipedev.kords.settings_screen.StorePreferences
-import com.vipedev.kords.songs_screen.SongsScreen
+import com.vipedev.kords.songs_screen.MainSongScreen
 import com.vipedev.kords.songs_screen.SongsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -57,9 +57,9 @@ fun MainScreen(
             }
         },
         floatingActionButton = {
-            if (selectedItemIndex == 1 && !songsViewModel.isCreatingSong) {
+            if (selectedItemIndex == 1 && !songsViewModel.isEditingSong && songsViewModel.currentSong == null) {
                 FloatingActionButton(
-                    onClick = { songsViewModel.updateIsCreatingSong(true) },
+                    onClick = { songsViewModel.updateIsEditingSong(true) },
                 ) {
                     Icon(Icons.Filled.Add, contentDescription = null)
                 }
@@ -68,7 +68,7 @@ fun MainScreen(
     ){
         when(selectedItemIndex) {
             0 -> ChordScreen(viewModel = viewModel)
-            1 -> SongsScreen(songsViewModel)
+            1 -> MainSongScreen(songsViewModel)
             2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
         }
     }

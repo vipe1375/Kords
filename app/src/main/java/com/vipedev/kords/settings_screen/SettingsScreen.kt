@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -118,13 +119,21 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimary)
 
-                Text(text = "vipe@tutamail.com",
+                Text(text = "vipe1375@disroot.org",
                     modifier = Modifier.padding(8.dp),
+                    fontFamily = FontFamily.Monospace,
                     style = MaterialTheme.typography.bodySmall,
                     //modifier = Modifier.padding(top = 20.dp)
                     fontWeight = FontWeight.Light,
                     color = MaterialTheme.colorScheme.onPrimary)
             }
+
+            Text(text = stringResource(R.string.contact_issues),
+                modifier = Modifier.padding(8.dp),
+                style = MaterialTheme.typography.titleMedium,
+                //modifier = Modifier.padding(top = 20.dp)
+                fontWeight = FontWeight.Light,
+                color = MaterialTheme.colorScheme.onPrimary)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -137,9 +146,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                 fontWeight = FontWeight.Bold
             )
 
-            Column (
-
-            ) {
+            Column {
                 val context = LocalContext.current
                 val gitlabIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://gitlab.com/vipe1375/kords")) }
                 val githubIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/vipe1375/kords")) }

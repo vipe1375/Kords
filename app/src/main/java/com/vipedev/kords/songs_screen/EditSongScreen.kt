@@ -1,7 +1,9 @@
 package com.vipedev.kords.songs_screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,13 +11,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -28,20 +34,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
+import com.vipedev.kords.songs_screen.database.Song
 import kotlinx.coroutines.launch
 
 @Composable
-fun NewSongScreen(viewModel: SongsViewModel) {
+fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
 
     val focusManager = LocalFocusManager.current
     val composableScope = rememberCoroutineScope()
@@ -60,6 +73,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
+            //        HEADER BAR       //
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -68,16 +82,25 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 // back button
                 TextButton(
                     onClick = {
-                        viewModel.updateIsCreatingSong(false)
-                        viewModel.resetCreation()
+                        if (viewModel.currentSong == null) {
+                            viewModel.updateIsEditingSong(false)
+                            viewModel.resetCreation()
+                        }
+                        else {
+                            viewModel.resetCurrentSong()
+                        }
+
                     },
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 }
 
+                val header: String = if (viewModel.currentSong == null) {stringResource(R.string.create_song_header)} else {
+                    stringResource(R.string.edit_song_header)
+                }
                 Text(
-                    text = stringResource(R.string.create_song_header),
+                    text = header,
                     modifier = Modifier.padding(20.dp)
                 )
 
@@ -154,27 +177,61 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                     onDone = {focusManager.clearFocus()}
                 )
             )
+
             //     EXISTING STRUCTURE ELEMENTS     //
-            viewModel.struct.forEach { (type, chords) ->
-                Text(
-                    text = type,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 8.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = chords,
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+            LazyColumn {
+                items(viewModel.struct.toList()) { (section, chords) ->
+
+                    if (section.isNotBlank() && chords.isNotBlank()) {
+                        var newChords by remember {
+                            mutableStateOf(chords)
+                        }
+                        Text(
+                            text = section,
+                            modifier = Modifier
+                                .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        TextField(
+                            value = newChords,
+                            onValueChange = { newChords = it },
+                            placeholder = {
+                                Text(
+                                text = stringResource(R.string.create_song_type_chords),
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(bottom = 5.dp))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            shape = CircleShape,
+                            textStyle = MaterialTheme.typography.labelLarge,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                                focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                                focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
+                            ),
+                            singleLine = true,
+                            keyboardActions = KeyboardActions(onDone = {
+                                if (newChords.isNotBlank()) {
+                                    viewModel.struct[section] = newChords
+                                    focusManager.clearFocus()
+                                } else {
+                                    viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
+                                }
+                            })
+                        )
+                    }
+                }
             }
 
+
             //     CURRENT STRUCTURE ELEMENT     //
+
             if (viewModel.currentStructType.isNotEmpty()) {
                 Text(
                     text = viewModel.currentStructType,
@@ -184,16 +241,15 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                 TextField(
                     value = viewModel.currentChords,
                     onValueChange = { viewModel.updateCurrentChords(it) },
-                    label = {
+                    placeholder = {
                         Text(
                             text = stringResource(R.string.create_song_type_chords),
                             style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier.padding(bottom = 5.dp)
                         )
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp),
+                        .padding(0.dp),
                     shape = CircleShape,
                     textStyle = MaterialTheme.typography.labelLarge,
                     colors = OutlinedTextFieldDefaults.colors(
@@ -242,6 +298,7 @@ fun NewSongScreen(viewModel: SongsViewModel) {
                         DropdownMenuItem(
                             text = {Text(text = struct)},
                             onClick = {
+                                //viewModel.struct[struct] = ""
                                 viewModel.updateCurrentStructType(struct)
                                 viewModel.updateStructDropdownState(false)
 

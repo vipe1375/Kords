@@ -10,7 +10,7 @@ data class Song(
 
     val title: String,
     val artist: String,
-    val structure: Map<String, List<String>>, // "Intro-1-2-3:Chorus-32-33    int are the ids of the chords
+    val structure: Map<String, List<String>>, // "Intro": ["G", "E", "A"], ...
 
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
@@ -42,7 +42,7 @@ object Converters {
         var result = ""
 
         map.forEach { (type, chords) ->
-            result += type
+            result += "$type-"
             chords.forEach { chordId ->
                 result += "$chordId-"
             }

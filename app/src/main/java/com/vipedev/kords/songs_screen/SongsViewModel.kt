@@ -18,7 +18,10 @@ class SongsViewModel (
     private val context: Context
 ) : ViewModel() {
 
-    var isCreatingSong by mutableStateOf(false)
+    // creating song
+    var isEditingSong by mutableStateOf(false)
+
+    var currentSong: Song? by mutableStateOf(null)
 
     var titleField by mutableStateOf("")
 
@@ -42,14 +45,14 @@ class SongsViewModel (
 
     var songs : LiveData<List<Song>> = dao.getSongs_Artist()
 
-    private val duplicableStructTypes = mutableMapOf(
+    private var duplicableStructTypes = mutableMapOf(
         context.getString(R.string.section_chorus) to 1,
         context.getString(R.string.section_verse) to 1,
         context.getString(R.string.section_bridge) to 1,
         context.getString(R.string.section_solo) to 1)
 
-    fun updateIsCreatingSong(value: Boolean) {
-        isCreatingSong = value
+    fun updateIsEditingSong(value: Boolean) {
+        isEditingSong = value
     }
 
     fun updateTitleField(value: String) {
@@ -98,24 +101,31 @@ class SongsViewModel (
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
-    suspend fun saveSong(title: String, artist: String, structure: Map<String, String>, context: Context) {
+    suspend fun saveSong(title: String, artist: String, structure: Map<String, String>, context: Context, song: Song? = null) {
 
         if (title.isNotEmpty() && artist.isNotEmpty() && structure.isNotEmpty()) {
+
+
             // reformatting the chords
             val formattedStruct: MutableMap<String, List<String>> = mutableMapOf()
 
             structure.forEach { (type, chords) ->
                 formattedStruct[type] = chords.split(" ")
             }
+            println(formattedStruct)
+            // if editing a song
+            val newSong = if (song == null) {
+                Song(title = title, artist = artist, structure = formattedStruct)
+            } else {
+                Song(title = title, artist = artist, structure = formattedStruct, id = song.id)
+            }
 
-            val song = Song(title = title, artist = artist, structure = formattedStruct)
-            dao.upsertSong(song)
+            dao.upsertSong(newSong)
             resetCreation()
-            updateIsCreatingSong(false)
+            updateIsEditingSong(false)
         } else {
             displayToast(context, context.getString(R.string.create_song_missing_informations))
         }
-
     }
 
     fun deleteSong(song: Song, context: Context) {
@@ -131,6 +141,32 @@ class SongsViewModel (
         struct = mutableMapOf()
         titleField = ""
         artistField = ""
+        duplicableStructTypes = mutableMapOf(
+            context.getString(R.string.section_chorus) to 1,
+            context.getString(R.string.section_verse) to 1,
+            context.getString(R.string.section_bridge) to 1,
+            context.getString(R.string.section_solo) to 1)
+    }
+
+    fun resetCurrentSong() {
+        currentSong = null
+    }
+
+    fun initCurrentSong(song: Song) {
+        currentSong = song
+        artistField = song.artist
+        titleField = song.title
+
+        struct = convertDBSong(song.structure)
+    }
+
+    private fun convertDBSong(struct: Map<String, List<String>>) : MutableMap<String, String> {
+        val result: MutableMap<String, String> = mutableMapOf()
+        struct.forEach { (section, chords) ->
+            result[section] = chords.joinToString(separator = " ")
+        }
+
+        return result
     }
 
 }
