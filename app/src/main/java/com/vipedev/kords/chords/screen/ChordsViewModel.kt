@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.ChordsDao
+import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
 
 @SuppressLint("MutableCollectionMutableState")
@@ -60,7 +61,9 @@ class ChordsViewModel(
         searched = false
         currentChord = newChord
 
-        val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
+        currentChordName = nameChord(context, currentChord.joinToString(separator = "-"))
+
+        /*val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
 
         if (dbResult.isEmpty()) {
             currentChordName = context.getString(R.string.no_chord_found_id)
@@ -72,7 +75,7 @@ class ChordsViewModel(
             }
             currentChordName = temp
         }
-
+        */
     }
 
     fun changeChordSearched(newChord: String) {

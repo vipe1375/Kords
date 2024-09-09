@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
+import com.vipedev.kords.chords.database.nameChord
 
 
 @SuppressLint("MutableCollectionMutableState")
@@ -69,6 +70,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
             Spacer(modifier = Modifier.height(10.dp))
 
             val currentChordName: String = viewModel.currentChordName
+
             Text(
                 text = stringResource(id = R.string.current_chord_text, currentChordName),
                 style = MaterialTheme.typography.bodySmall,
