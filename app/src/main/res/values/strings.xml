@@ -59,5 +59,6 @@
     <string name="sourcecode_github">See source code on GitHub</string>
     <string name="contact_issues">Or leave an issue on GitHub &amp; GitLab !</string>
     <string name="edit_song_header">Edit a song</string>
+    <string name="song_view_header">Song</string>
 
 </resources>

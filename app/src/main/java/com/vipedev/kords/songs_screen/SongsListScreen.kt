@@ -111,7 +111,7 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 // edit icon
                                 TextButton(
                                     onClick = {
-                                        viewModel.isEditingSong = true
+                                        viewModel.updateIsEditingSong(true)
                                         viewModel.initCurrentSong(song)
                                     },
                                     //modifier = Modifier.align(Alignment.CenterEnd)

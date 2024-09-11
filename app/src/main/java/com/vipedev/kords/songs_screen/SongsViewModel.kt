@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.vipedev.kords.R
 import com.vipedev.kords.songs_screen.database.Song
 import com.vipedev.kords.songs_screen.database.SongsDao
@@ -105,22 +106,26 @@ class SongsViewModel (
 
         if (title.isNotEmpty() && artist.isNotEmpty() && structure.isNotEmpty()) {
 
-
             // reformatting the chords
             val formattedStruct: MutableMap<String, List<String>> = mutableMapOf()
 
             structure.forEach { (type, chords) ->
                 formattedStruct[type] = chords.split(" ")
             }
-            println(formattedStruct)
+
             // if editing a song
-            val newSong = if (song == null) {
-                Song(title = title, artist = artist, structure = formattedStruct)
-            } else {
-                Song(title = title, artist = artist, structure = formattedStruct, id = song.id)
+            if (song == null) {
+                println("insert")
+                val newSong = Song(title = title, artist = artist, structure = formattedStruct)
+                dao.insertSong(newSong)
+            }
+            else {
+                println("update")
+                val newSong = Song(title = title, artist = artist, structure = formattedStruct, id = song.id)
+                dao.updateSong(newSong)
+                currentSong = newSong
             }
 
-            dao.upsertSong(newSong)
             resetCreation()
             updateIsEditingSong(false)
         } else {

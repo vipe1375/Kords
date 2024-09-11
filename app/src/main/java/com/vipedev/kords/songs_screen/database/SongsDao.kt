@@ -3,14 +3,19 @@ package com.vipedev.kords.songs_screen.database
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import androidx.room.Upsert
 
 @Dao
 interface SongsDao {
 
-    @Upsert
-    suspend fun upsertSong(song: Song)
+    @Update
+    suspend fun updateSong(song: Song)
+
+    @Insert
+    suspend fun insertSong(song: Song)
 
     @Delete
     suspend fun deleteSong(song: Song)

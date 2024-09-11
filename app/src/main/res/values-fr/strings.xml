@@ -53,5 +53,6 @@
     <string name="sourcecode_gitlab">Voir le code source sur GitLab</string>
     <string name="sourcecode_github">Voir le code source sur GitHub</string>
     <string name="contact_issues">Ou laissez un issue sur GitHub &amp; GitLab !</string>
-    <string name="edit_song_header">Edit a song</string>
+    <string name="edit_song_header">Modifier une chanson</string>
+    <string name="song_view_header">Chanson</string>
 </resources>

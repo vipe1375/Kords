@@ -2,6 +2,7 @@ package com.vipedev.kords.songs_screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +18,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -79,9 +82,32 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 }
 
                 Text(
-                    text = "Song",
+                    text = stringResource(R.string.song_view_header),
                     modifier = Modifier.padding(20.dp)
                 )
+
+                // edit and delete button
+                Row (
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ){
+                    TextButton(
+                        onClick = {
+                            viewModel.initCurrentSong(song)
+                            viewModel.updateIsEditingSong(true)
+                        }
+                    ) {
+                        Icon(Icons.Default.Edit, contentDescription = null)
+                    }
+
+                    TextButton(
+                        onClick = { viewModel.deleteSong(song, context = context) },
+                    ) {
+                        Icon(Icons.Default.Delete, contentDescription = null)
+                    }
+
+
+                }
+
 
             }
 

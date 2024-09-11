@@ -87,7 +87,8 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                             viewModel.resetCreation()
                         }
                         else {
-                            viewModel.resetCurrentSong()
+                            viewModel.updateIsEditingSong(false)
+                            //viewModel.resetCurrentSong()
                         }
 
                     },
@@ -108,12 +109,24 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                 TextButton(
                     onClick = {
                         composableScope.launch {
-                            viewModel.saveSong(
-                                title = viewModel.titleField,
-                                artist = viewModel.artistField,
-                                structure = viewModel.struct,
-                                context = context
-                            )
+                            if (viewModel.currentSong == null) {
+                                viewModel.saveSong(
+                                    title = viewModel.titleField,
+                                    artist = viewModel.artistField,
+                                    structure = viewModel.struct,
+                                    context = context
+                                )
+                            }
+
+                            else {
+                                viewModel.saveSong(
+                                    title = viewModel.titleField,
+                                    artist = viewModel.artistField,
+                                    structure = viewModel.struct,
+                                    context = context,
+                                    viewModel.currentSong
+                                )
+                            }
                         }
                     },
                     modifier = Modifier.align(Alignment.CenterEnd)
