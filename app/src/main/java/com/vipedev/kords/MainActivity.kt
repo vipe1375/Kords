@@ -18,12 +18,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.os.LocaleListCompat
@@ -31,27 +26,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
-import com.google.firebase.database.DataSnapshot
-import com.vipedev.kords.chords.database.ChordsDao
-import com.vipedev.kords.chords.database.convertToChords
-import com.vipedev.kords.chords.database.fetchChordsData
 import com.vipedev.kords.chords.screen.ChordsViewModel
-import com.vipedev.kords.loading_screen.LoadingScreen
 import com.vipedev.kords.settings_screen.SettingsViewModel
 import com.vipedev.kords.settings_screen.StorePreferences
 import com.vipedev.kords.songs_screen.SongsViewModel
 import com.vipedev.kords.songs_screen.database.SongsDao
 import com.vipedev.kords.songs_screen.database.SongsDatabase
 import com.vipedev.kords.ui.theme.KordsJetpackTheme
-import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
 
 
 class MainActivity : ComponentActivity() {
+/*
 
     // chords storing dao
     private val chordsDao: ChordsDao = ChordsDao()
-
+*/
     // songs database dao
     private val db by lazy {
         Room.databaseBuilder(
@@ -60,6 +49,7 @@ class MainActivity : ComponentActivity() {
             "songs.db"
         ).build()
     }
+
 
     private var updated: Boolean = false // if chords have been updated from firebase
 
@@ -112,6 +102,7 @@ class MainActivity : ComponentActivity() {
                 val autoDownload: Boolean = dataStore.getAutoDownload.collectAsState(initial = true).value!!
                 println(autoDownload)
 */
+/*
 
                 // var isLoading by rememberSaveable { mutableStateOf(autoDownload) }
                 var isLoading by rememberSaveable { mutableStateOf(true) }
@@ -136,21 +127,23 @@ class MainActivity : ComponentActivity() {
                 if (isLoading) {
                     LoadingScreen()
                 } else {
-                    val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory(chordsDao, this))
-                    val settingsViewModel = SettingsViewModel(dataStore = dataStore)
-                    val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, this))
-                    MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
-                }
 
+                }
+*/
+
+                val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this))
+                val settingsViewModel = SettingsViewModel(dataStore = dataStore)
+                val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, this))
+                MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
 
             }
         }
     }
 }
 
-class ChordsViewModelFactory(private val db: ChordsDao, private val context: Context) :
+class ChordsViewModelFactory(private val context: Context) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(db, context) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(context) as T
 }
 
 class SongsViewModelFactory(private val db: SongsDao, private val context: Context) :

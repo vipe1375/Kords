@@ -9,12 +9,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
-import com.vipedev.kords.chords.database.ChordsDao
+import com.vipedev.kords.chords.database.allChords
+import com.vipedev.kords.chords.database.findChord
+import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
 
 @SuppressLint("MutableCollectionMutableState")
 class ChordsViewModel(
-    private val chordsDao: ChordsDao,
     private val context: Context
 ) : ViewModel() {
 
@@ -43,7 +44,7 @@ class ChordsViewModel(
     var textState by mutableStateOf(value = "") // value of text
         private set
 
-    var searchResult by mutableStateOf(mutableListOf(Chord())) // list of chords found by name
+    var searchResult: MutableList<Chord> by mutableStateOf(mutableListOf()) // list of chords found by name
         private set
 
     var visualizedID by mutableIntStateOf(1) // id of the currently visualized chord
@@ -60,7 +61,9 @@ class ChordsViewModel(
         searched = false
         currentChord = newChord
 
-        val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
+        currentChordName = nameChord(context, currentChord.joinToString(separator = "-"))
+
+        /*val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
 
         if (dbResult.isEmpty()) {
             currentChordName = context.getString(R.string.no_chord_found_id)
@@ -72,7 +75,7 @@ class ChordsViewModel(
             }
             currentChordName = temp
         }
-
+        */
     }
 
     fun changeChordSearched(newChord: String) {
@@ -91,11 +94,13 @@ class ChordsViewModel(
     }
 
     private fun resetSearchResult() {
-        searchResult = mutableListOf(Chord())
+        searchResult = mutableListOf()
     }
 
     fun searchChord() {
-        val result = chordsDao.getChordsByName(chordSearched.lowercase())
+        visualizedID = 1
+        val result = findChord(chordSearched.lowercase())
+        //val result = chordsDao.getChordsByName(chordSearched.lowercase())
 
         if (result.isNotEmpty()) {
             searchResult = result.toMutableList()
@@ -115,8 +120,16 @@ class ChordsViewModel(
         searched = true
     }
 
-    fun getSuggestions(): List<Chord> {
-        return chordsDao.getSuggestions(chordSearched)
+    fun getSuggestions(): List<String> {
+        //return chordsDao.getSuggestions(chordSearched)
+        val result: MutableList<String> = mutableListOf()
+        allChords.forEach { chord ->
+            if (chordSearched in chord) {
+                result.add(chord)
+            }
+        }
+
+        return result
     }
 
     fun visualizeChord(chord: Chord) {
@@ -148,6 +161,8 @@ class ChordsViewModel(
                 visualizedID = searchResult.size
             }
         }
+
+        visualizeChord(searchResult[visualizedID - 1])
     }
 
 }
