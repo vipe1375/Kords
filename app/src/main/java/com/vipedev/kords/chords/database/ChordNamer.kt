@@ -3,57 +3,7 @@ package com.vipedev.kords.chords.database
 import android.content.Context
 import com.vipedev.kords.R
 
-val triads: Map<List<Int>, String> = mapOf(
-    listOf(0, 4, 7) to "",
-    listOf(0, 3, 7) to "m",
-    listOf(0, 3, 6) to "dim",
-)
 
-val tetrads: Map<List<Int>, String> = mapOf(
-    listOf(0, 4, 7, 12) to "",
-    listOf(0, 3, 7, 12) to "m"
-)
-
-val sevens: Map<List<Int>, String> = mapOf(
-    listOf(0, 4, 7, 10) to "7",
-    listOf(0, 4, 7, 11) to "maj7",
-    listOf(0, 3, 7, 10) to "m7",
-    listOf(0, 3, 6, 10) to "m7b5",
-    )
-
-val reversed_1: Map<List<Int>, String> = mapOf(
-    listOf(0, 5, 9) to "",
-    listOf(0, 2, 6, 9) to "7",
-    listOf(0, 1, 5, 8) to "maj7",
-    listOf(0, 2, 5, 9) to "m7",
-    listOf(0, 2, 5, 8) to "m7b5"
-)
-
-val reversed_2: Map<List<Int>, String> = mapOf(
-    listOf(0, 3, 8) to "",
-    listOf(0, 4, 9) to "m",
-    listOf(0, 3, 6, 8) to "m7"
-)
-
-val stringToValue : Map<String, Int> = mapOf(
-    "C" to 0,
-    "C#" to 1,
-    "Db" to 1,
-    "D" to 2,
-    "D#" to 3,
-    "Eb" to 3,
-    "E" to 4,
-    "F" to 5,
-    "F#" to 6,
-    "Gb" to 6,
-    "G" to 7,
-    "G#" to 8,
-    "Ab" to 8,
-    "A" to 9,
-    "A#" to 10,
-    "Bb" to 10,
-    "B" to 11
-)
 
 fun findFond(chord: List<Int>, type: String) : List<String> {
     val result: MutableList<String> = mutableListOf()
@@ -111,30 +61,34 @@ fun nameChord(context: Context, fingers: String) : String {
 
     val intervals = chord.map { it - chord[0] }.distinct()
 
+    println(intervals)
+
     if (triads.containsKey(intervals)) {
         val fond = findFond(chord, type = "triad")
-        return fond.joinToString(" - ") { fond -> fond + triads[intervals] }
+        return fond.joinToString(" - ") { it + triads[intervals] }
     }
 
     if (tetrads.containsKey(intervals)) {
         val fond = findFond(chord, type = "tetrad")
-        return fond.joinToString(" - ") { fond -> fond + tetrads[intervals] }
+        return fond.joinToString(" - ") { it + tetrads[intervals] }
     }
 
     if (sevens.containsKey(intervals)) {
         val fond = findFond(chord, type = "seven")
-        return fond.joinToString(" - ") { fond -> fond + sevens[intervals] }
+        return fond.joinToString(" - ") { it + sevens[intervals] }
     }
 
     if (reversed_1.containsKey(intervals)) {
         val fond = findFond(chord, type = "r1")
-        return fond.joinToString(" - ") { fond -> fond + reversed_1[intervals] }
+        return fond.joinToString(" - ") { it + reversed_1[intervals] }
     }
 
     if (reversed_2.containsKey(intervals)) {
         val fond = findFond(chord, type = "r2")
-        return fond.joinToString(" - ") { fond -> fond + reversed_2[intervals] }
+        return fond.joinToString(" - ") { it + reversed_2[intervals] }
     }
 
     return context.getString(R.string.no_chord_found_id)
 }
+
+

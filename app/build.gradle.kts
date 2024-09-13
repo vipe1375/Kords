@@ -16,7 +16,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = 4
-        versionName = "1.1.1"
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.plus(listOf("en", "fr"))
@@ -76,6 +76,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
+/*
 
     // Import the BoM for the Firebase platform
     implementation(platform(libs.firebase.bom))
@@ -83,6 +84,7 @@ dependencies {
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation(libs.google.firebase.database)
+*/
 
 
 

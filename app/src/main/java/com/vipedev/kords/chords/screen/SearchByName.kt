@@ -34,12 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.vipedev.kords.R
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 @Composable
 fun SearchByName(viewModel: ChordsViewModel) {
 
     val focusManager = LocalFocusManager.current
-
     val composableScope = rememberCoroutineScope()
 
     Surface {
@@ -86,17 +86,12 @@ fun SearchByName(viewModel: ChordsViewModel) {
                     // List of suggestions
 
                     // filtering suggestions (if 2 chords have the same name, show only 1 in the suggestions)
-                    val matchingChords = viewModel.getSuggestions()
-                    val uniqueMatchingChords : MutableList<String> = mutableListOf()
-                    matchingChords.forEach { chord ->
-                        if (!uniqueMatchingChords.contains(chord.name)) {
-                            uniqueMatchingChords.add(chord.name)
-                        }
-                    }
+                    val ogMatch = viewModel.getSuggestions().distinct()
+                    val matchingChords = ogMatch.subList(0, min(3, ogMatch.size))
 
-                    if (viewModel.chordSearched.isNotEmpty() && !viewModel.searched) {
+                    if (viewModel.chordSearched.isNotEmpty() && !viewModel.searched && matchingChords.isNotEmpty()) {
 
-                        Suggestions(viewModel = viewModel, matchingChords = uniqueMatchingChords.toMutableList(), focusManager = focusManager)
+                        Suggestions(viewModel = viewModel, matchingChords = matchingChords.toMutableList(), focusManager = focusManager)
 
                     }
                 }
@@ -146,11 +141,11 @@ fun SearchByName(viewModel: ChordsViewModel) {
 @Composable
 fun Suggestions(viewModel: ChordsViewModel, matchingChords: List<String>, focusManager: FocusManager) {
 
+
     DropdownMenu(
         expanded = viewModel.showSuggestions,
         modifier = Modifier
-            .width(190.dp)
-            .height(160.dp),
+            .width(190.dp),
         onDismissRequest = { viewModel.showSuggestions = false},
         properties = PopupProperties(focusable = false),
         offset = DpOffset(x = 5.dp, y = 0.dp)
