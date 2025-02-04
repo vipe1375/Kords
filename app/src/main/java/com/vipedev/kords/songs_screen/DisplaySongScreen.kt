@@ -95,8 +95,7 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 ){
                     TextButton(
                         onClick = {
-                            viewModel.initCurrentSong(song)
-                            viewModel.updateIsEditingSong(true)
+                            viewModel.initEdition(song)
                         }
                     ) {
                         Icon(Icons.Default.Edit, contentDescription = null)

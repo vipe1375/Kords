@@ -89,6 +89,13 @@ class SongsViewModel (
         structDropdownState = value
     }
 
+    fun initEdition(song: Song) {
+        resetCreation()
+        initCurrentSong(song)
+        updateIsEditingSong(true)
+
+    }
+
     fun addStructItem() {
 
         if (currentStructType in duplicableStructTypes.keys) {
@@ -174,12 +181,22 @@ class SongsViewModel (
         currentSong = null
     }
 
-    fun initCurrentSong(song: Song) {
+    private fun initCurrentSong(song: Song) {
         currentSong = song
         artistField = song.artist
         titleField = song.title
 
         struct = convertDBSong(song.structure)
+
+        // updating the number of duplicable structures elements
+        println(duplicableStructTypes)
+        struct.keys.forEach { structElt ->
+            // split structElt to get only the type of element, not the number
+            val _structElt: String = structElt.split(" ")[0]
+            if (_structElt in duplicableStructTypes) {
+                duplicableStructTypes[_structElt] = duplicableStructTypes[_structElt]!! + 1
+            }
+        }
     }
 
     private fun convertDBSong(struct: Map<String, List<String>>) : MutableMap<String, String> {

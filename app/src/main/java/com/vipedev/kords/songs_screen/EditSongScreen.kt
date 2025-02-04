@@ -21,6 +21,7 @@ package com.vipedev.kords.songs_screen
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,9 +30,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
@@ -79,7 +82,7 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(20.dp)
         ) {
 
@@ -204,7 +207,11 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
             )
 
             //     EXISTING STRUCTURE ELEMENTS     //
-            LazyColumn {
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth()
+            ) {
                 items(viewModel.struct.toList()) { (section, chords) ->
 
                     if (section.isNotBlank() && chords.isNotBlank()) {
@@ -296,9 +303,6 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                 )
             }
 
-
-
-
             //     STRUCTURE TYPE DROPDOWN      //
             OutlinedButton(
                 onClick = { viewModel.updateStructDropdownState(true) },
@@ -332,7 +336,8 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(500.dp))
+            Text(text = stringResource(R.string.create_song_choose_type))
         }
     }
 }

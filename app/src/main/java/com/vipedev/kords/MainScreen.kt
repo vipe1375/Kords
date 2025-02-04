@@ -77,7 +77,9 @@ fun MainScreen(
         floatingActionButton = {
             if (selectedItemIndex == 1 && !songsViewModel.isEditingSong && songsViewModel.currentSong == null) {
                 FloatingActionButton(
-                    onClick = { songsViewModel.updateIsEditingSong(true) },
+                    onClick = {
+                        songsViewModel.resetCreation();
+                        songsViewModel.updateIsEditingSong(true) },
                 ) {
                     Icon(Icons.Filled.Add, contentDescription = null)
                 }
