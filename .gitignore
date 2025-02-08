@@ -6,7 +6,6 @@
 .idea
 gradlew
 gradlew.bat
-gradle
 ChordsDAO.kt
 app/google-services.json
 bipbop.json
