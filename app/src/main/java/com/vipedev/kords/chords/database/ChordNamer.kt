@@ -24,25 +24,33 @@ import com.vipedev.kords.R
 
 
 fun findFond(chord: List<Int>, type: String) : List<String> {
+
     val result: MutableList<String> = mutableListOf()
 
     when(type) {
 
         "r1" ->
             stringToValue.forEach { (name, id) ->
-                if (id == chord[1]) {
+                if (id == chord[1]%12) {
                     result.add(name) }
             }
 
         "r2" ->
             stringToValue.forEach { (name, id) ->
-                if (id == chord[2]) {
+                if (id == chord[2]%12) {
+                    result.add(name)
+                }
+            }
+
+        "r3" ->
+            stringToValue.forEach { (name, id) ->
+                if (id == chord[3]%12) {
                     result.add(name)
                 }
             }
 
         else -> stringToValue.forEach { (name, id) ->
-            if (id == chord[0]) {
+            if (id == chord[0]%12) {
                 result.add(name)
             }
         }
@@ -59,6 +67,17 @@ fun nameChord(context: Context, fingers: String) : String {
      * @return [name] The name of the chord
      */
 
+    // try to name the chord using the chords database
+    val result = chordsList.filter {it.fingers == fingers}.map { it.name }
+    if (result.isNotEmpty()) {
+        if (result.size == 1) {
+            return result[0]
+        }
+        val r = result.joinToString("-")
+        return r
+    }
+
+    // no result from the database -> try to find it with the intervals
     val bchord: List<String> = fingers.split("-")
     val chord: MutableList<Int> = mutableListOf()
 
@@ -68,45 +87,30 @@ fun nameChord(context: Context, fingers: String) : String {
             1 -> 0
             2 -> 4
             3 -> 9
-            else -> {
-                0
-            }
+            else -> 0
         }
 
         chord.add(index, s.toInt() + i)
     }
     chord.sort()
 
+
     val intervals = chord.map { it - chord[0] }.distinct()
 
-    println(intervals)
 
-    if (triads.containsKey(intervals)) {
-        val fond = findFond(chord, type = "triad")
-        return fond.joinToString(" - ") { it + triads[intervals] }
-    }
+    val chordTypes = mapOf(
+        "triad" to triads,
+        "tetrad" to tetrads,
+        "seven" to sevens,
+        "r1" to reversed_1,
+        "r2" to reversed_2,
+        "r3" to reversed_3
+    )
+    val (type, matchingMap) = chordTypes.entries.firstOrNull { it.value.containsKey(intervals) } ?: return context.getString(R.string.no_chord_found_id)
+    val fond = findFond(chord, type = type)
+    val res = fond.joinToString(" - ") { it + matchingMap[intervals] }
+    return res
 
-    if (tetrads.containsKey(intervals)) {
-        val fond = findFond(chord, type = "tetrad")
-        return fond.joinToString(" - ") { it + tetrads[intervals] }
-    }
-
-    if (sevens.containsKey(intervals)) {
-        val fond = findFond(chord, type = "seven")
-        return fond.joinToString(" - ") { it + sevens[intervals] }
-    }
-
-    if (reversed_1.containsKey(intervals)) {
-        val fond = findFond(chord, type = "r1")
-        return fond.joinToString(" - ") { it + reversed_1[intervals] }
-    }
-
-    if (reversed_2.containsKey(intervals)) {
-        val fond = findFond(chord, type = "r2")
-        return fond.joinToString(" - ") { it + reversed_2[intervals] }
-    }
-
-    return context.getString(R.string.no_chord_found_id)
 }
 
 

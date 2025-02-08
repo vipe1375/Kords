@@ -110,6 +110,11 @@ fun getOptions(valid: List<List<Int>>, notes: List<Int>) : List<Pair<Int, List<I
     return options
 }
 
+fun findChord2(name: String): List<Chord> {
+    val results = chordsList.filter { it.name.lowercase() == name }
+    return results
+}
+
 fun findChord(name: String) : List<Chord> {
     val result: MutableList<Pair<Int, List<Int>>> = mutableListOf()
     val splitName = splitName(name)
@@ -124,6 +129,19 @@ fun findChord(name: String) : List<Chord> {
 
     val rootId: Int = stringToValue[root] ?: return result.map { (_, _) -> Chord() }
 
+
+    allIntervals.forEach { (intervals, type) ->
+        if (type == splitName["mod"]) {
+            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
+
+            val valid = getValidFrets(notes)
+
+            val options = getOptions(valid, notes)
+            options.forEach { result.add(it) }
+        }
+    }
+
+    /*
     triads.forEach { (intervals, type) ->
         if (type == splitName["mod"]) {
             val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
@@ -182,6 +200,20 @@ fun findChord(name: String) : List<Chord> {
             options.forEach { result.add(it) }
         }
     }
+
+    reversed_3.forEach { (intervals, type) ->
+        if (type == splitName["mod"]) {
+            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
+
+
+            val valid = getValidFrets(notes)
+
+            val options = getOptions(valid, notes)
+            options.forEach { result.add(it) }
+        }
+    }
+
+    */
 
     // remove duplicates, and sort by score :
     // - if the chord is high on the frets, it will have a higher score

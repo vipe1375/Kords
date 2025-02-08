@@ -29,6 +29,7 @@ import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.allChords
 import com.vipedev.kords.chords.database.findChord
+import com.vipedev.kords.chords.database.findChord2
 import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
 
@@ -117,7 +118,8 @@ class ChordsViewModel(
 
     fun searchChord() {
         visualizedID = 1
-        val result = findChord(chordSearched.lowercase())
+        val result = findChord2(chordSearched.lowercase())
+        println(result)
         //val result = chordsDao.getChordsByName(chordSearched.lowercase())
 
         if (result.isNotEmpty()) {
@@ -151,10 +153,8 @@ class ChordsViewModel(
     }
 
     fun visualizeChord(chord: Chord) {
-
         currentChord = chord.fingers.split("-").toMutableList()
         currentChordName = chord.name
-
 
         if (searchResult.size == 1) {
             showVisualizeButton = false
@@ -162,8 +162,6 @@ class ChordsViewModel(
             resetChordSearched()
             resetSearchResult()
         }
-
-
     }
 
     fun changeVisualizedChord(right: Boolean) {

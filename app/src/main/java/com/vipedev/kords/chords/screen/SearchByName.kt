@@ -105,11 +105,13 @@ fun SearchByName(viewModel: ChordsViewModel) {
 
                     // filtering suggestions (if 2 chords have the same name, show only 1 in the suggestions)
                     val ogMatch = viewModel.getSuggestions().distinct()
-                    val matchingChords = ogMatch.subList(0, min(3, ogMatch.size))
+                    val matchingChords = ogMatch.subList(0, min(3, ogMatch.size)).sortedBy{ it.length }
 
                     if (viewModel.chordSearched.isNotEmpty() && !viewModel.searched && matchingChords.isNotEmpty()) {
 
-                        Suggestions(viewModel = viewModel, matchingChords = matchingChords.toMutableList(), focusManager = focusManager)
+                        Suggestions(viewModel = viewModel,
+                            matchingChords = matchingChords.toMutableList(),
+                            focusManager = focusManager)
 
                     }
                 }
@@ -119,7 +121,7 @@ fun SearchByName(viewModel: ChordsViewModel) {
                     shape = CircleShape,
                     modifier = Modifier.padding(top = 10.dp),
                     content = {
-                        Icon(Icons.Default.Search, contentDescription = "content description", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.Search, contentDescription = "search", tint = MaterialTheme.colorScheme.onPrimary)
                     })
             }
             Spacer(modifier = Modifier.height(20.dp))
@@ -143,7 +145,6 @@ fun SearchByName(viewModel: ChordsViewModel) {
                         if (nbResults > 1) {
                             ChangeChordButton(viewModel = viewModel, right = false)
                         }
-
                         VisualizeButton(nbResults, viewModel)
 
                         if (viewModel.searchResult.size > 1) {
