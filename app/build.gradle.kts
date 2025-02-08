@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.vipedev.kords"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.vipedev.kords"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 5
         versionName = "1.2.3"
 
