@@ -1,0 +1,5 @@
+Kords est un outil pour les joueurs de ukulélé, avec plusieurs fonctionnalités utiles :
+
+  -  Recherche d'accords : Tapez le nom d'un accord et découvrez comment le jouer !
+  -  Détecteur d'accords : Vous savez jouer un accord, mais vous ne vous souvenez plus de son nom ? Indiquez comment vous le jouez, et l'application le retrouvera pour vous !
+  -  Songbook : Enregistrez vos chansons dans l'application avec différents types de structures !

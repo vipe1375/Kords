@@ -1,0 +1,5 @@
+Kords is a tool for ukulele players with multiple useful functionalities:
+
+  -  Chord search: Type the name of a chord and see how you can play it!
+  -  Chord namer: You know how to play a chord but can't remember its name? Enter how you play it, and let the app find its name!
+  -  Songbook: Save songs in the app with multiple structure types!

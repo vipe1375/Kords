@@ -1,0 +1,4 @@
+v1.2.3 :
+- minor bugs fixes
+- update of the chord searching system
+- cleaning of the build files
