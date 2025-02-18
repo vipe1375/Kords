@@ -1,0 +1,2 @@
+amélioration de l'affichage des suggestions
+ajout de nouveaux types d'accords

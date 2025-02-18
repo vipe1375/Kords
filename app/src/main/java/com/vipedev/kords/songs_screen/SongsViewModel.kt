@@ -53,21 +53,43 @@ class SongsViewModel (
         context.getString(R.string.section_outro),
         context.getString(R.string.section_bridge))
 
+    val sectionTypes: List<String> = mutableListOf(
+        "Intro",
+        "Chorus",
+        "Verse",
+        "Solo",
+        "Outro",
+        "Bridge"
+    )
+
+    // name of the section
     var currentStructType by mutableStateOf("")
 
     var currentChords by mutableStateOf("")
 
     var structDropdownState by mutableStateOf(false)
 
+    // map<String, String> = "1 1: ["G", ...]
     var struct : MutableMap<String, String> = mutableMapOf()
 
     var songs : LiveData<List<Song>> = dao.getSongs_Artist()
 
     private var duplicableStructTypes = mutableMapOf(
-        context.getString(R.string.section_chorus) to 1,
-        context.getString(R.string.section_verse) to 1,
-        context.getString(R.string.section_bridge) to 1,
-        context.getString(R.string.section_solo) to 1)
+        "Chorus" to 1,
+        "Verse" to 1,
+        "Bridge" to 1,
+        "Solo" to 1)
+
+    /*
+    fun getSectionName(sectionID: Int) : String? {
+        return structTypes2[sectionID]
+    }*/
+
+    /*
+    fun getSectionId(sectionName: String) : Int? {
+        val invertedStructTypes = structTypes2.entries.associateBy({ it.value }) { it.key }
+        return invertedStructTypes[sectionName]
+    }*/
 
     fun updateIsEditingSong(value: Boolean) {
         isEditingSong = value
@@ -107,7 +129,8 @@ class SongsViewModel (
             duplicableStructTypes[currentStructType] = duplicableStructTypes[currentStructType]!! + 1
         }
         else {
-            struct[currentStructType] = currentChords
+            // not duplicable section type, so no need for a number after the section name
+            struct[currentStructType.toString()] = currentChords
         }
         currentChords = ""
         currentStructType = ""
@@ -171,10 +194,10 @@ class SongsViewModel (
         titleField = ""
         artistField = ""
         duplicableStructTypes = mutableMapOf(
-            context.getString(R.string.section_chorus) to 1,
-            context.getString(R.string.section_verse) to 1,
-            context.getString(R.string.section_bridge) to 1,
-            context.getString(R.string.section_solo) to 1)
+            "Chorus" to 1,
+            "Verse" to 1,
+            "Bridge" to 1,
+            "Solo" to 1)
     }
 
     fun resetCurrentSong() {
@@ -192,9 +215,9 @@ class SongsViewModel (
         println(duplicableStructTypes)
         struct.keys.forEach { structElt ->
             // split structElt to get only the type of element, not the number
-            val _structElt: String = structElt.split(" ")[0]
-            if (_structElt in duplicableStructTypes) {
-                duplicableStructTypes[_structElt] = duplicableStructTypes[_structElt]!! + 1
+            val sectionType = structElt.split(" ")[0]
+            if (sectionType in duplicableStructTypes) {
+                duplicableStructTypes[sectionType] = duplicableStructTypes[sectionType]!! + 1
             }
         }
     }

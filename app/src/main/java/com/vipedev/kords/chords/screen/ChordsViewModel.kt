@@ -117,6 +117,7 @@ class ChordsViewModel(
     }
 
     fun searchChord() {
+        showVisualizeButton = false
         visualizedID = 1
         val result = findChord2(chordSearched.lowercase())
         println(result)
@@ -148,8 +149,8 @@ class ChordsViewModel(
                 result.add(chord)
             }
         }
-
-        return result
+        val sorted = result.sortedBy { it.length }
+        return sorted
     }
 
     fun visualizeChord(chord: Chord) {

@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 import com.vipedev.kords.songs_screen.database.Song
 
+
 @Composable
 fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
 
@@ -147,10 +148,24 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
 
             //    STRUCTURE     //
             song.structure.forEach { (section, chords) ->
+                // split section (looking like "Chorus 1") into a section name and a number
+                // (name is always in french, no matter the app language)
+                val sectionSplit = section.split(" ")
+                val sectionNameEn: String = sectionSplit[0]
+                val number = if (sectionSplit.size > 1) " ${sectionSplit[1]}" else ""
+                val sectionName = when(sectionNameEn) {
+                    "Refrain" -> stringResource(id = R.string.section_chorus) + number
+                    "Couplet" -> stringResource(id = R.string.section_verse) + number
+                    "Pont" -> stringResource(id = R.string.section_bridge) + number
+                    "Solo" -> stringResource(id = R.string.section_solo) + number
+                    "Intro" -> stringResource(id = R.string.section_intro) + number
+                    "Outro" -> stringResource(id = R.string.section_outro) + number
+                    else -> ""
+                }
 
                 // section header
                 Text(
-                    text = section,
+                    text = sectionName,
                     modifier = Modifier
                         .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.bodyMedium,

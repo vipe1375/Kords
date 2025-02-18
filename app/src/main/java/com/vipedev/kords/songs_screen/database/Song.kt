@@ -28,7 +28,7 @@ data class Song(
 
     val title: String,
     val artist: String,
-    val structure: Map<String, List<String>>, // "Intro": ["G", "E", "A"], ...
+    val structure: Map<String, List<String>>, // 1: ["G", "E", "A"], ...
 
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
