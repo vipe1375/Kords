@@ -73,4 +73,14 @@
     <string name="contact_issues">Ou laissez un issue sur GitHub &amp; GitLab !</string>
     <string name="edit_song_header">Modifier une chanson</string>
     <string name="song_view_header">Chanson</string>
+    <string name="sorting_type_label">Trier par : %s</string>
+    <string name="sorting_type_artist">artiste</string>
+    <string name="sorting_type_title">titre</string>
+    <string name="sorting_type_date">date</string>
+    <string name="delete_song_dialog_header">Supprimer une chanson</string>
+    <string name="delete_section_dialog_header">Supprimer une section</string>
+    <string name="delete_song_dialog_text">Êtes-vous sûr.e de vouloir supprimer cette chanson ?</string>
+    <string name="delete_section_dialog_text">Êtes-vous sûr.e de vouloir supprimer cette section ?</string>
+    <string name="confirm_button_text">Confirmer</string>
+    <string name="cancel_button_text">Annuler</string>
 </resources>

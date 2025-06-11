@@ -78,5 +78,15 @@
     <string name="contact_issues">Or leave an issue on GitHub &amp; GitLab !</string>
     <string name="edit_song_header">Edit a song</string>
     <string name="song_view_header">Song</string>
+    <string name="sorting_type_label">Sort by : %s</string>
+    <string name="sorting_type_artist">artist</string>
+    <string name="sorting_type_title">title</string>
+    <string name="sorting_type_date">date</string>
+    <string name="delete_song_dialog_header">Delete a song</string>
+    <string name="delete_section_dialog_header">Delete a section</string>
+    <string name="delete_song_dialog_text">Are you sure you want to delete this song ?</string>
+    <string name="delete_section_dialog_text">Are you sure you want to delete this section ?</string>
+    <string name="confirm_button_text">Confirm</string>
+    <string name="cancel_button_text">Cancel</string>
 
 </resources>

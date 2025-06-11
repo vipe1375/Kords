@@ -109,9 +109,50 @@ fun getOptions(valid: List<List<Int>>, notes: List<Int>) : List<Pair<Int, List<I
 
     return options
 }
+fun findRoot(name: String): Pair<String, Int> {
+    if (name.length == 1) {
+        return if (name in equivalentRoots) {
+            Pair(equivalentRoots[name].toString(), 1)
+        } else { Pair(name, 1) }
+    }
 
+    // length > 2
+    val (root, index) = if (name[1] == 'b' || name[1] == '#') {
+        Pair(name.slice(0..1), 2)
+    }
+    else {
+        Pair(name.slice(0..0), 1)
+    }
+    return if (root in equivalentRoots) {
+        Pair(equivalentRoots[root].toString(), index)
+    } else { Pair(root, index) }
+}
 fun findChord2(name: String): List<Chord> {
-    val results = chordsList.filter { it.name.lowercase() == name }
+    // find root of the chord
+    val (root, nonRootIndex) = findRoot(name)
+
+    val trueName = if (nonRootIndex >= name.length) {
+        root
+    }
+    else {
+        root + name.slice(nonRootIndex..name.length)
+    }
+    val results = when (root) {
+        "a"  -> chordsListA.filter { it.name.lowercase() == trueName }
+        "a#" -> chordsListAd.filter { it.name.lowercase() == trueName }
+        "b"  -> chordsListB.filter { it.name.lowercase() == trueName }
+        "c"  -> chordsListC.filter { it.name.lowercase() == trueName }
+        "c#" -> chordsListCd.filter { it.name.lowercase() == trueName }
+        "d"  -> chordsListD.filter { it.name.lowercase() == trueName }
+        "d#" -> chordsListDd.filter { it.name.lowercase() == trueName }
+        "e"  -> chordsListE.filter { it.name.lowercase() == trueName }
+        "f"  -> chordsListF.filter { it.name.lowercase() == trueName }
+        "f#" -> chordsListFd.filter { it.name.lowercase() == trueName }
+        "g"  -> chordsListG.filter { it.name.lowercase() == trueName }
+        "g#" -> chordsListGd.filter { it.name.lowercase() == trueName }
+        else -> listOf()
+    }
+
     return results
 }
 

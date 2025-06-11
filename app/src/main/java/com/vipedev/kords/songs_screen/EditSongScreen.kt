@@ -38,6 +38,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -233,15 +234,34 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                             "Outro" -> stringResource(id = R.string.section_outro) + number
                             else -> ""
                         }
-                        
-                        Text(
-                            text = sectionName,
-                            modifier = Modifier
-                                .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                text = sectionName,
+                                modifier = Modifier
+                                    .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+
+                            TextButton(
+                                onClick = {
+                                    viewModel.sectionToDelete = section
+                                    viewModel.chordsToDelete = chords
+                                    viewModel.showDeleteSectionDialog = true
+                                },
+                                modifier = Modifier.align(Alignment.CenterEnd)
+                            ) {
+                                Icon(Icons.Default.Delete,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary)
+                            }
+                        }
+
 
                         TextField(
                             value = newChords,
@@ -269,7 +289,8 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                                     viewModel.struct[section] = newChords
                                     focusManager.clearFocus()
                                 } else {
-                                    viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
+                                    viewModel.showDeleteSectionDialog = true
+                                    //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
                                 }
                             })
                         )
@@ -280,9 +301,9 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
 
             //     CURRENT STRUCTURE ELEMENT     //
 
-            if (viewModel.currentStructType.isNotEmpty()) {
+            if (viewModel.currentSection.isNotEmpty()) {
                 Text(
-                    text = viewModel.currentStructType,
+                    text = viewModel.currentSection,
                     modifier = Modifier.padding(top = 16.dp, bottom = 5.dp, start = 20.dp)
                 )
 
@@ -311,12 +332,21 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                         if (viewModel.currentChords.isNotBlank()) {
                             viewModel.addStructItem()
                             focusManager.clearFocus()
+                            println("not blank")
                         }
                         else {
-                            viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
+                            println("blank")
+                            viewModel.showDeleteSectionDialog = true
+                            //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
                         }
                     })
                 )
+
+
+            }
+
+            if (viewModel.showDeleteSectionDialog) {
+                DeleteDialog(viewModel, context)
             }
 
             //     STRUCTURE TYPE DROPDOWN      //
@@ -333,18 +363,18 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                 Text(text = stringResource(R.string.create_song_choose_type))
 
                 DropdownMenu(
-                    expanded = viewModel.structDropdownState,
+                    expanded = viewModel.sectionDropdownState,
                     onDismissRequest = { viewModel.updateStructDropdownState(false) },
                     modifier = Modifier
                         .size(width = 265.dp, height = 305.dp),
                     offset = DpOffset(0.dp, 8.dp)
                 ) {
-                    viewModel.structTypes.forEach { struct ->
+                    viewModel.sectionTypes.forEach { section ->
                         DropdownMenuItem(
-                            text = {Text(text = struct)},
+                            text = {Text(text = section)},
                             onClick = {
                                 //viewModel.struct[struct] = ""
-                                viewModel.updateCurrentStructType(struct)
+                                viewModel.updateCurrentStructType(section)
                                 viewModel.updateStructDropdownState(false)
 
                             })
@@ -352,8 +382,8 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(500.dp))
-            Text(text = stringResource(R.string.create_song_choose_type))
+            //Spacer(modifier = Modifier.height(500.dp))
+            // Text(text = stringResource(R.string.create_song_choose_type))
         }
     }
 }

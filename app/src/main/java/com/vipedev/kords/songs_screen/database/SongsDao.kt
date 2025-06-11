@@ -37,13 +37,7 @@ interface SongsDao {
     @Delete
     suspend fun deleteSong(song: Song)
 
-    @Query("SELECT * FROM Song ORDER BY id DESC")
-    fun getSongs_Id(): LiveData<List<Song>>
-
-    @Query("SELECT * FROM Song ORDER BY artist ASC")
-    fun getSongs_Artist(): LiveData<List<Song>>
-
-    @Query("SELECT * FROM Song ORDER BY title ASC")
-    fun getSongs_Title(): LiveData<List<Song>>
+    @Query("SELECT * FROM Song")
+    fun getAllSongs(): LiveData<List<Song>>
 
 }

@@ -70,7 +70,7 @@ fun SearchByName(viewModel: ChordsViewModel) {
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                //verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 // text field and list of suggestions
@@ -91,14 +91,15 @@ fun SearchByName(viewModel: ChordsViewModel) {
                         modifier = Modifier
                             .width(200.dp)
                             .height(60.dp),
-                        shape = RoundedCornerShape(30.dp),
+                        shape = RoundedCornerShape(10.dp),
                         textStyle = MaterialTheme.typography.labelLarge,
                         colors = OutlinedTextFieldDefaults.colors(
                             unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
                             focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
                             focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
                             unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ),
+                        singleLine = true
                     )
 
                     // List of suggestions

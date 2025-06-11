@@ -30,11 +30,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -73,15 +78,77 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
 
-                // title
+                // title bar
                 item {
-                    Text(
-                        text = stringResource(id = R.string.songs_nav_item),
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth()
                     )
+                    {
+                        // title
+                        Text(
+                            text = stringResource(id = R.string.songs_nav_item),
+                            modifier = Modifier
+                                .padding(20.dp),
+                            textAlign = TextAlign.Center
+                        )
+
+
+                    }
+                }
+
+                item {
+                    Box(
+                        contentAlignment = Alignment.CenterStart,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // sorting type
+                        OutlinedButton(
+                            onClick = {
+                                viewModel.updateSortingType()
+                            },
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.Sort,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimary)
+                            val sortingType: String = when (viewModel.sortingType.value) {
+                                0 -> stringResource(R.string.sorting_type_artist)
+                                1 -> stringResource(R.string.sorting_type_title)
+                                2 -> stringResource(R.string.sorting_type_date)
+                                else -> stringResource(R.string.sorting_type_artist)
+                            }
+                            Text(
+                                text = stringResource(R.string.sorting_type_label, sortingType),
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                textAlign = TextAlign.Start,
+                                maxLines = 1
+                            )
+                        }
+
+                        // sorting type
+                        TextButton(
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                            onClick = {
+                                viewModel.updateSortingOrder()
+                            }
+                        ) {
+                            if (viewModel.sortAsc.value) {
+                                Icon(
+                                    Icons.Default.ArrowUpward,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary)
+                            }
+                            else {
+                                Icon(
+                                    Icons.Default.ArrowDownward,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary)
+                            }
+                        }
+                    }
                 }
 
                 // list of songs
@@ -141,13 +208,20 @@ fun SongsListScreen(viewModel: SongsViewModel) {
 
                                 // delete icon
                                 TextButton(
-                                    onClick = { viewModel.deleteSong(song = song, context = context) },
+                                    onClick = {
+                                        viewModel.songToDelete = song
+                                        viewModel.showDeleteSongDialog = true
+                                        println(song.title)
+                                    },
                                     //modifier = Modifier.align(Alignment.CenterEnd)
                                 ) {
                                     Icon(Icons.Default.Delete,
                                         contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onPrimary)
                                 }
+
+                                //println("here : ${viewModel.showDeleteSongDialog}, ${viewModel.showDeleteSectionDialog}")
+
                             }
 
                         }
@@ -211,12 +285,12 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                 }
             }
         }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
+        if (viewModel.showDeleteSongDialog) {
+            DeleteDialog(
+                viewModel = viewModel,
+                context = context
+            )
         }
+
     }
 }

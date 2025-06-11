@@ -18,6 +18,7 @@
 
 package com.vipedev.kords.songs_screen
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 import com.vipedev.kords.songs_screen.database.Song
@@ -103,7 +105,11 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                     }
 
                     TextButton(
-                        onClick = { viewModel.deleteSong(song, context = context) },
+                        onClick = {
+                            viewModel.songToDelete = song
+                            viewModel.showDeleteSongDialog = true
+
+                        },
                     ) {
                         Icon(Icons.Default.Delete, contentDescription = null)
                     }
@@ -112,6 +118,13 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 }
 
 
+            }
+
+            if (viewModel.showDeleteSongDialog) {
+                DeleteDialog(
+                    viewModel = viewModel,
+                    context = context
+                )
             }
 
             //     TITLE     //
@@ -175,16 +188,17 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
 
                 // chords
                 LazyRow (
-                    modifier = Modifier.padding(horizontal = 20.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth()
                 ){
                     items(chords) { chord ->
                         Text(text = "$chord  ",
-                            style = MaterialTheme.typography.bodySmall)
+                            style = MaterialTheme.typography.bodySmall,
+                            overflow = TextOverflow.Ellipsis)
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }

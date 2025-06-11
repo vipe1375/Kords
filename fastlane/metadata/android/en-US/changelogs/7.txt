@@ -1,0 +1,5 @@
+fix search for some b chords
+add songs sorting
+fix UI bugs
+add confirmation when deleting a section from a song
+add confirmation when deleting a song

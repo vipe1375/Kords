@@ -1,0 +1,5 @@
+la recherche d'accords est réparée pour les accords bémol
+ajout du tri des chansons sauvegardées
+réparation de bugs de l'interface
+ajout d'une confirmation lors de la suppression d'une section d'une chansons
+ajout d'une confirmation lors de la suppression d'une chanson

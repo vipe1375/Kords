@@ -43,6 +43,8 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.vipedev.kords.chords.screen.ChordsViewModel
 import com.vipedev.kords.settings_screen.SettingsViewModel
@@ -90,6 +92,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+            // user settings
             val dataStore = StorePreferences(LocalContext.current)
             val useSystemTheme : Boolean = dataStore.getUseSystemTheme.collectAsState(initial = true).value!!
             val useDarkTheme : Boolean = dataStore.getUseDarkTheme.collectAsState(initial = true).value!!
@@ -98,6 +101,7 @@ class MainActivity : ComponentActivity() {
             } else {
                 useDarkTheme
             }
+
             KordsJetpackTheme (darkTheme = darkTheme) {
                 val items = listOf(
                     BottomNavigationItem(title = stringResource(id = R.string.chords_nav_item),
@@ -114,44 +118,12 @@ class MainActivity : ComponentActivity() {
                         hasNews = true)
                 )
 
-
-/*
-
-                val autoDownload: Boolean = dataStore.getAutoDownload.collectAsState(initial = true).value!!
-                println(autoDownload)
-*/
-/*
-
-                // var isLoading by rememberSaveable { mutableStateOf(autoDownload) }
-                var isLoading by rememberSaveable { mutableStateOf(true) }
-
-                LaunchedEffect(isLoading) // Unit is the key which determines when the effect should be run
-                {
-                    val dataSnapshot: DataSnapshot? = fetchChordsData()
-
-                    if (dataSnapshot == null) {
-                        delay(5.seconds)
-                    } else {
-                        if (!updated) {
-                            chordsDao.initChordList(convertToChords(dataSnapshot))
-                            updated = true
-                        }
-
-                    }
-
-                    isLoading = false
-                }
-
-                if (isLoading) {
-                    LoadingScreen()
-                } else {
-
-                }
-*/
-
+                // ViewModels
                 val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this))
                 val settingsViewModel = SettingsViewModel(dataStore = dataStore)
                 val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, this))
+
+                // Navigation
                 MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
 
             }

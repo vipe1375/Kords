@@ -18,6 +18,18 @@
 
 package com.vipedev.kords.chords.database
 
+val equivalentRoots: Map<String, String> = mapOf(
+    "ab" to "a#",
+    "ab" to "a#",
+    "cb" to "b",
+    "b#" to "c",
+    "db" to "c#",
+    "eb" to "d#",
+    "fb" to "f",
+    "e#" to "f",
+    "gb" to "f#"
+)
+
 val triads: Map<List<Int>, String> = mapOf(
     listOf(0, 4, 7) to "",
     listOf(0, 4, 8) to "aug",
@@ -87,7 +99,7 @@ val stringToValue : Map<String, Int> = mapOf(
 
 val allChords : MutableList<String> = stringToValue.keys.flatMap { root -> chordTypes.map { root + it }}.toMutableList()
 
-val chordsList: List<Chord> = listOf(
+val chordsListA: List<Chord> = listOf(
     Chord("A", "2-1-0-0"),
     Chord("A", "2-1-0-4"),
     Chord("A", "2-4-0-4"),
@@ -116,7 +128,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Amaj7", "1-1-0-0"),
     Chord("Amaj7", "1-1-4-0"),
     Chord("Amaj7", "1-1-0-4"),
-    Chord("Amaj7", "2-4-4-4"),
+    Chord("Amaj7", "2-4-4-4"))
+
+val chordsListAd: List<Chord> = listOf(
     Chord("A#", "3-2-1-1"),
     Chord("A#7", "1-2-1-1"),
     Chord("A#7sus4", "1-3-1-1"),
@@ -140,7 +154,9 @@ val chordsList: List<Chord> = listOf(
     Chord("A#maj7", "3-2-1-0"),
     Chord("A#maj7", "2-2-1-1"),
     Chord("A#maj7", "2-2-1-0"),
-    Chord("A#sus4", "3-3-1-1"),
+    Chord("A#sus4", "3-3-1-1"))
+
+val chordsListB: List<Chord> = listOf(
     Chord("B", "4-3-2-2"),
     Chord("B7", "2-3-2-2"),
     Chord("B7", "4-3-2-0"),
@@ -164,7 +180,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Bm7b5", "2-2-1-0"),
     Chord("Bmaj7", "3-3-2-2"),
     Chord("Bmaj7", "4-3-2-1"),
-    Chord("Bsus4", "4-4-2-2"),
+    Chord("Bsus4", "4-4-2-2"))
+
+val chordsListC: List<Chord> = listOf(
     Chord("C", "0-0-0-3"),
     Chord("C", "0-4-0-3"),
     Chord("C", "0-4-3-3"),
@@ -194,7 +212,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Cmaj7", "4-0-0-2"),
     Chord("Cmaj7", "0-4-0-2"),
     Chord("Csus4", "0-0-1-3"),
-    Chord("Csus2", "0-2-3-3"),
+    Chord("Csus2", "0-2-3-3"))
+
+val chordsListCd: List<Chord> = listOf(
     Chord("C#", "1-1-1-4"),
     Chord("C#5", "1-1-4-4"),
     Chord("C#7", "1-1-1-2"),
@@ -225,8 +245,9 @@ val chordsList: List<Chord> = listOf(
     Chord("C#maj7", "1-1-1-3"),
     Chord("C#maj7", "1-0-1-3"),
     Chord("C#sus4", "1-1-2-4"),
-    Chord("C#sus2", "1-3-4-4"),
+    Chord("C#sus2", "1-3-4-4"))
 
+val chordsListD: List<Chord> = listOf(
     Chord("D", "2-2-2-0"),
     Chord("D7", "2-2-2-3"),
     Chord("D7", "2-0-2-0"),
@@ -245,8 +266,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Dmaj7", "2-1-2-4"),
     Chord("Dmaj7", "2-1-2-0"),
     Chord("Dsus4", "0-2-3-0"),
-    Chord("Dsus4", "2-2-3-0"),
+    Chord("Dsus4", "2-2-3-0"))
 
+val chordsListDd: List<Chord> = listOf(
     Chord("D#", "0-3-3-1"),
     Chord("D#", "3-3-3-1"),
     Chord("D#7", "3-3-3-4"),
@@ -264,8 +286,9 @@ val chordsList: List<Chord> = listOf(
     Chord("D#sus4", "1-3-4-1"),
     Chord("D#sus4", "3-3-4-1"),
     Chord("D#sus2", "3-3-1-1"),
-    Chord("D#7sus2", "3-3-1-4"),
+    Chord("D#7sus2", "3-3-1-4"))
 
+val chordsListE: List<Chord> = listOf(
     Chord("E", "1-4-0-2"),
     Chord("E", "1-4-4-2"),
     Chord("E", "4-4-4-2"),
@@ -295,8 +318,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Esus4", "2-4-0-2"),
     Chord("Esus4", "4-4-0-0"),
     Chord("Esus2", "4-4-2-2"),
-    Chord("E7sus2", "4-4-2-5"),
+    Chord("E7sus2", "4-4-2-5"))
 
+val chordsListF: List<Chord> = listOf(
     Chord("F", "2-0-1-0"),
     Chord("F", "2-0-1-3"),
     Chord("F7", "2-3-1-3"),
@@ -313,8 +337,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Fsus4", "3-0-1-1"),
     Chord("Fsus4", "3-0-1-3"),
     Chord("Fsus2", "0-0-1-3"),
-    Chord("F7sus2", "0-3-1-3"),
+    Chord("F7sus2", "0-3-1-3"))
 
+val chordsListFd: List<Chord> = listOf(
     Chord("F#", "3-1-2-1"),
     Chord("F#", "3-1-2-4"),
     Chord("F#7", "3-4-2-4"),
@@ -332,8 +357,9 @@ val chordsList: List<Chord> = listOf(
     Chord("F#sus4", "4-1-2-2"),
     Chord("F#sus4", "4-1-2-4"),
     Chord("F#sus2", "1-1-2-4"),
-    Chord("F#7sus2", "1-4-2-4"),
+    Chord("F#7sus2", "1-4-2-4"))
 
+val chordsListG: List<Chord> = listOf(
     Chord("G", "0-2-3-2"),
     Chord("G", "4-2-3-2"),
     Chord("G7", "0-2-1-2"),
@@ -351,8 +377,9 @@ val chordsList: List<Chord> = listOf(
     Chord("Gmaj7", "0-2-2-2"),
     Chord("Gsus4", "0-2-3-3"),
     Chord("Gsus2", "0-2-3-0"),
-    Chord("G7sus2", "0-2-1-0"),
+    Chord("G7sus2", "0-2-1-0"))
 
+val chordsListGd: List<Chord> = listOf(
     Chord("G#", "1-3-4-3"),
     Chord("G#7", "1-3-2-3"),
     Chord("G#7sus4", "1-3-2-4"),
@@ -370,3 +397,5 @@ val chordsList: List<Chord> = listOf(
     Chord("G#sus2", "1-3-4-1"),
     Chord("Csus2", "1-3-2-1"),
 )
+
+val chordsList: List<Chord> = chordsListA + chordsListAd + chordsListB + chordsListC + chordsListCd + chordsListD + chordsListDd + chordsListE + chordsListF + chordsListFd + chordsListG + chordsListGd

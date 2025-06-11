@@ -14,8 +14,8 @@ android {
         applicationId = "com.vipedev.kords"
         minSdk = 24
         targetSdk = 35
-        versionCode = 6
-        versionName = "1.2.4"
+        versionCode = 7
+        versionName = "1.2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.plus(listOf("en", "fr"))
@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
