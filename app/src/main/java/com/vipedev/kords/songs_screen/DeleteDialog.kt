@@ -64,7 +64,8 @@ fun DeleteDialog(viewModel: SongsViewModel, context: Context) {
         AlertDialog(
             onDismissRequest = onDismiss,
             title = { Text(text = titleText) },
-            text = { Text(text = messageText) },
+            text = { Text(text = messageText,
+                style = MaterialTheme.typography.bodySmall) },
             confirmButton = {
                 Button(onClick = onConfirm) {
                     Text(stringResource(R.string.confirm_button_text), color = MaterialTheme.colorScheme.onPrimary)
