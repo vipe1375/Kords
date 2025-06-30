@@ -19,8 +19,8 @@
 package com.vipedev.kords.chords.database
 
 val equivalentRoots: Map<String, String> = mapOf(
-    "ab" to "a#",
-    "ab" to "a#",
+    "ab" to "g#",
+    "bb" to "a#",
     "cb" to "b",
     "b#" to "c",
     "db" to "c#",
@@ -78,6 +78,7 @@ val chordTypes: List<String> = listOf("add9", "m7b5", "maj7", "aug", "dim", "m7"
 val stringTones = listOf(7, 0, 4, 9)
 
 val stringToValue : Map<String, Int> = mapOf(
+    "Cb" to 11,
     "C" to 0,
     "C#" to 1,
     "Db" to 1,
@@ -94,7 +95,8 @@ val stringToValue : Map<String, Int> = mapOf(
     "A" to 9,
     "A#" to 10,
     "Bb" to 10,
-    "B" to 11
+    "B" to 11,
+    "B#" to 0
 )
 
 val allChords : MutableList<String> = stringToValue.keys.flatMap { root -> chordTypes.map { root + it }}.toMutableList()

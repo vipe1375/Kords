@@ -135,7 +135,7 @@ fun findChord2(name: String): List<Chord> {
         root
     }
     else {
-        root + name.slice(nonRootIndex..name.length)
+        root + name.slice(nonRootIndex..<name.length)
     }
     val results = when (root) {
         "a"  -> chordsListA.filter { it.name.lowercase() == trueName }

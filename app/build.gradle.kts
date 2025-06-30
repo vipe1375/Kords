@@ -14,8 +14,8 @@ android {
         applicationId = "com.vipedev.kords"
         minSdk = 24
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.2.7"
+        versionCode = 10
+        versionName = "1.2.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.plus(listOf("en", "fr"))
