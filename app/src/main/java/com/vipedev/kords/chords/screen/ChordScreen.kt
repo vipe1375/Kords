@@ -19,6 +19,7 @@
 package com.vipedev.kords.chords.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -36,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 
@@ -43,7 +46,7 @@ import com.vipedev.kords.R
 fun ChordScreen(viewModel: ChordsViewModel) {
 
     Surface(
-        color = MaterialTheme.colorScheme.surface
+        color = MaterialTheme.colorScheme.background
     ) {
         // SEARCH BY NAME SURFACE
 
@@ -60,12 +63,47 @@ fun ChordScreen(viewModel: ChordsViewModel) {
             SearchByName(viewModel)
 
 
-            //          SEPARATOR         //
-            Separator(text = stringResource(id = R.string.or_spacer))
-            Spacer(modifier = Modifier.height(12.dp))
-
-
             //          SEARCH A CHORD BY ID SURFACE         //
+
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Row (
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    Text(
+                        text = stringResource(id = R.string.current_chord_text),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onTertiary,
+                        textAlign = TextAlign.Center,
+                    )
+
+                    Text(
+                        text = viewModel.currentChordName,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                }
+                Text(
+                    text = viewModel.extraChordNames,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                         .align(Alignment.CenterEnd)
+                        .padding(end = 60.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            VisualizeButton(viewModel)
+
             SearchByID(viewModel)
 
         }

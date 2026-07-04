@@ -34,21 +34,23 @@ import com.vipedev.kords.R
 
 @Composable
 fun VisualizeButton(
-    nbResults: Int,
     viewModel: ChordsViewModel
 ) {
-    Button(modifier = Modifier
-        .padding(horizontal = 20.dp),
+    Button(
+        modifier = Modifier
+            .padding(horizontal = 20.dp),
+        enabled = viewModel.showVisualizeButton,
         onClick = {
-            if (nbResults > 1) {
+            if (viewModel.searchResult.size == 1) {
+                val visualizedChord = viewModel.searchResult[0]
+                viewModel.visualizeChord(visualizedChord)
+            }
+            else {
                 val visualizedChord = viewModel.searchResult[viewModel.visualizedID - 1]
                 viewModel.visualizeChord(visualizedChord)
-
-            } else {
-                viewModel.visualizeChord(viewModel.searchResult[0])
-
+                viewModel.changeVisualizedChord()
             }
-            //focusManager.clearFocus()
+
 
         },
         content = {
@@ -63,6 +65,7 @@ fun VisualizeButton(
         })
 }
 
+/*
 @Composable
 fun ChangeChordButton(viewModel: ChordsViewModel, right: Boolean) {
     Button(onClick = { viewModel.changeVisualizedChord(right = right) },
@@ -76,4 +79,4 @@ fun ChangeChordButton(viewModel: ChordsViewModel, right: Boolean) {
         }
 
     }
-}
+}*/

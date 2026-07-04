@@ -19,6 +19,7 @@
 package com.vipedev.kords
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
@@ -121,7 +122,7 @@ class MainActivity : ComponentActivity() {
                 // ViewModels
                 val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this))
                 val settingsViewModel = SettingsViewModel(dataStore = dataStore)
-                val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, this))
+                val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, application))
 
                 // Navigation
                 MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
@@ -136,7 +137,7 @@ class ChordsViewModelFactory(private val context: Context) :
     override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(context) as T
 }
 
-class SongsViewModelFactory(private val db: SongsDao, private val context: Context) :
+class SongsViewModelFactory(private val db: SongsDao, private val application: Application) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, context) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, application) as T
 }

@@ -110,6 +110,7 @@ fun getOptions(valid: List<List<Int>>, notes: List<Int>) : List<Pair<Int, List<I
     return options
 }
 fun findRoot(name: String): Pair<String, Int> {
+    if (name.isEmpty()) return Pair("", 0)
     if (name.length == 1) {
         return if (name in equivalentRoots) {
             Pair(equivalentRoots[name].toString(), 1)
@@ -135,7 +136,7 @@ fun findChord2(name: String): List<Chord> {
         root
     }
     else {
-        root + name.slice(nonRootIndex..name.length)
+        root + name.substring(nonRootIndex)
     }
     val results = when (root) {
         "a"  -> chordsListA.filter { it.name.lowercase() == trueName }
@@ -259,9 +260,10 @@ fun findChord(name: String) : List<Chord> {
     // remove duplicates, and sort by score :
     // - if the chord is high on the frets, it will have a higher score
     // - if the chord has a big spacing between frets, it will have a bad score
-    return result
+    val finalResults = result
         .distinct()
         .sortedBy { (score, _) -> score }
         .map { (_, fingers) -> Chord(name = name, fingers = fingers.joinToString("-")) }
-        .subList(0, 5)
+    
+    return finalResults.subList(0, minOf(5, finalResults.size))
 }

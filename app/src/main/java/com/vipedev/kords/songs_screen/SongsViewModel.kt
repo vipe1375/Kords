@@ -18,18 +18,19 @@
 
 package com.vipedev.kords.songs_screen
 
+import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vipedev.kords.R
@@ -39,39 +40,36 @@ import kotlinx.coroutines.launch
 
 class SongsViewModel (
     private val dao: SongsDao,
-    private val context: Context
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val context: Context get() = getApplication<Application>().applicationContext
 
     // SONG CREATION & EDITION
-    var isEditingSong by mutableStateOf(false) // is the user editing a song
+    var isEditingSong by mutableStateOf(false)
 
-    var currentSong: Song? by mutableStateOf(null) // the song displayed or edited
+    var currentSong: Song? by mutableStateOf(null)
 
-    var titleField by mutableStateOf("") // value of "Title" field while editing
+    var titleField by mutableStateOf("")
 
-    var artistField by mutableStateOf("") // value of "Artist" field while editing
+    var artistField by mutableStateOf("")
 
-    val sectionTypes: List<String> = mutableListOf( // possible section types
-        context.getString(R.string.section_intro),
-        context.getString(R.string.section_chorus),
-        context.getString(R.string.section_verse),
-        context.getString(R.string.section_solo),
-        context.getString(R.string.section_outro),
-        context.getString(R.string.section_bridge))
+    // Use stable internal keys for logic and storage
+    val sectionTypes = listOf("Intro", "Couplet", "Refrain", "Solo", "Outro", "Pont")
 
-    private var duplicableSectionTypes = mutableMapOf( // section types that are duplicable
-        "Chorus" to 1,
-        "Verse" to 1,
-        "Bridge" to 1,
+    private var duplicableSectionTypes = mutableMapOf(
+        "Couplet" to 1,
+        "Refrain" to 1,
+        "Pont" to 1,
         "Solo" to 1)
 
-    var currentSection by mutableStateOf("") // section type being edited
+    var currentSection by mutableStateOf("") // Holds the stable key (e.g. "Chorus")
 
-    var currentChords by mutableStateOf("") // chords of the current section
+    var currentChords by mutableStateOf("")
 
-    var sectionDropdownState by mutableStateOf(false) // state of the Dropdown menu to create a new section
+    var sectionDropdownState by mutableStateOf(false)
 
-    var struct : MutableMap<String, String> = mutableMapOf() // structure of the current song
+    val struct = mutableStateMapOf<String, String>()
 
     fun updateIsEditingSong(value: Boolean) {
         isEditingSong = value
@@ -100,17 +98,12 @@ class SongsViewModel (
     }
 
     fun addStructItem() {
-
         if (currentSection in duplicableSectionTypes.keys) {
-            // if the struct type is duplicable, adds a number after the struct type name
-            // ex : chorus -> chorus 1, 2...
-            struct["$currentSection ${duplicableSectionTypes[currentSection]}"] = currentChords
-
-            // updating the number of the struct type
-            duplicableSectionTypes[currentSection] = duplicableSectionTypes[currentSection]!! + 1
+            val count = duplicableSectionTypes[currentSection] ?: 1
+            struct["$currentSection $count"] = currentChords
+            duplicableSectionTypes[currentSection] = count + 1
         }
         else {
-            // not duplicable section type, so no need for a number after the section name
             struct[currentSection] = currentChords
         }
         currentChords = ""
@@ -127,24 +120,17 @@ class SongsViewModel (
     }
 
     suspend fun saveSong(title: String, artist: String, structure: Map<String, String>, context: Context, song: Song? = null) {
-
         if (title.isNotEmpty() && artist.isNotEmpty() && structure.isNotEmpty()) {
-
-            // reformatting the chords
             val formattedStruct: MutableMap<String, List<String>> = mutableMapOf()
-
             structure.forEach { (type, chords) ->
-                formattedStruct[type] = chords.split(" ")
+                formattedStruct[type] = chords.split(" ").filter { it.isNotBlank() }
             }
 
-            // if editing a song
             if (song == null) {
-                println("insert")
                 val newSong = Song(title = title, artist = artist, structure = formattedStruct)
                 dao.insertSong(newSong)
             }
             else {
-                println("update")
                 val newSong = Song(title = title, artist = artist, structure = formattedStruct, id = song.id)
                 dao.updateSong(newSong)
                 currentSong = newSong
@@ -161,19 +147,18 @@ class SongsViewModel (
         viewModelScope.launch {
             dao.deleteSong(song)
         }
-        //updateSongs()
         displayToast(context = context, text = context.getString(R.string.song_deleted))
     }
 
     fun resetCreation() {
         resetStructElement()
-        struct = mutableMapOf()
+        struct.clear()
         titleField = ""
         artistField = ""
         duplicableSectionTypes = mutableMapOf(
-            "Chorus" to 1,
-            "Verse" to 1,
-            "Bridge" to 1,
+            "Refrain" to 1,
+            "Couplet" to 1,
+            "Pont" to 1,
             "Solo" to 1)
     }
 
@@ -185,16 +170,24 @@ class SongsViewModel (
         currentSong = song
         artistField = song.artist
         titleField = song.title
+        struct.clear()
+        struct.putAll(convertDBSong(song.structure))
 
-        struct = convertDBSong(song.structure)
+        // Reset duplicable counters
+        duplicableSectionTypes = mutableMapOf(
+            "Refrain" to 1,
+            "Couplet" to 1,
+            "Pont" to 1,
+            "Solo" to 1)
 
-        // updating the number of duplicable structures elements
-        println(duplicableSectionTypes)
         struct.keys.forEach { structElt ->
-            // split structElt to get only the type of element, not the number
-            val sectionType = structElt.split(" ")[0]
+            val parts = structElt.split(" ")
+            val sectionType = parts[0]
             if (sectionType in duplicableSectionTypes) {
-                duplicableSectionTypes[sectionType] = duplicableSectionTypes[sectionType]!! + 1
+                val number = parts.getOrNull(1)?.toIntOrNull() ?: 1
+                if (number >= duplicableSectionTypes[sectionType]!!) {
+                    duplicableSectionTypes[sectionType] = number + 1
+                }
             }
         }
     }
@@ -204,8 +197,28 @@ class SongsViewModel (
         struct.forEach { (section, chords) ->
             result[section] = chords.joinToString(separator = " ")
         }
-
         return result
+    }
+
+    /**
+     * Translates a section key (internal or legacy) to a localized display name.
+     */
+    fun getLocalizedSectionName(section: String): String {
+        val sectionSplit = section.split(" ")
+        val sectionKey = sectionSplit[0]
+        val number = if (sectionSplit.size > 1) " ${sectionSplit[1]}" else ""
+        
+        val resId = when(sectionKey) {
+            "Refrain", "Chorus" -> R.string.section_chorus
+            "Couplet", "Verse" -> R.string.section_verse
+            "Pont", "Bridge" -> R.string.section_bridge
+            "Solo" -> R.string.section_solo
+            "Intro" -> R.string.section_intro
+            "Outro" -> R.string.section_outro
+            else -> null
+        }
+        
+        return if (resId != null) context.getString(resId) + number else section
     }
 
     // SONGS LIST
@@ -243,13 +256,9 @@ class SongsViewModel (
 
     // DELETE DIALOG
     var showDeleteSongDialog by mutableStateOf(false)
-
     var showDeleteSectionDialog by mutableStateOf(false)
-
     var songToDelete: Song? = null
-
     var sectionToDelete: String? = null
-    
     var chordsToDelete: String? = null
     
     private fun displayToast(context: Context, text: String) {

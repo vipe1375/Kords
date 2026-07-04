@@ -38,18 +38,16 @@ object Converters {
     @TypeConverter
     fun fromString(value: String?): Map<String, List<String>> {
 
-        val list = value?.split(":")
+        val list = value?.split(":")?.filter { it.isNotBlank() }
         val result : MutableMap<String, List<String>> = mutableMapOf()
 
         list?.forEach { item ->
 
-            val structElt = item.split("-")
+            val structElt = item.split("-").filter { it.isNotBlank() }
 
-            val structElt2 = structElt.drop(1)
-
-            // val mappedStructElt = mapOf(structElt[0] to structElt2)
-
-            result[structElt[0]] = structElt2
+            if (structElt.isNotEmpty()) {
+                result[structElt[0]] = structElt.drop(1)
+            }
         }
 
         return result
@@ -57,16 +55,9 @@ object Converters {
 
     @TypeConverter
     fun fromList(map: Map<String, List<String>>): String {
-        var result = ""
-
-        map.forEach { (type, chords) ->
-            result += "$type-"
-            chords.forEach { chordId ->
-                result += "$chordId-"
-            }
-            result += ":"
+        return map.entries.joinToString(":") { (type, chords) ->
+            "$type-${chords.joinToString("-")}"
         }
-        return result
     }
 }
 

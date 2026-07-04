@@ -18,7 +18,6 @@
 
 package com.vipedev.kords.songs_screen
 
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,12 +38,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,13 +54,10 @@ import com.vipedev.kords.songs_screen.database.Song
 @Composable
 fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
 
-    val focusManager = LocalFocusManager.current
-    val composableScope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    println("struct deb display : ${song.structure}")
     Surface(
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
@@ -70,8 +65,6 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-
-            Spacer(modifier = Modifier.height(30.dp))
 
             //        HEADER BAR       //
             Box(
@@ -87,10 +80,10 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 }
 
-                Text(
+                /*Text(
                     text = stringResource(R.string.song_view_header),
                     modifier = Modifier.padding(20.dp)
-                )
+                )*/
 
                 // edit and delete button
                 Row (
@@ -113,11 +106,7 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                     ) {
                         Icon(Icons.Default.Delete, contentDescription = null)
                     }
-
-
                 }
-
-
             }
 
             if (viewModel.showDeleteSongDialog) {
@@ -127,75 +116,57 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 )
             }
 
-            //     TITLE     //
-            Text(text = stringResource(R.string.create_song_title),
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold)
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(),
+            ) {
+                Text(
+                    text = song.title,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(10.dp),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Text(text = song.title,
-                modifier = Modifier.padding(horizontal = 20.dp),
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Bold)
-
-
-            //     ARTIST     //
-            Text(text = stringResource(R.string.create_song_artist_field),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold)
-
-            Text(text = song.artist,
-                modifier = Modifier.padding(horizontal = 20.dp),
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Bold)
-
+                Text(
+                    text = song.artist,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(10.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Normal
+                )
+            }
 
             //    STRUCTURE     //
             song.structure.forEach { (section, chords) ->
-                // split section (looking like "Chorus 1") into a section name and a number
-                // (name is always in french, no matter the app language)
-                val sectionSplit = section.split(" ")
-                val sectionNameEn: String = sectionSplit[0]
-                val number = if (sectionSplit.size > 1) " ${sectionSplit[1]}" else ""
-                val sectionName = when(sectionNameEn) {
-                    "Refrain" -> stringResource(id = R.string.section_chorus) + number
-                    "Couplet" -> stringResource(id = R.string.section_verse) + number
-                    "Pont" -> stringResource(id = R.string.section_bridge) + number
-                    "Solo" -> stringResource(id = R.string.section_solo) + number
-                    "Intro" -> stringResource(id = R.string.section_intro) + number
-                    "Outro" -> stringResource(id = R.string.section_outro) + number
-                    else -> ""
-                }
+                if (section.isNotBlank() && chords.isNotEmpty()) {
+                    val sectionName = viewModel.getLocalizedSectionName(section)
 
-                // section header
-                Text(
-                    text = sectionName,
-                    modifier = Modifier
-                        .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                    // section header
+                    Text(
+                        text = sectionName,
+                        modifier = Modifier
+                            .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                // chords
-                LazyRow (
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                ){
-                    items(chords) { chord ->
-                        Text(text = "$chord  ",
-                            style = MaterialTheme.typography.bodySmall,
-                            overflow = TextOverflow.Ellipsis)
+                    // chords
+                    LazyRow (
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp)
+                            .fillMaxWidth()
+                    ){
+                        items(chords) { chord ->
+                            Text(text = "$chord  ",
+                                style = MaterialTheme.typography.bodySmall,
+                                overflow = TextOverflow.Ellipsis)
+                        }
                     }
                 }
             }

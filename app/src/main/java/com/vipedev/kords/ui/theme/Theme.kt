@@ -24,10 +24,14 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.ui.graphics.Color
+
+
 private val BlueDarkColorScheme = darkColorScheme(
     primary = Blue200,
     onPrimary = White,
-    primaryContainer = Blue200,
+    primaryContainer = Blue300,
     onPrimaryContainer = White,
     inversePrimary = Blue200,
 
@@ -43,9 +47,10 @@ private val BlueDarkColorScheme = darkColorScheme(
 
     background = Blue400,
     onBackground = White,
-    surface = Blue500,
-    scrim = Grey300
-    //surfaceVariant = Blue500,
+    surface = Blue400,
+    scrim = Grey300,
+    surfaceVariant = Blue500,
+    onSurfaceVariant = White,
     /*
     onSurface: Color,
 

@@ -19,8 +19,7 @@
 package com.vipedev.kords.chords.database
 
 val equivalentRoots: Map<String, String> = mapOf(
-    "ab" to "a#",
-    "ab" to "a#",
+    "ab" to "g#",
     "cb" to "b",
     "b#" to "c",
     "db" to "c#",
@@ -223,7 +222,6 @@ val chordsListCd: List<Chord> = listOf(
     Chord("C#7sus4", "1-1-2-2"),
     Chord("C#7sus4", "4-1-2-2"),
     Chord("C#7sus4", "4-1-2-4"),
-    Chord("C#sus2", "1-3-4-4"),
     Chord("C#7sus2", "4-3-4-4"),
     Chord("C#9", "1-3-1-2"),
     Chord("C#9", "4-3-1-4"),

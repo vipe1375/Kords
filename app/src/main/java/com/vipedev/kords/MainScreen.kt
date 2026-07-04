@@ -19,6 +19,8 @@
 package com.vipedev.kords
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -33,6 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.vipedev.kords.chords.screen.ChordScreen
 import com.vipedev.kords.chords.screen.ChordsViewModel
 import com.vipedev.kords.settings_screen.SettingsScreen
@@ -56,7 +60,10 @@ fun MainScreen(
 
     Scaffold (
         bottomBar = {
-            NavigationBar {
+            NavigationBar (
+                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                tonalElevation = 0.dp
+            ){
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = (selectedItemIndex == index),
@@ -86,10 +93,13 @@ fun MainScreen(
             }
         }
     ){
-        when(selectedItemIndex) {
-            0 -> ChordScreen(viewModel = viewModel)
-            1 -> MainSongScreen(songsViewModel)
-            2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
+        innerPadding -> // 1. Capture the padding values here
+        Box(modifier = Modifier.padding(innerPadding)) { // 2. Apply them to a container
+            when(selectedItemIndex) {
+                0 -> ChordScreen(viewModel = viewModel)
+                1 -> MainSongScreen(songsViewModel)
+                2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
+            }
         }
     }
 }

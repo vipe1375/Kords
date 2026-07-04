@@ -28,8 +28,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,12 +41,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -59,6 +64,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -75,144 +87,166 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
     val focusManager = LocalFocusManager.current
     val composableScope = rememberCoroutineScope()
     val context = LocalContext.current
+    val lazyListState = rememberLazyListState()
 
 
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.fillMaxSize()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        //        HEADER BAR       //
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
+            // back button
+            TextButton(
+                onClick = {
+                    if (viewModel.currentSong == null) {
+                        viewModel.updateIsEditingSong(false)
+                        viewModel.resetCreation()
+                    }
+                    else {
+                        viewModel.updateIsEditingSong(false)
+                        //viewModel.resetCurrentSong()
+                    }
 
-            Spacer(modifier = Modifier.height(30.dp))
-
-            //        HEADER BAR       //
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+                },
+                modifier = Modifier.align(Alignment.CenterStart)
             ) {
-
-                // back button
-                TextButton(
-                    onClick = {
-                        if (viewModel.currentSong == null) {
-                            viewModel.updateIsEditingSong(false)
-                            viewModel.resetCreation()
-                        }
-                        else {
-                            viewModel.updateIsEditingSong(false)
-                            //viewModel.resetCurrentSong()
-                        }
-
-                    },
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                }
-
-                val header: String = if (viewModel.currentSong == null) {stringResource(R.string.create_song_header)} else {
-                    stringResource(R.string.edit_song_header)
-                }
-                Text(
-                    text = header,
-                    modifier = Modifier.padding(20.dp)
-                )
-
-                // save button
-                TextButton(
-                    onClick = {
-                        composableScope.launch {
-                            if (viewModel.currentSong == null) {
-                                viewModel.saveSong(
-                                    title = viewModel.titleField,
-                                    artist = viewModel.artistField,
-                                    structure = viewModel.struct,
-                                    context = context
-                                )
-                            }
-
-                            else {
-                                viewModel.saveSong(
-                                    title = viewModel.titleField,
-                                    artist = viewModel.artistField,
-                                    structure = viewModel.struct,
-                                    context = context,
-                                    viewModel.currentSong
-                                )
-                            }
-                        }
-                    },
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(Icons.Default.Done, contentDescription = null)
-                }
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
 
-            //     TITLE TEXT FIELD      //
-            OutlinedTextField(
-                value = viewModel.titleField,
-                onValueChange = { viewModel.updateTitleField(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.create_song_title),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(bottom = 5.dp)
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                shape = RoundedCornerShape(30.dp),
-                textStyle = MaterialTheme.typography.labelLarge,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                    focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onDone = {focusManager.clearFocus()}
-                )
+            val header: String = if (viewModel.currentSong == null) {stringResource(R.string.create_song_header)} else {
+                stringResource(R.string.edit_song_header)
+            }
+            Text(
+                text = header,
+                modifier = Modifier.padding(20.dp)
             )
 
-            //     ARTIST TEXT FIELD      //
-            OutlinedTextField(
-                value = viewModel.artistField,
-                onValueChange = { viewModel.updateArtistField(it) },
-                label = {
-                    Text(
-                        text = stringResource(R.string.create_song_artist_field),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(bottom = 5.dp)
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                shape = RoundedCornerShape(30.dp),
-                textStyle = MaterialTheme.typography.labelLarge,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                    focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                    focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                    unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                singleLine = true,
-                keyboardActions = KeyboardActions(
-                    onDone = {focusManager.clearFocus()}
-                )
-            )
+            // save button
+            TextButton(
+                onClick = {
+                    composableScope.launch {
+                        if (viewModel.currentSong == null) {
+                            viewModel.saveSong(
+                                title = viewModel.titleField,
+                                artist = viewModel.artistField,
+                                structure = viewModel.struct,
+                                context = context
+                            )
+                        }
 
-            //     EXISTING STRUCTURE ELEMENTS     //
-            LazyColumn (
-                modifier = Modifier
-                    .fillMaxHeight(0.6f)
-                    .fillMaxWidth()
+                        else {
+                            viewModel.saveSong(
+                                title = viewModel.titleField,
+                                artist = viewModel.artistField,
+                                structure = viewModel.struct,
+                                context = context,
+                                viewModel.currentSong
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterEnd)
             ) {
+                Icon(Icons.Default.Done, contentDescription = null)
+            }
+        }
+
+        //     EXISTING STRUCTURE ELEMENTS     //
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .weight(1f)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+        ) {
+            LazyColumn (
+                state = lazyListState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen) // Required for blending
+                    .drawWithContent {
+                        drawContent() // Draw the actual buttons first
+                        if (lazyListState.canScrollForward) {
+                            drawRect(
+                                brush = Brush.verticalGradient(
+                                    0.8f to Color.Black, // Fully opaque until 80% of the height
+                                    1f to Color.Transparent // Fade to transparent at the very bottom
+                                ),
+                                blendMode = BlendMode.DstIn // This "cuts" the content based on the brush opacity
+                            )
+                        }
+                    },
+            ) {
+                item {
+
+                    //     TITLE TEXT FIELD      //
+                    OutlinedTextField(
+                        value = viewModel.titleField,
+                        onValueChange = { viewModel.updateTitleField(it) },
+                        label = {
+                            Text(
+                                text = stringResource(R.string.create_song_title),
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(bottom = 5.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        textStyle = MaterialTheme.typography.labelLarge,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                            focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        singleLine = true,
+                        keyboardActions = KeyboardActions(
+                            onDone = {focusManager.clearFocus()}
+                        )
+                    )
+
+                    //     ARTIST TEXT FIELD      //
+                    OutlinedTextField(
+                        value = viewModel.artistField,
+                        onValueChange = { viewModel.updateArtistField(it) },
+                        label = {
+                            Text(
+                                text = stringResource(R.string.create_song_artist_field),
+                                style = MaterialTheme.typography.labelLarge,
+                                modifier = Modifier.padding(bottom = 5.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        textStyle = MaterialTheme.typography.labelLarge,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                            focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        singleLine = true,
+                        keyboardActions = KeyboardActions(
+                            onDone = {focusManager.clearFocus()}
+                        )
+                    )
+
+                }
+
                 items(viewModel.struct.toList()) { (section, chords) ->
 
                     if (section.isNotBlank() && chords.isNotBlank()) {
@@ -242,7 +276,7 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                             Text(
                                 text = sectionName,
                                 modifier = Modifier
-                                    .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
+                                    .padding(top = 20.dp, start = 20.dp),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -268,14 +302,13 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                             onValueChange = { newChords = it },
                             placeholder = {
                                 Text(
-                                text = stringResource(R.string.create_song_type_chords),
-                                style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(bottom = 5.dp))
+                                    text = stringResource(R.string.create_song_type_chords),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    modifier = Modifier.padding(bottom = 5.dp))
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(10.dp),
-                            shape = CircleShape,
+                                .padding(horizontal = 10.dp),
                             textStyle = MaterialTheme.typography.labelLarge,
                             colors = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
@@ -296,94 +329,109 @@ fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
                         )
                     }
                 }
+
+                item {Spacer(modifier = Modifier.height(20.dp))}
             }
+        }
 
 
-            //     CURRENT STRUCTURE ELEMENT     //
 
-            if (viewModel.currentSection.isNotEmpty()) {
-                Text(
-                    text = viewModel.currentSection,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 5.dp, start = 20.dp)
-                )
+        //     CURRENT STRUCTURE ELEMENT     //
 
-                TextField(
-                    value = viewModel.currentChords,
-                    onValueChange = { viewModel.updateCurrentChords(it) },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.create_song_type_chords),
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp),
-                    shape = CircleShape,
-                    textStyle = MaterialTheme.typography.labelLarge,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                        focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                        focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(onDone = {
-                        if (viewModel.currentChords.isNotBlank()) {
-                            viewModel.addStructItem()
-                            focusManager.clearFocus()
-                            println("not blank")
-                        }
-                        else {
-                            println("blank")
-                            viewModel.showDeleteSectionDialog = true
-                            //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
-                        }
-                    })
-                )
+        if (viewModel.currentSection.isNotEmpty()) {
+            Text(
+                text = viewModel.currentSection,
+                modifier = Modifier.padding(top = 16.dp, bottom = 5.dp, start = 20.dp)
+            )
 
-
-            }
-
-            if (viewModel.showDeleteSectionDialog) {
-                DeleteDialog(viewModel, context)
-            }
-
-            //     STRUCTURE TYPE DROPDOWN      //
-            OutlinedButton(
-                onClick = { viewModel.updateStructDropdownState(true) },
+            TextField(
+                value = viewModel.currentChords,
+                onValueChange = { viewModel.updateCurrentChords(it) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.create_song_type_chords),
+                        style = MaterialTheme.typography.labelLarge,
+                    )
+                },
                 modifier = Modifier
-                    .padding(20.dp)
                     .fillMaxWidth()
-            ) {
-                Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)
-
-                Spacer(modifier = Modifier.width(10.dp))
-
-                Text(text = stringResource(R.string.create_song_choose_type))
-
-                DropdownMenu(
-                    expanded = viewModel.sectionDropdownState,
-                    onDismissRequest = { viewModel.updateStructDropdownState(false) },
-                    modifier = Modifier
-                        .size(width = 265.dp, height = 305.dp),
-                    offset = DpOffset(0.dp, 8.dp)
-                ) {
-                    viewModel.sectionTypes.forEach { section ->
-                        DropdownMenuItem(
-                            text = {Text(text = section)},
-                            onClick = {
-                                //viewModel.struct[struct] = ""
-                                viewModel.updateCurrentStructType(section)
-                                viewModel.updateStructDropdownState(false)
-
-                            })
+                    .padding(0.dp),
+                shape = CircleShape,
+                textStyle = MaterialTheme.typography.labelLarge,
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                singleLine = true,
+                keyboardActions = KeyboardActions(onDone = {
+                    if (viewModel.currentChords.isNotBlank()) {
+                        viewModel.addStructItem()
+                        focusManager.clearFocus()
+                        println("not blank")
                     }
+                    else {
+                        println("blank")
+                        viewModel.showDeleteSectionDialog = true
+                        //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
+                    }
+                })
+            )
+
+
+        }
+
+        if (viewModel.showDeleteSectionDialog) {
+            DeleteDialog(viewModel, context)
+        }
+
+        //     STRUCTURE TYPE DROPDOWN      //
+        OutlinedButton(
+            onClick = { viewModel.updateStructDropdownState(true) },
+            modifier = Modifier
+                .padding(20.dp)
+                .wrapContentWidth()
+                .align(Alignment.CenterHorizontally)
+        ) {
+            Icon(Icons.Default.Add, contentDescription = null)
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Text(text = stringResource(R.string.create_song_choose_type))
+
+            DropdownMenu(
+                expanded = viewModel.sectionDropdownState,
+                onDismissRequest = { viewModel.updateStructDropdownState(false) },
+                modifier = Modifier
+                    .wrapContentWidth(),
+                offset = DpOffset(12.dp, 8.dp),
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ) {
+                viewModel.sectionTypes.forEach { section ->
+
+                    val sectionName = when (section) {
+                        "Intro" -> stringResource(id = R.string.section_intro)
+                        "Refrain" -> stringResource(id = R.string.section_chorus)
+                        "Couplet" -> stringResource(id = R.string.section_verse)
+                        "Solo" -> stringResource(id = R.string.section_solo)
+                        "Pont" -> stringResource(id = R.string.section_bridge)
+                        "Outro" -> stringResource(id = R.string.section_outro)
+                        else-> ""
+                    }
+                    DropdownMenuItem(
+                        text = {Text(text = sectionName)},
+                        onClick = {
+                            //viewModel.struct[struct] = ""
+                            viewModel.updateCurrentStructType(section)
+                            viewModel.updateStructDropdownState(false)
+
+                        })
                 }
             }
-
-            //Spacer(modifier = Modifier.height(500.dp))
-            // Text(text = stringResource(R.string.create_song_choose_type))
         }
+
+        //Spacer(modifier = Modifier.height(500.dp))
+        // Text(text = stringResource(R.string.create_song_choose_type))
     }
 }

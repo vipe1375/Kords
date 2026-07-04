@@ -1,0 +1,6 @@
+## Changes
+- interface de la page Accords
+- interface de la page Chansons
+
+## Coming
+- sons des accords

@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -48,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -63,9 +65,11 @@ fun SongsListScreen(viewModel: SongsViewModel) {
 
     val songs by viewModel.songs.observeAsState()
 
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        modifier = Modifier.fillMaxSize()
+    Surface (
+        color = MaterialTheme.colorScheme.background,
+        modifier = Modifier
+            .padding(all = 20.dp)
+            .clip(RoundedCornerShape(15.dp))
     ) {
 
         Spacer(modifier = Modifier.height(50.dp))
@@ -77,24 +81,6 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-
-                // title bar
-                item {
-                    Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    {
-                        // title
-                        Text(
-                            text = stringResource(id = R.string.songs_nav_item),
-                            modifier = Modifier
-                                .padding(20.dp),
-                            textAlign = TextAlign.Center
-                        )
-
-
-                    }
-                }
 
                 item {
                     Box(
@@ -151,12 +137,22 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                     }
                 }
 
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+
                 // list of songs
                 items(songs!!) { song ->
                     TextButton(
                         onClick = { viewModel.currentSong = song },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RectangleShape
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp)),
+                        shape = RectangleShape,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
                     ) {
                         Box (
                             contentAlignment = Alignment.CenterStart,
@@ -226,6 +222,8 @@ fun SongsListScreen(viewModel: SongsViewModel) {
 
                         }
                     }
+
+                    Spacer(modifier = Modifier.padding(vertical = 5.dp))
                     /*
                     Row (
                         horizontalArrangement = Arrangement.End,

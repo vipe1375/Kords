@@ -21,13 +21,13 @@
     <string name="or_spacer">ou</string>
     <string name="search_bar_text">Cherchez un accord…</string>
     <plurals name="visualize_button_text">
-        <item quantity="one">Visualiser</item>
-        <item quantity="other">Visualiser (%d/%d)</item>
+        <item quantity="one">Voir</item>
+        <item quantity="other">Voir (%d/%d)</item>
     </plurals>
     <string name="find_chord_text">Trouvez le nom d\'un accord</string>
-    <string name="current_chord_text">Accord actuel : %s</string>
-    <string name="no_chord_found_name">Accord %s introuvable</string>
-    <string name="no_chord_found_id">pas d\'accord trouvé</string>
+    <string name="current_chord_text">Accord actuel : </string>
+    <string name="no_chord_found_name">Aucun</string>
+    <string name="no_chord_found_id">Aucun</string>
     <plurals name="chord_found_name">
         <item quantity="one">%d accord trouvé avec le nom %s</item>
         <item quantity="other">%d accords trouvés avec le nom %s</item>
@@ -57,10 +57,10 @@
     <string name="create_song_artist_field">Artiste</string>
     <string name="create_song_type_chords">Tapez les accords, séparés par un espace</string>
     <string name="create_song_no_chords">Pas d\'accords dans la section !</string>
-    <string name="create_song_choose_type">Choisissez un type de section</string>
+    <string name="create_song_choose_type">Nouvelle section</string>
     <string name="section_intro">Intro</string>
-    <string name="section_chorus">Couplet</string>
-    <string name="section_verse">Refrain</string>
+    <string name="section_chorus">Refrain</string>
+    <string name="section_verse">Couplet</string>
     <string name="section_solo">Solo</string>
     <string name="section_outro">Outro</string>
     <string name="section_bridge">Pont</string>
@@ -71,7 +71,7 @@
     <string name="sourcecode_gitlab">Voir le code source sur GitLab</string>
     <string name="sourcecode_github">Voir le code source sur GitHub</string>
     <string name="contact_issues">Ou laissez un issue sur GitHub &amp; GitLab !</string>
-    <string name="edit_song_header">Modifier une chanson</string>
+    <string name="edit_song_header">Modifier</string>
     <string name="song_view_header">Chanson</string>
     <string name="sorting_type_label">Trier par : %s</string>
     <string name="sorting_type_artist">artiste</string>

@@ -27,10 +27,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
@@ -44,6 +46,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -64,35 +73,33 @@ fun SearchByID(viewModel: ChordsViewModel) {
     }
 
     val currentChord = viewModel.currentChord
+    val scrollState = rememberScrollState()
 
 
-    Surface {
+    Surface (
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        modifier = Modifier
+            .padding(all = 20.dp)
+            .clip(RoundedCornerShape(15.dp))
+    ){
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 100.dp),
+                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen) // Required for blending
+                .drawWithContent {
+                    drawContent() // Draw the actual buttons first
+                    if (scrollState.canScrollForward) {
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                0.8f to Color.Black, // Fully opaque until 80% of the height
+                                1f to Color.Transparent // Fade to transparent at the very bottom
+                            ),
+                            blendMode = BlendMode.DstIn // This "cuts" the content based on the brush opacity
+                        )
+                    }
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            //        SEARCH TEXT       //
-
-
-            Text(
-                text = stringResource(id = R.string.find_chord_text),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(5.dp)
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            val currentChordName: String = viewModel.currentChordName
-
-            Text(
-                text = stringResource(id = R.string.current_chord_text, currentChordName),
-                style = MaterialTheme.typography.bodySmall,
-                textAlign = TextAlign.Center
-            )
 
             // STRING NAMES
             Spacer(modifier = Modifier.height(30.dp))
@@ -126,7 +133,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -134,7 +141,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                 for (i in 1 until 15) {
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 15.dp)
+                            .padding(vertical = 8.dp)
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -167,6 +174,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                             .size(activeButtonSize)
                                             .padding(activeButtonPadding)
                                     ) {
+                                        Text(i.toString(), modifier = Modifier.fillMaxWidth())
                                     }
                                 } else {
                                     // inactive button

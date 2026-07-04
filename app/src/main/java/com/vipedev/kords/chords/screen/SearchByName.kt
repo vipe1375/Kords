@@ -1,3 +1,4 @@
+
 /*
  * Kords
  * Copyright (C) 2024 Victor Pezennec--Deutsch
@@ -18,31 +19,31 @@
 
 package com.vipedev.kords.chords.screen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.MenuItemColors
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -52,93 +53,87 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.vipedev.kords.R
 import kotlinx.coroutines.launch
-import kotlin.math.min
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchByName(viewModel: ChordsViewModel) {
-
     val focusManager = LocalFocusManager.current
-    val composableScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
+
+    val suggestions = viewModel.getSuggestions()
+        .distinct()
+        .sortedBy { it.length }
+        .take(3)
+
+    // Every color the search field can use, kept in one place.
+    val fieldColors = SearchBarDefaults.inputFieldColors(
+        focusedTextColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+        cursorColor = MaterialTheme.colorScheme.primary,
+        focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+        unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
 
     Surface {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+            MaterialTheme(
+                typography = MaterialTheme.typography.copy(
+                    bodyLarge = MaterialTheme.typography.labelLarge
+                )
             ) {
-
-                // text field and list of suggestions
-                Column {
-                    OutlinedTextField(
-                        value = viewModel.chordSearched,
-                        onValueChange = {
-                            viewModel.changeChordSearched(it)
-                            composableScope.launch { viewModel.delaySuggestions() }
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.search_bar_text),
-                                style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier.padding(bottom = 5.dp)
-                            )
-                        },
-                        modifier = Modifier
-                            .width(200.dp)
-                            .height(60.dp),
-                        shape = RoundedCornerShape(10.dp),
-                        textStyle = MaterialTheme.typography.labelLarge,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        singleLine = true
-                    )
-
-                    // List of suggestions
-
-                    // filtering suggestions (if 2 chords have the same name, show only 1 in the suggestions)
-                    val ogMatch = viewModel.getSuggestions().distinct()
-                    val matchingChords = ogMatch.subList(0, min(3, ogMatch.size)).sortedBy{ it.length }
-
-                    if (viewModel.chordSearched.isNotEmpty() && !viewModel.searched && matchingChords.isNotEmpty()) {
-
-                        Suggestions(viewModel = viewModel,
-                            matchingChords = matchingChords.toMutableList(),
-                            focusManager = focusManager)
-
-                    }
-                }
-
-                // search button
-                Button(onClick = { viewModel.searchChord() },
-                    shape = CircleShape,
-                    modifier = Modifier.padding(top = 10.dp),
-                    content = {
-                        Icon(Icons.Default.Search, contentDescription = "search", tint = MaterialTheme.colorScheme.onPrimary)
-                    })
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (viewModel.searched) {
-                Text(
-                    text = viewModel.textState,
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.width(400.dp)
+                SearchBarDefaults.InputField(
+                    query = viewModel.chordSearched,
+                    onQueryChange = {
+                        viewModel.changeChordSearched(it)
+                        viewModel.showSuggestions = it.isNotBlank()
+                        scope.launch { viewModel.delaySuggestions() }
+                    },
+                    onSearch = {
+                        viewModel.searchChord()
+                        viewModel.showSuggestions = false
+                        focusManager.clearFocus()
+                    },
+                    expanded = false,
+                    onExpandedChange = {},
+                    modifier = Modifier
+                        .width(250.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    placeholder = {
+                        Text(
+                            stringResource(R.string.search_bar_text),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    trailingIcon = {
+                        if (viewModel.chordSearched.isNotEmpty()) {
+                            IconButton(onClick = {
+                                viewModel.changeChordSearched("")
+                                viewModel.showSuggestions = false
+                            }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
+                        }
+                    },
+                    colors = fieldColors,
                 )
 
+                // Popup anchored under the field; its height matches the item count.
+                Suggestions(viewModel, suggestions, focusManager)
+            }
 
+            // TODO("redo the visualize button to remove arrows and make space for the Listen button")
+            Spacer(modifier = Modifier.height(20.dp))
 
-                if (viewModel.showVisualizeButton) {
-                    Spacer(modifier = Modifier.height(20.dp))
+                /*if (viewModel.showVisualizeButton) {
+
 
                     // change chord and visualize buttons
                     Row {
@@ -152,36 +147,52 @@ fun SearchByName(viewModel: ChordsViewModel) {
                             ChangeChordButton(viewModel = viewModel, right = true)
                         }
                     }
-                }
-            }
+                }*/
+
         }
     }
 }
 
+/** Dropdown of matching chord names, shown only when there is something to suggest. */
 @Composable
-fun Suggestions(viewModel: ChordsViewModel, matchingChords: List<String>, focusManager: FocusManager) {
-
-
+fun Suggestions(
+    viewModel: ChordsViewModel,
+    matchingChords: List<String>,
+    focusManager: FocusManager
+) {
     DropdownMenu(
-        expanded = viewModel.showSuggestions,
+        expanded = viewModel.showSuggestions && matchingChords.isNotEmpty(),
         modifier = Modifier
             .width(190.dp),
-        onDismissRequest = { viewModel.showSuggestions = false},
-        properties = PopupProperties(focusable = false),
-        offset = DpOffset(x = 5.dp, y = 0.dp)
+        onDismissRequest = { viewModel.showSuggestions = false },
+        properties = PopupProperties(focusable = false), // keeps the keyboard open
+        offset = DpOffset(x = 95.dp, y = 0.dp),
+        containerColor = MaterialTheme.colorScheme.surfaceVariant
     ) {
         matchingChords.forEach { chord ->
-            DropdownMenuItem(text = {
-                Text(text = chord)
-            }, onClick = {
-                viewModel.changeChordSearched(chord)
-                viewModel.searchChord()
-                focusManager.clearFocus()
-            })
+            DropdownMenuItem(
+                text = { Text(
+                    chord,
+                    style = MaterialTheme.typography.bodySmall
+                ) },
+                onClick = {
+                    viewModel.changeChordSearched(chord)
+                    viewModel.searchChord()
+                    focusManager.clearFocus()
+                    viewModel.showSuggestions = false
+                },
+                colors = MenuItemColors(
+                    textColor = MaterialTheme.colorScheme.onSurface,
+                    leadingIconColor = MaterialTheme.colorScheme.surface,
+                    trailingIconColor = MaterialTheme.colorScheme.surface,
+                    disabledTextColor = MaterialTheme.colorScheme.surface,
+                    disabledLeadingIconColor = MaterialTheme.colorScheme.surface,
+                    disabledTrailingIconColor = MaterialTheme.colorScheme.surface,
+                )
+            )
         }
     }
-
-
 }
+
 
 

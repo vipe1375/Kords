@@ -1,8 +1,8 @@
 [versions]
-agp = "8.5.2"
+agp = "9.2.1"
 datastorePreferences = "1.1.2"
 gson = "2.11.0"
-kotlin = "2.0.0"
+kotlin = "2.2.10"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -14,10 +14,14 @@ lifecycleViewmodelKtx = "2.8.7"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.8.6"
 navigationComposeVersion = "2.9.0"
-room_compiler = "2.6.1"
-roomKtx = "2.6.1"
+room_compiler = "2.8.4"
+roomKtx = "2.8.4"
 appcompat = "1.7.0"
 runtimeLivedata = "1.7.7"
+material3 = "1.4.0"
+uiText = "1.11.3"
+foundation = "1.11.3"
+uiGraphics = "1.11.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +49,10 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

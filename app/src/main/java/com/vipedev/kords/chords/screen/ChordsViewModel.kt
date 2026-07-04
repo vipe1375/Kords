@@ -47,7 +47,7 @@ class ChordsViewModel(
     var searched by mutableStateOf(value = false) // if user clicked search
         private set
 
-    var chordSearched by mutableStateOf("") // chord typed by the user
+    var chordSearched by mutableStateOf("G") // chord typed by the user
         private set
 
     var chordSearchedID by mutableStateOf(
@@ -60,9 +60,6 @@ class ChordsViewModel(
     ) // id of the chord searched (if found)
         private set
 
-    var textState by mutableStateOf(value = "") // value of text
-        private set
-
     var searchResult: MutableList<Chord> by mutableStateOf(mutableListOf()) // list of chords found by name
         private set
 
@@ -72,6 +69,13 @@ class ChordsViewModel(
 
     var showSuggestions by mutableStateOf(false)
 
+    var extraChordNames by mutableStateOf("") // To store "Em7-G" etc.
+        private set
+
+    init {
+        searchChord()
+    }
+
     fun changeCurrentChord(newChord: MutableList<String>) {
         /**
          * update currentChord ID to the given ID
@@ -80,21 +84,14 @@ class ChordsViewModel(
         searched = false
         currentChord = newChord
 
-        currentChordName = nameChord(context, currentChord.joinToString(separator = "-"))
-
-        /*val dbResult = chordsDao.getChordsByFingers(currentChord.joinToString("-"))
-
-        if (dbResult.isEmpty()) {
-            currentChordName = context.getString(R.string.no_chord_found_id)
-
+        val names = nameChord(context, currentChord.joinToString(separator = "-"))
+        val namesList = names.split("-").sortedBy { it.length }
+        currentChordName = namesList[0]
+        extraChordNames = if (namesList.size > 1) {
+            namesList.drop(1).joinToString(separator = "-")
         } else {
-            var temp = dbResult[0].name
-            for (i in 1 until dbResult.size) {
-                temp += " / ${dbResult[i].name}"
-            }
-            currentChordName = temp
+            ""
         }
-        */
     }
 
     fun changeChordSearched(newChord: String) {
@@ -112,10 +109,6 @@ class ChordsViewModel(
         chordSearched = ""
     }
 
-    private fun resetSearchResult() {
-        searchResult = mutableListOf()
-    }
-
     fun searchChord() {
         showVisualizeButton = false
         visualizedID = 1
@@ -125,58 +118,53 @@ class ChordsViewModel(
 
         if (result.isNotEmpty()) {
             searchResult = result.toMutableList()
-            textState = context.resources.getQuantityString(
-                R.plurals.chord_found_name,
-                result.size,
-                result.size,
-                chordSearched
-            )
             chordSearchedID = result[0].fingers.split("-").toMutableList()
             showVisualizeButton = true
+            visualizeChord(result[0])
+            // changeCurrentChord(chordSearchedID)
+            currentChordName = result[0].name
 
         } else {
-            textState = context.getString(R.string.no_chord_found_name, chordSearched)
+            currentChordName = context.getString(R.string.no_chord_found_name)
+            showVisualizeButton = false
+            extraChordNames = ""
         }
 
         searched = true
     }
 
     fun getSuggestions(): List<String> {
-        //return chordsDao.getSuggestions(chordSearched)
-        val result: MutableList<String> = mutableListOf()
-        allChords.forEach { chord ->
-            if (chordSearched in chord) {
-                result.add(chord)
-            }
-        }
-        val sorted = result.sortedBy { it.length }
-        return sorted
+        val query = chordSearched.lowercase()
+        if (query.isEmpty()) return emptyList()
+
+        return allChords
+            .filter { it.lowercase().contains(query) }
+            .sortedBy { it.length }
     }
 
     fun visualizeChord(chord: Chord) {
         currentChord = chord.fingers.split("-").toMutableList()
         currentChordName = chord.name
 
-        if (searchResult.size == 1) {
-            showVisualizeButton = false
-            searched = false
-            resetChordSearched()
-            resetSearchResult()
+        val allNames = nameChord(context, chord.fingers)
+
+        if (allNames == currentChordName) {
+            extraChordNames = ""
+        }
+        else {
+            val extraNames = allNames.split("-").toMutableList()
+            println(extraNames)
+            extraNames.remove(currentChordName)
+            println(extraNames)
+            println("DEBUG : ${extraNames.joinToString(separator = "-")}")
+            extraChordNames = extraNames.joinToString(separator = "-")
         }
     }
 
-    fun changeVisualizedChord(right: Boolean) {
-
-        if (right) {
-            visualizedID += 1
-            if (visualizedID > searchResult.size) {
-                visualizedID = 1
-            }
-        } else {
-            visualizedID -= 1
-            if (visualizedID < 1) {
-                visualizedID = searchResult.size
-            }
+    fun changeVisualizedChord() {
+        visualizedID += 1
+        if (visualizedID > searchResult.size) {
+            visualizedID = 1
         }
 
         visualizeChord(searchResult[visualizedID - 1])

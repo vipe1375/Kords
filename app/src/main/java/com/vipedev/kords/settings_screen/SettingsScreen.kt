@@ -55,7 +55,7 @@ import com.vipedev.kords.R
 fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
 
     Surface(
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Column(

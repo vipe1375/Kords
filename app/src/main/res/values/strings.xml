@@ -24,14 +24,14 @@
     <string name="e_string" translatable="false">E</string>
     <string name="a_string" translatable="false">A</string>
     <plurals name="visualize_button_text">
-        <item quantity="one">Visualize</item>
-        <item quantity="other">Visualize (%d/%d)</item>
+        <item quantity="one">View</item>
+        <item quantity="other">View (%d/%d)</item>
     </plurals>
     <string name="or_spacer">or</string>
     <string name="find_chord_text">Find a chord\'s name</string>
-    <string name="current_chord_text">Current chord : %s</string>
-    <string name="no_chord_found_name">No chord found with name %s</string>
-    <string name="no_chord_found_id">no chord found</string>
+    <string name="current_chord_text">Current chord : </string>
+    <string name="no_chord_found_name">None</string>
+    <string name="no_chord_found_id">None</string>
     <plurals name="chord_found_name">
         <item quantity="one">%d chord found with name %s</item>
         <item quantity="other">%d chords found with name %s</item>
@@ -62,7 +62,7 @@
     <string name="create_song_artist_field">Artist</string>
     <string name="create_song_type_chords">Type the chords, separated by a space</string>
     <string name="create_song_no_chords">No chords in the section !</string>
-    <string name="create_song_choose_type">Choose a structure type</string>
+    <string name="create_song_choose_type">New section</string>
     <string name="section_intro">Intro</string>
     <string name="section_chorus">Chorus</string>
     <string name="section_verse">Verse</string>
@@ -76,7 +76,7 @@
     <string name="sourcecode_gitlab">See source code on GitLab</string>
     <string name="sourcecode_github">See source code on GitHub</string>
     <string name="contact_issues">Or leave an issue on GitHub &amp; GitLab !</string>
-    <string name="edit_song_header">Edit a song</string>
+    <string name="edit_song_header">Edit</string>
     <string name="song_view_header">Song</string>
     <string name="sorting_type_label">Sort by : %s</string>
     <string name="sorting_type_artist">artist</string>
