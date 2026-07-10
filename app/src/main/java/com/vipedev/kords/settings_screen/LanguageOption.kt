@@ -58,9 +58,7 @@ fun LanguageOption(viewModel: SettingsViewModel) {
 
     val languages = listOf(LanguageItem("Français", "fr"), LanguageItem("English", "en"))
 
-    var newLocale by rememberSaveable {
-        mutableStateOf("")
-    }
+    val context = LocalContext.current
 
     Column (
         horizontalAlignment = Alignment.Start
@@ -101,7 +99,8 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                 DropdownMenu(expanded = viewModel.isDropdownVisible,
                     onDismissRequest = { viewModel.changeDropdownState(false) },
                     modifier = Modifier,
-                    offset = DpOffset(0.dp, 10.dp)
+                    offset = DpOffset(0.dp, 10.dp),
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                 ) {
 
                     // dropdown items
@@ -109,7 +108,8 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                         TextButton(
                             onClick = {
                                 viewModel.changeDropdownState(false)
-                                newLocale = item.id
+                                viewModel.localeSelection(context, item.id)
+
                             }
                         ) {
                             Text(text = item.title,
@@ -126,7 +126,6 @@ fun LanguageOption(viewModel: SettingsViewModel) {
             }
         }
     }
-    viewModel.localeSelection(LocalContext.current, newLocale)
 
     Spacer(modifier = Modifier.height(10.dp))
 }

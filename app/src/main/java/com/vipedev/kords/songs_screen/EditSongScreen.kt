@@ -18,6 +18,8 @@
 
 package com.vipedev.kords.songs_screen
 
+import android.R.attr.alpha
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -82,19 +84,25 @@ import com.vipedev.kords.songs_screen.database.Song
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditSongScreen(viewModel: SongsViewModel, song: Song? = null) {
+fun EditSongScreen(viewModel: SongsViewModel) {
 
     val focusManager = LocalFocusManager.current
     val composableScope = rememberCoroutineScope()
     val context = LocalContext.current
     val lazyListState = rememberLazyListState()
 
-
+    val animatedAlpha by animateFloatAsState(
+        targetValue = if (viewModel.isScreenVisible) 1.0f else 0f,
+        label = "alpha"
+    )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp)
+            .graphicsLayer {
+                alpha = animatedAlpha
+            }
     ) {
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -20,7 +20,6 @@
 package com.vipedev.kords.chords.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
@@ -91,9 +89,9 @@ fun SearchByName(viewModel: ChordsViewModel) {
                 )
             ) {
                 SearchBarDefaults.InputField(
-                    query = viewModel.chordSearched,
+                    query = viewModel.textInput,
                     onQueryChange = {
-                        viewModel.changeChordSearched(it)
+                        viewModel.changeTextInput(it)
                         viewModel.showSuggestions = it.isNotBlank()
                         scope.launch { viewModel.delaySuggestions() }
                     },
@@ -115,9 +113,9 @@ fun SearchByName(viewModel: ChordsViewModel) {
                     },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
-                        if (viewModel.chordSearched.isNotEmpty()) {
+                        if (viewModel.textInput.isNotEmpty()) {
                             IconButton(onClick = {
-                                viewModel.changeChordSearched("")
+                                viewModel.changeTextInput("")
                                 viewModel.showSuggestions = false
                             }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
                         }
@@ -129,26 +127,7 @@ fun SearchByName(viewModel: ChordsViewModel) {
                 Suggestions(viewModel, suggestions, focusManager)
             }
 
-            // TODO("redo the visualize button to remove arrows and make space for the Listen button")
             Spacer(modifier = Modifier.height(20.dp))
-
-                /*if (viewModel.showVisualizeButton) {
-
-
-                    // change chord and visualize buttons
-                    Row {
-                        val nbResults = viewModel.searchResult.size
-                        if (nbResults > 1) {
-                            ChangeChordButton(viewModel = viewModel, right = false)
-                        }
-                        VisualizeButton(nbResults, viewModel)
-
-                        if (viewModel.searchResult.size > 1) {
-                            ChangeChordButton(viewModel = viewModel, right = true)
-                        }
-                    }
-                }*/
-
         }
     }
 }
@@ -176,7 +155,7 @@ fun Suggestions(
                     style = MaterialTheme.typography.bodySmall
                 ) },
                 onClick = {
-                    viewModel.changeChordSearched(chord)
+                    viewModel.changeTextInput(chord)
                     viewModel.searchChord()
                     focusManager.clearFocus()
                     viewModel.showSuggestions = false

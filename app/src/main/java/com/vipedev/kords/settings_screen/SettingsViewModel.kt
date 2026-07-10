@@ -37,6 +37,8 @@ class SettingsViewModel (
 
 ) : ViewModel() {
 
+    var isScreenVisible by mutableStateOf(false)
+
     val dataStore = dataStore
 
 

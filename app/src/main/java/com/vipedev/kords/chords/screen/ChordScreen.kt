@@ -18,6 +18,7 @@
 
 package com.vipedev.kords.chords.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,101 +46,65 @@ import com.vipedev.kords.R
 @Composable
 fun ChordScreen(viewModel: ChordsViewModel) {
 
-    Surface(
-        color = MaterialTheme.colorScheme.background
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // SEARCH BY NAME SURFACE
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Spacer(modifier = Modifier.height(50.dp))
+
+
+        //          SEARCH BAR          //
+        SearchByName(viewModel)
+
+
+        //          SEARCH A CHORD BY ID SURFACE         //
+
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
         ) {
-
-            Spacer(modifier = Modifier.height(50.dp))
-
-
-            //          SEARCH BAR          //
-            SearchByName(viewModel)
-
-
-            //          SEARCH A CHORD BY ID SURFACE         //
-
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Row (
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ){
-                    Text(
-                        text = stringResource(id = R.string.current_chord_text),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onTertiary,
-                        textAlign = TextAlign.Center,
-                    )
-
-                    Text(
-                        text = viewModel.currentChordName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 10.dp)
-                    )
-                }
+            Row (
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ){
                 Text(
-                    text = viewModel.extraChordNames,
+                    text = stringResource(id = R.string.current_chord_text),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiary,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                         .align(Alignment.CenterEnd)
-                        .padding(end = 60.dp),
+                )
+
+                Text(
+                    text = viewModel.currentChord.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            VisualizeButton(viewModel)
-
-            SearchByID(viewModel)
-
+            Text(
+                text = viewModel.alternativeNames.joinToString(separator = "-"),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onTertiary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 60.dp),
+            )
         }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        VisualizeButton(viewModel)
+
+        SearchByID(viewModel)
+
     }
 }
 
-@Composable
-fun Separator(text: String) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp)
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.barre),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onTertiary,
-            modifier = Modifier.size(width = 100.dp, height = 8.dp)
-        )
-
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onTertiary
-        )
-
-        Icon(
-            painter = painterResource(id = R.drawable.barre),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onTertiary,
-            modifier = Modifier.size(width = 100.dp, height = 8.dp)
-        )
-    }
-}
 
 
 

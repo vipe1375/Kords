@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
 
                 // ViewModels
                 val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this))
-                val settingsViewModel = SettingsViewModel(dataStore = dataStore)
+                val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(dataStore))
                 val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, application))
 
                 // Navigation
@@ -140,4 +140,9 @@ class ChordsViewModelFactory(private val context: Context) :
 class SongsViewModelFactory(private val db: SongsDao, private val application: Application) :
     ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, application) as T
+}
+
+class SettingsViewModelFactory(private val dataStore: StorePreferences) :
+    ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = SettingsViewModel(dataStore) as T
 }

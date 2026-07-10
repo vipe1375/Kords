@@ -1,0 +1,7 @@
+## New
+- animations lors du changement de pages
+
+## Fixed
+- la langue était réinitialisée au paramètre système quand on allait sur la page Paramètres
+- bugs de synchronisation entre le manche et le nom affiché sur la page Accords
+

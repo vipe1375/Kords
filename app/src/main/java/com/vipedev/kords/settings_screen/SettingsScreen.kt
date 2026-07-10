@@ -54,172 +54,152 @@ import com.vipedev.kords.R
 @Composable
 fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
 
-    Surface(
-        color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
+    Column(
             modifier = Modifier
                 .padding(vertical = 50.dp, horizontal = 20.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.Start
+    ) {
+        Text(text = stringResource(id = R.string.settings_nav_item),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth())
 
+        Spacer(modifier = Modifier.height(50.dp))
+
+        // Appearance
+        Text(text = stringResource(R.string.appearance_options_header),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold
+        )
+
+        UseSystemThemeOption(viewModel = viewModel, dataStore = dataStore)
+
+        UseDarkThemeOption(viewModel = viewModel, dataStore = dataStore)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Language
+        Text(text = stringResource(R.string.language_options_header),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold
+        )
+
+        LanguageOption(viewModel = viewModel)
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+
+
+        //      CONTACT      //
+        Text(text = stringResource(R.string.contact_options_header),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold
+        )
+
+        Row (
+            modifier = Modifier.padding(10.dp)
         ) {
-            Text(text = stringResource(id = R.string.settings_nav_item),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth())
+            Icon(imageVector = Icons.Filled.Email,
+                modifier = Modifier.size(40.dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimary)
 
-            Spacer(modifier = Modifier.height(50.dp))
-
-            // Appearance
-            Text(text = stringResource(R.string.appearance_options_header),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold
-            )
-
-            UseSystemThemeOption(viewModel = viewModel, dataStore = dataStore)
-
-            UseDarkThemeOption(viewModel = viewModel, dataStore = dataStore)
-            
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Language
-            Text(text = stringResource(R.string.language_options_header),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold
-            )
-
-            LanguageOption(viewModel = viewModel)
-
-            Spacer(modifier = Modifier.height(20.dp))
-/*
-            // Updates
-            Text(text = stringResource(R.string.auto_download_options_header),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold
-            )
-
-            AutoDownloadOption(dataStore = dataStore)
-
-            if (!dataStore.getAutoDownload.collectAsState(initial = true).value!!) {
-                DownloadOption(viewModel = viewModel, dataStore = dataStore)
-            }*/
-
-
-            //      CONTACT      //
-            Text(text = stringResource(R.string.contact_options_header),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold
-            )
-
-            Row (
-                modifier = Modifier.padding(10.dp)
-            ) {
-                Icon(imageVector = Icons.Filled.Email,
-                    modifier = Modifier.size(40.dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary)
-
-                Text(text = "vipe1375@disroot.org",
-                    modifier = Modifier.padding(8.dp),
-                    fontFamily = FontFamily.Monospace,
-                    style = MaterialTheme.typography.bodySmall,
-                    //modifier = Modifier.padding(top = 20.dp)
-                    fontWeight = FontWeight.Light,
-                    color = MaterialTheme.colorScheme.onPrimary)
-            }
-
-            Text(text = stringResource(R.string.contact_issues),
+            Text(text = "vipe1375@disroot.org",
                 modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.titleMedium,
+                fontFamily = FontFamily.Monospace,
+                style = MaterialTheme.typography.bodySmall,
                 //modifier = Modifier.padding(top = 20.dp)
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colorScheme.onPrimary)
+        }
 
-            Spacer(modifier = Modifier.height(20.dp))
+        Text(text = stringResource(R.string.contact_issues),
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.titleMedium,
+            //modifier = Modifier.padding(top = 20.dp)
+            fontWeight = FontWeight.Light,
+            color = MaterialTheme.colorScheme.onPrimary)
 
-            //       SOURCE CODE      //
-            Text(text = stringResource(R.string.sourcecode_options_header),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold
-            )
+        Spacer(modifier = Modifier.height(20.dp))
 
-            Column {
-                val context = LocalContext.current
-                val gitlabIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://gitlab.com/vipe1375/kords")) }
-                val githubIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/vipe1375/kords")) }
+        //       SOURCE CODE      //
+        Text(text = stringResource(R.string.sourcecode_options_header),
+            modifier = Modifier.fillMaxWidth(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold
+        )
 
-                //Gitlab
-                Row (
-                    modifier = Modifier.padding(10.dp)
-                ){
-                    Icon(painter = painterResource(R.drawable.gitlab_logo),
-                        modifier = Modifier
-                            .size(40.dp),
-                        contentDescription = "gitlab logo",
-                        tint = Color.Unspecified)
+        Column {
+            val context = LocalContext.current
+            val gitlabIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://gitlab.com/vipe1375/kords")) }
+            val githubIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/vipe1375/kords")) }
 
-                    TextButton(
-                        onClick = { context.startActivity(gitlabIntent) },
-                        //modifier = Modifier.padding(top = 20.dp)
-                    ) {
-                        Text(text = stringResource(R.string.sourcecode_gitlab),
-                            style = MaterialTheme.typography.titleMedium,
-                            //modifier = Modifier.padding(top = 20.dp)
-                            fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.onPrimary)
+            //Gitlab
+            Row (
+                modifier = Modifier.padding(10.dp)
+            ){
+                Icon(painter = painterResource(R.drawable.gitlab_logo),
+                    modifier = Modifier
+                        .size(40.dp),
+                    contentDescription = "gitlab logo",
+                    tint = Color.Unspecified)
 
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                            contentDescription = null,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            tint = MaterialTheme.colorScheme.onPrimary)
-                    }
-                }
-
-
-                // Github
-                Row (
-                    modifier = Modifier.padding(10.dp)
+                TextButton(
+                    onClick = { context.startActivity(gitlabIntent) },
+                    //modifier = Modifier.padding(top = 20.dp)
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.github_logo),
-                        modifier = Modifier
-                            .size(40.dp),
-                        contentDescription = "github logo",
-                        tint = MaterialTheme.colorScheme.onPrimary)
-
-                    TextButton(onClick = { context.startActivity(githubIntent) },
+                    Text(text = stringResource(R.string.sourcecode_gitlab),
+                        style = MaterialTheme.typography.titleMedium,
                         //modifier = Modifier.padding(top = 20.dp)
-                    ) {
-                        Text(text = stringResource(R.string.sourcecode_github),
-                            //modifier = Modifier.padding(top = 20.dp),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.onPrimary)
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onPrimary)
 
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                            contentDescription = null,
-                            modifier = Modifier.padding(horizontal = 10.dp),
-                            tint = MaterialTheme.colorScheme.onPrimary)
-                    }
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary)
                 }
-
-                
             }
+
+
+            // Github
+            Row (
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Icon(painter = painterResource(id = R.drawable.github_logo),
+                    modifier = Modifier
+                        .size(40.dp),
+                    contentDescription = "github logo",
+                    tint = MaterialTheme.colorScheme.onPrimary)
+
+                TextButton(onClick = { context.startActivity(githubIntent) },
+                    //modifier = Modifier.padding(top = 20.dp)
+                ) {
+                    Text(text = stringResource(R.string.sourcecode_github),
+                        //modifier = Modifier.padding(top = 20.dp),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onPrimary)
+
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                        contentDescription = null,
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        tint = MaterialTheme.colorScheme.onPrimary)
+                }
+            }
+
+
         }
     }
 }

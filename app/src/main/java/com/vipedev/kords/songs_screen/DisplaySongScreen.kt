@@ -55,118 +55,112 @@ import com.vipedev.kords.songs_screen.database.Song
 fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
 
     val context = LocalContext.current
-
-    Surface(
-        color = MaterialTheme.colorScheme.background,
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp)
+
+        //        HEADER BAR       //
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
 
-            //        HEADER BAR       //
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+            // back button
+            TextButton(
+                onClick = { viewModel.resetCurrentSong() },
+                modifier = Modifier.align(Alignment.CenterStart)
             ) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+            }
 
-                // back button
+            /*Text(
+                text = stringResource(R.string.song_view_header),
+                modifier = Modifier.padding(20.dp)
+            )*/
+
+            // edit and delete button
+            Row (
+                modifier = Modifier.align(Alignment.CenterEnd)
+            ){
                 TextButton(
-                    onClick = { viewModel.resetCurrentSong() },
-                    modifier = Modifier.align(Alignment.CenterStart)
+                    onClick = {
+                        viewModel.initEdition(song)
+                    }
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    Icon(Icons.Default.Edit, contentDescription = null)
                 }
 
-                /*Text(
-                    text = stringResource(R.string.song_view_header),
-                    modifier = Modifier.padding(20.dp)
-                )*/
+                TextButton(
+                    onClick = {
+                        viewModel.songToDelete = song
+                        viewModel.showDeleteSongDialog = true
 
-                // edit and delete button
-                Row (
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ){
-                    TextButton(
-                        onClick = {
-                            viewModel.initEdition(song)
-                        }
-                    ) {
-                        Icon(Icons.Default.Edit, contentDescription = null)
-                    }
-
-                    TextButton(
-                        onClick = {
-                            viewModel.songToDelete = song
-                            viewModel.showDeleteSongDialog = true
-
-                        },
-                    ) {
-                        Icon(Icons.Default.Delete, contentDescription = null)
-                    }
+                    },
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = null)
                 }
             }
+        }
 
-            if (viewModel.showDeleteSongDialog) {
-                DeleteDialog(
-                    viewModel = viewModel,
-                    context = context
-                )
-            }
+        if (viewModel.showDeleteSongDialog) {
+            DeleteDialog(
+                viewModel = viewModel,
+                context = context
+            )
+        }
 
-            Column(
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+        ) {
+            Text(
+                text = song.title,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = song.title,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(10.dp),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontStyle = FontStyle.Italic,
-                    fontWeight = FontWeight.Bold
-                )
+                    .padding(10.dp),
+                style = MaterialTheme.typography.headlineMedium,
+                fontStyle = FontStyle.Italic,
+                fontWeight = FontWeight.Bold
+            )
 
+            Text(
+                text = song.artist,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Normal
+            )
+        }
+
+        //    STRUCTURE     //
+        song.structure.forEach { (section, chords) ->
+            if (section.isNotBlank() && chords.isNotEmpty()) {
+                val sectionName = viewModel.getLocalizedSectionName(section)
+
+                // section header
                 Text(
-                    text = song.artist,
+                    text = sectionName,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(10.dp),
+                        .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Normal
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                 )
-            }
 
-            //    STRUCTURE     //
-            song.structure.forEach { (section, chords) ->
-                if (section.isNotBlank() && chords.isNotEmpty()) {
-                    val sectionName = viewModel.getLocalizedSectionName(section)
-
-                    // section header
-                    Text(
-                        text = sectionName,
-                        modifier = Modifier
-                            .padding(top = 20.dp, start = 20.dp, bottom = 10.dp),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    // chords
-                    LazyRow (
-                        modifier = Modifier
-                            .padding(horizontal = 20.dp)
-                            .fillMaxWidth()
-                    ){
-                        items(chords) { chord ->
-                            Text(text = "$chord  ",
-                                style = MaterialTheme.typography.bodySmall,
-                                overflow = TextOverflow.Ellipsis)
-                        }
+                // chords
+                LazyRow (
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth()
+                ){
+                    items(chords) { chord ->
+                        Text(text = "$chord  ",
+                            style = MaterialTheme.typography.bodySmall,
+                            overflow = TextOverflow.Ellipsis)
                     }
                 }
             }

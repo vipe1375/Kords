@@ -37,46 +37,18 @@ fun VisualizeButton(
     viewModel: ChordsViewModel
 ) {
     Button(
-        modifier = Modifier
-            .padding(horizontal = 20.dp),
+        modifier = Modifier.padding(horizontal = 20.dp),
         enabled = viewModel.showVisualizeButton,
-        onClick = {
-            if (viewModel.searchResult.size == 1) {
-                val visualizedChord = viewModel.searchResult[0]
-                viewModel.visualizeChord(visualizedChord)
-            }
-            else {
-                val visualizedChord = viewModel.searchResult[viewModel.visualizedID - 1]
-                viewModel.visualizeChord(visualizedChord)
-                viewModel.changeVisualizedChord()
-            }
-
-
-        },
+        onClick = { viewModel.changeVisualizedChord() },
         content = {
             Text(
                 LocalContext.current.resources.getQuantityString(
                     R.plurals.visualize_button_text,
-                    viewModel.searchResult.size,   // quantity
-                    viewModel.visualizedID,   // arg1
-                    viewModel.searchResult.size
+                    viewModel.searchResult.size,       // quantity
+                    viewModel.visualizedIndex + 1,     // arg1 (1-based)
+                    viewModel.searchResult.size        // arg2
                 )
-            )  // arg2
-        })
-}
-
-/*
-@Composable
-fun ChangeChordButton(viewModel: ChordsViewModel, right: Boolean) {
-    Button(onClick = { viewModel.changeVisualizedChord(right = right) },
-        shape = CircleShape,
-
-        ) {
-        if (right) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
-        } else {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null)
+            )
         }
-
-    }
-}*/
+    )
+}

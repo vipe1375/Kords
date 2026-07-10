@@ -22,16 +22,9 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun MainSongScreen(viewModel: SongsViewModel) {
-    println("main : ${viewModel.showDeleteSongDialog}, ${viewModel.showDeleteSectionDialog}")
     if (viewModel.isEditingSong) {
-        if (viewModel.currentSong == null) {
-            EditSongScreen(viewModel = viewModel)
-        }
-        else {
-            EditSongScreen(viewModel = viewModel, song = viewModel.currentSong)
-        }
+        EditSongScreen(viewModel = viewModel)
     }
-
     else {
         if (viewModel.currentSong == null) {
             SongsListScreen(viewModel = viewModel)

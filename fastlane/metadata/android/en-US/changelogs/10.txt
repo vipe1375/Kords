@@ -1,6 +1,6 @@
 ## Changes
-- interface de la page Accords
-- interface de la page Chansons
+- Chords page UI
+- Songs page UI
 
 ## Coming
-- sons des accords
+- chord sounds

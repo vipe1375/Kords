@@ -19,7 +19,13 @@
 package com.vipedev.kords
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,6 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -68,6 +75,9 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = (selectedItemIndex == index),
                         onClick = {selectedItemIndex = index
+                                  viewModel.isScreenVisible = index == 0
+                                  songsViewModel.isScreenVisible = index == 1
+                                  settingsViewModel.isScreenVisible = index == 2
                                   },
                         label = { Text(text = item.title) },
                         icon = {
@@ -94,11 +104,24 @@ fun MainScreen(
         }
     ){
         innerPadding -> // 1. Capture the padding values here
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) { }
         Box(modifier = Modifier.padding(innerPadding)) { // 2. Apply them to a container
-            when(selectedItemIndex) {
-                0 -> ChordScreen(viewModel = viewModel)
-                1 -> MainSongScreen(songsViewModel)
-                2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
+            AnimatedContent(
+                targetState = selectedItemIndex,
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(500)) togetherWith
+                            fadeOut(animationSpec = tween(500))
+                },
+                label = "screen_transition"
+            ) { targetIndex ->
+                when (targetIndex) {
+                    0 -> ChordScreen(viewModel = viewModel)
+                    1 -> MainSongScreen(songsViewModel)
+                    2 -> SettingsScreen(dataStore = dataStore, viewModel = settingsViewModel)
+                }
             }
         }
     }

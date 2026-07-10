@@ -28,75 +28,116 @@ import androidx.lifecycle.ViewModel
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.allChords
-import com.vipedev.kords.chords.database.findChord
 import com.vipedev.kords.chords.database.findChord2
 import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
 
-@SuppressLint("MutableCollectionMutableState")
 class ChordsViewModel(
     private val context: Context
 ) : ViewModel() {
 
-    var currentChord by mutableStateOf(mutableListOf("0", "2", "3", "2")) // id of the current chord
+    // --- Chord displayed on the grid ---
+    var currentChord by mutableStateOf(Chord("G", "0-2-3-2"))
         private set
 
-    var currentChordName by mutableStateOf("G") // name of the current chord
+    var alternativeNames by mutableStateOf<List<String>>(emptyList())
         private set
 
-    var searched by mutableStateOf(value = false) // if user clicked search
+    // --- Search ---
+    var textInput by mutableStateOf("G")
         private set
-
-    var chordSearched by mutableStateOf("G") // chord typed by the user
-        private set
-
-    var chordSearchedID by mutableStateOf(
-        mutableListOf(
-            "",
-            "",
-            "",
-            ""
-        )
-    ) // id of the chord searched (if found)
-        private set
-
-    var searchResult: MutableList<Chord> by mutableStateOf(mutableListOf()) // list of chords found by name
-        private set
-
-    var visualizedID by mutableIntStateOf(1) // id of the currently visualized chord
-
-    var showVisualizeButton by mutableStateOf(false) // show visualized button or not when a chord is searched
 
     var showSuggestions by mutableStateOf(false)
 
-    var extraChordNames by mutableStateOf("") // To store "Em7-G" etc.
+    var searchResult by mutableStateOf<List<Chord>>(emptyList())
         private set
+
+    var showVisualizeButton by mutableStateOf(false)
+        private set
+
+    var visualizedIndex by mutableIntStateOf(0) // index of the chord in searchResult
+
+    var isScreenVisible by mutableStateOf(true)
 
     init {
         searchChord()
     }
 
-    fun changeCurrentChord(newChord: MutableList<String>) {
-        /**
-         * update currentChord ID to the given ID
-         * @param newChord
-         */
-        searched = false
-        currentChord = newChord
+    /**
+     * Updates the displayed chord based on a fingering string.
+     *
+     * It identifies the possible names for the given fingering, selecting the shortest name
+     * as the primary title and storing the others as alternative names.
+     *
+     * @param fingers A string representing the chord fingering (e.g., "0-2-3-2").
+     */
+    private fun displayFingering(fingers: String) {
 
-        val names = nameChord(context, currentChord.joinToString(separator = "-"))
-        val namesList = names.split("-").sortedBy { it.length }
-        currentChordName = namesList[0]
-        extraChordNames = if (namesList.size > 1) {
-            namesList.drop(1).joinToString(separator = "-")
+        val names = nameChord(context, fingers)
+            .split("-")
+            .filter { it.isNotEmpty() }
+            .sortedBy { it.length }
+
+        currentChord = Chord(
+            name = names.firstOrNull() ?: context.getString(R.string.no_chord_found_name),
+            fingers = fingers
+        )
+        alternativeNames = names.drop(1)
+    }
+
+    /**
+     * Changes the displayed chord and erases search result.
+     * Called when a button is clicked on the grid.
+     * @param fingers A list of strings representing the chord fingering (e.g., ["0", "2", "3", "2"]).
+     * */
+    fun changeFingering(fingers: List<String>) {
+        displayFingering(fingers.joinToString("-"))
+        searchResult = emptyList()
+        showVisualizeButton = false
+    }
+
+    fun changeTextInput(newText: String) {
+        textInput = newText
+    }
+
+    /**
+     * Searches a chord by its name.
+     * Called when clicking on the search button or a suggestion in the dropdown.*/
+    fun searchChord() {
+        showSuggestions = false
+        val result = findChord2(textInput.lowercase())
+
+        if (result.isNotEmpty()) {
+            searchResult = result
+            visualizedIndex = 0
+            showVisualizeButton = true
+            displayFingering(result[0].fingers)
         } else {
-            ""
+            // No chord found
+            currentChord = Chord(
+                context.getString(R.string.no_chord_found_name),
+                currentChord.fingers
+            )
+            alternativeNames = emptyList()
+            searchResult = emptyList()
+            showVisualizeButton = false
         }
     }
 
-    fun changeChordSearched(newChord: String) {
-        chordSearched = newChord
-        searched = false
+    /** Changes the displayed chord to the next one in the search result.
+     * Called when clicking the View button */
+    fun changeVisualizedChord() {
+        if (searchResult.isEmpty()) return
+        visualizedIndex = (visualizedIndex + 1) % searchResult.size
+        displayFingering(searchResult[visualizedIndex].fingers)
+    }
+
+    fun getSuggestions(): List<String> {
+        val query = textInput.lowercase()
+        if (query.isEmpty()) return emptyList()
+        return allChords
+            .filter { it.lowercase().contains(query) }
+            .sortedBy { it.length }
     }
 
     suspend fun delaySuggestions() {
@@ -106,68 +147,6 @@ class ChordsViewModel(
     }
 
     fun resetChordSearched() {
-        chordSearched = ""
+        textInput = ""
     }
-
-    fun searchChord() {
-        showVisualizeButton = false
-        visualizedID = 1
-        val result = findChord2(chordSearched.lowercase())
-        println(result)
-        //val result = chordsDao.getChordsByName(chordSearched.lowercase())
-
-        if (result.isNotEmpty()) {
-            searchResult = result.toMutableList()
-            chordSearchedID = result[0].fingers.split("-").toMutableList()
-            showVisualizeButton = true
-            visualizeChord(result[0])
-            // changeCurrentChord(chordSearchedID)
-            currentChordName = result[0].name
-
-        } else {
-            currentChordName = context.getString(R.string.no_chord_found_name)
-            showVisualizeButton = false
-            extraChordNames = ""
-        }
-
-        searched = true
-    }
-
-    fun getSuggestions(): List<String> {
-        val query = chordSearched.lowercase()
-        if (query.isEmpty()) return emptyList()
-
-        return allChords
-            .filter { it.lowercase().contains(query) }
-            .sortedBy { it.length }
-    }
-
-    fun visualizeChord(chord: Chord) {
-        currentChord = chord.fingers.split("-").toMutableList()
-        currentChordName = chord.name
-
-        val allNames = nameChord(context, chord.fingers)
-
-        if (allNames == currentChordName) {
-            extraChordNames = ""
-        }
-        else {
-            val extraNames = allNames.split("-").toMutableList()
-            println(extraNames)
-            extraNames.remove(currentChordName)
-            println(extraNames)
-            println("DEBUG : ${extraNames.joinToString(separator = "-")}")
-            extraChordNames = extraNames.joinToString(separator = "-")
-        }
-    }
-
-    fun changeVisualizedChord() {
-        visualizedID += 1
-        if (visualizedID > searchResult.size) {
-            visualizedID = 1
-        }
-
-        visualizeChord(searchResult[visualizedID - 1])
-    }
-
 }

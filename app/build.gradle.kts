@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "com.vipedev.kords"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.vipedev.kords"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 10
-        versionName = "1.2.9"
+        targetSdk = 36
+        versionCode = 12
+        versionName = "1.2.10"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.plus(listOf("en", "fr"))
@@ -44,9 +44,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -55,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.animation.core)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui.graphics)
@@ -79,6 +77,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     //implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
+    // implementation("dev.kotlinds:fluidsynth-kmp:1.1.0")
 /*
 
     // Import the BoM for the Firebase platform

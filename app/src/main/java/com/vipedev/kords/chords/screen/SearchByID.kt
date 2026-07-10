@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -53,11 +52,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.vipedev.kords.R
 
 
 @SuppressLint("MutableCollectionMutableState")
@@ -67,10 +63,6 @@ fun SearchByID(viewModel: ChordsViewModel) {
     val inactiveButtonSize: Dp = 60.dp
     val inactiveButtonPadding: Dp = 5.dp
     val activeButtonPadding: Dp = 4.dp
-
-    var inputChord by remember {
-        mutableStateOf("0-2-3-2")
-    }
 
     val currentChord = viewModel.currentChord
     val scrollState = rememberScrollState()
@@ -156,18 +148,14 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
                         Row {
                             for (j in 0 until 4) {
-                                if (currentChord[j] == i.toString()) {
+                                if (currentChord.fingers.split("-")[j] == i.toString()) {
                                     // active button
                                     Button(
-                                        onClick =
-                                        {
-                                            val inputChordList =
-                                                inputChord.split("-").toMutableList()
-                                            inputChordList[j] = "0"
-                                            inputChord = inputChordList.joinToString("-")
-                                            viewModel.changeCurrentChord(inputChordList)
+                                        onClick = {
+                                            val fingers = currentChord.fingers.split("-").toMutableList()
+                                            fingers[j] = "0"
+                                            viewModel.changeFingering(fingers)
                                             viewModel.resetChordSearched()
-
                                         },
                                         shape = CircleShape,
                                         modifier = Modifier
@@ -179,13 +167,10 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                 } else {
                                     // inactive button
                                     FilledTonalButton(
-                                        onClick =
-                                        {
-                                            val inputChordList =
-                                                inputChord.split("-").toMutableList()
-                                            inputChordList[j] = i.toString()
-                                            inputChord = inputChordList.joinToString("-")
-                                            viewModel.changeCurrentChord(inputChordList)
+                                        onClick = {
+                                            val fingers = currentChord.fingers.split("-").toMutableList()
+                                            fingers[j] = i.toString()
+                                            viewModel.changeFingering(fingers)
                                             viewModel.resetChordSearched()
                                         },
                                         shape = CircleShape,

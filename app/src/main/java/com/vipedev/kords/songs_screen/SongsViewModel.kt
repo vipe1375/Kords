@@ -43,6 +43,8 @@ class SongsViewModel (
     application: Application
 ) : AndroidViewModel(application) {
 
+    var isScreenVisible by mutableStateOf(false)
+
     private val context: Context get() = getApplication<Application>().applicationContext
 
     // SONG CREATION & EDITION

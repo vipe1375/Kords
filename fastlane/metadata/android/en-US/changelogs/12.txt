@@ -1,0 +1,6 @@
+## New
+- animations when switching pages
+
+## Fixed
+- language was reset to system default when going on Settings page
+- synchronisation between name and fingers on Chord page

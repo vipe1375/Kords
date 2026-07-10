@@ -65,22 +65,22 @@ fun SongsListScreen(viewModel: SongsViewModel) {
 
     val songs by viewModel.songs.observeAsState()
 
-    Surface (
+    Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .padding(all = 20.dp)
             .clip(RoundedCornerShape(15.dp))
     ) {
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Column {
+            // Spacer(modifier = Modifier.height(20.dp))
 
-        songs?.let {
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 30.dp),
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(0.dp)
-            ) {
+            songs?.let { currentSongs ->
+                LazyColumn(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 30.dp),
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
+                ) {
 
                 item {
                     Box(
@@ -142,7 +142,7 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                 }
 
                 // list of songs
-                items(songs!!) { song ->
+                items(currentSongs) { song ->
                     TextButton(
                         onClick = { viewModel.currentSong = song },
                         modifier = Modifier
@@ -282,6 +282,7 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                     Spacer(modifier = Modifier.height(128.dp))
                 }
             }
+        }
         }
         if (viewModel.showDeleteSongDialog) {
             DeleteDialog(
