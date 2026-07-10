@@ -11,11 +11,11 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.vipedev.kords"
+        applicationId = "com.vipedev.kords-2"
         minSdk = 24
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.2.10"
+        versionCode = 13
+        versionName = "1.2.11"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         resourceConfigurations.plus(listOf("en", "fr"))
