@@ -11,7 +11,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.vipedev.kords-2"
+        applicationId = "com.vipedev.kords2"
         minSdk = 24
         targetSdk = 36
         versionCode = 13

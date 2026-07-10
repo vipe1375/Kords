@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.vipedev.kords",
+  "applicationId": "com.vipedev.kords2",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 12,
-      "versionName": "1.2.10",
+      "versionCode": 13,
+      "versionName": "1.2.11",
       "outputFile": "app-release.apk"
     }
   ],
