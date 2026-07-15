@@ -111,7 +111,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
             Icon(imageVector = Icons.Filled.Email,
                 modifier = Modifier.size(40.dp),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimary)
+                tint = MaterialTheme.colorScheme.onBackground)
 
             Text(text = "vipe1375@disroot.org",
                 modifier = Modifier.padding(8.dp),
@@ -119,7 +119,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                 style = MaterialTheme.typography.bodySmall,
                 //modifier = Modifier.padding(top = 20.dp)
                 fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.onPrimary)
+                color = MaterialTheme.colorScheme.onBackground)
         }
 
         Text(text = stringResource(R.string.contact_issues),
@@ -127,7 +127,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
             style = MaterialTheme.typography.titleMedium,
             //modifier = Modifier.padding(top = 20.dp)
             fontWeight = FontWeight.Light,
-            color = MaterialTheme.colorScheme.onPrimary)
+            color = MaterialTheme.colorScheme.onBackground)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -163,12 +163,12 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                         style = MaterialTheme.typography.titleMedium,
                         //modifier = Modifier.padding(top = 20.dp)
                         fontWeight = FontWeight.Light,
-                        color = MaterialTheme.colorScheme.onPrimary)
+                        color = MaterialTheme.colorScheme.onBackground)
 
                     Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                         contentDescription = null,
                         modifier = Modifier.padding(horizontal = 10.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary)
+                        tint = MaterialTheme.colorScheme.onBackground)
                 }
             }
 
@@ -181,7 +181,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                     modifier = Modifier
                         .size(40.dp),
                     contentDescription = "github logo",
-                    tint = MaterialTheme.colorScheme.onPrimary)
+                    tint = MaterialTheme.colorScheme.onBackground)
 
                 TextButton(onClick = { context.startActivity(githubIntent) },
                     //modifier = Modifier.padding(top = 20.dp)
@@ -190,12 +190,12 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                         //modifier = Modifier.padding(top = 20.dp),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Light,
-                        color = MaterialTheme.colorScheme.onPrimary)
+                        color = MaterialTheme.colorScheme.onBackground)
 
                     Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                         contentDescription = null,
                         modifier = Modifier.padding(horizontal = 10.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary)
+                        tint = MaterialTheme.colorScheme.onBackground)
                 }
             }
 

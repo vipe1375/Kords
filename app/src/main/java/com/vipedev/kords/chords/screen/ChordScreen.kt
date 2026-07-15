@@ -74,7 +74,7 @@ fun ChordScreen(viewModel: ChordsViewModel) {
                 Text(
                     text = stringResource(id = R.string.current_chord_text),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onTertiary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
                 )
 
@@ -88,7 +88,7 @@ fun ChordScreen(viewModel: ChordsViewModel) {
             Text(
                 text = viewModel.alternativeNames.joinToString(separator = "-"),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onTertiary,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)

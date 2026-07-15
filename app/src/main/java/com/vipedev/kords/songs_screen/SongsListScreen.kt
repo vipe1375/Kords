@@ -96,8 +96,7 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                         ) {
                             Icon(
                                 Icons.AutoMirrored.Filled.Sort,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onPrimary)
+                                contentDescription = null,)
                             val sortingType: String = when (viewModel.sortingType.value) {
                                 0 -> stringResource(R.string.sorting_type_artist)
                                 1 -> stringResource(R.string.sorting_type_title)
@@ -108,7 +107,6 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 text = stringResource(R.string.sorting_type_label, sortingType),
                                 modifier = Modifier.padding(horizontal = 10.dp),
                                 style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onPrimary,
                                 textAlign = TextAlign.Start,
                                 maxLines = 1
                             )
@@ -125,13 +123,15 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 Icon(
                                     Icons.Default.ArrowUpward,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary)
+                                    // tint = MaterialTheme.colorScheme.onPrimary,
+                                )
                             }
                             else {
                                 Icon(
                                     Icons.Default.ArrowDownward,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary)
+                                    // tint = MaterialTheme.colorScheme.onPrimary
+                                )
                             }
                         }
                     }
@@ -150,8 +150,8 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                             .clip(RoundedCornerShape(10.dp)),
                         shape = RectangleShape,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
                         ),
                     ) {
                         Box (
@@ -168,7 +168,6 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 Text(
                                     text = song.title,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onPrimary,
                                     textAlign = TextAlign.Start,
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1
@@ -177,7 +176,6 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 Text(
                                     text = song.artist,
                                     style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onPrimary,
                                     textAlign = TextAlign.Start,
                                     maxLines = 1
                                 )
@@ -198,7 +196,8 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 ) {
                                     Icon(Icons.Default.Edit,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onPrimary)
+                                        //tint = MaterialTheme.colorScheme.onPrimary
+                                    )
                                 }
 
 
@@ -213,7 +212,8 @@ fun SongsListScreen(viewModel: SongsViewModel) {
                                 ) {
                                     Icon(Icons.Default.Delete,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onPrimary)
+                                        // tint = MaterialTheme.colorScheme.onPrimary
+                                    )
                                 }
 
                                 //println("here : ${viewModel.showDeleteSongDialog}, ${viewModel.showDeleteSectionDialog}")

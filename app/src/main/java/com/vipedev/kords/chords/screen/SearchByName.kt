@@ -64,73 +64,67 @@ fun SearchByName(viewModel: ChordsViewModel) {
         .take(3)
 
     // Every color the search field can use, kept in one place.
-    val fieldColors = SearchBarDefaults.inputFieldColors(
+    /*val fieldColors = SearchBarDefaults.inputFieldColors(
         focusedTextColor = MaterialTheme.colorScheme.onSurface,
-        unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+        focusedContainerColor = MaterialTheme.colorScheme.surface,
+        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
         cursorColor = MaterialTheme.colorScheme.primary,
         focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
         unfocusedLeadingIconColor = MaterialTheme.colorScheme.primary,
-        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+        focusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurface,
+        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurface,
+    )*/
 
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            MaterialTheme(
-                typography = MaterialTheme.typography.copy(
-                    bodyLarge = MaterialTheme.typography.labelLarge
+
+    MaterialTheme(
+        typography = MaterialTheme.typography.copy(
+            bodyLarge = MaterialTheme.typography.labelLarge
+        )
+    ) {
+        SearchBarDefaults.InputField(
+            query = viewModel.textInput,
+            onQueryChange = {
+                viewModel.changeTextInput(it)
+                viewModel.showSuggestions = it.isNotBlank()
+                scope.launch { viewModel.delaySuggestions() }
+            },
+            onSearch = {
+                viewModel.searchChord()
+                viewModel.showSuggestions = false
+                focusManager.clearFocus()
+            },
+            expanded = false,
+            onExpandedChange = {},
+            modifier = Modifier
+                .width(250.dp)
+                .clip(RoundedCornerShape(10.dp)),
+            placeholder = {
+                Text(
+                    stringResource(R.string.search_bar_text),
+                    style = MaterialTheme.typography.labelMedium
                 )
-            ) {
-                SearchBarDefaults.InputField(
-                    query = viewModel.textInput,
-                    onQueryChange = {
-                        viewModel.changeTextInput(it)
-                        viewModel.showSuggestions = it.isNotBlank()
-                        scope.launch { viewModel.delaySuggestions() }
-                    },
-                    onSearch = {
-                        viewModel.searchChord()
+            },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            trailingIcon = {
+                if (viewModel.textInput.isNotEmpty()) {
+                    IconButton(onClick = {
+                        viewModel.changeTextInput("")
                         viewModel.showSuggestions = false
-                        focusManager.clearFocus()
-                    },
-                    expanded = false,
-                    onExpandedChange = {},
-                    modifier = Modifier
-                        .width(250.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    placeholder = {
-                        Text(
-                            stringResource(R.string.search_bar_text),
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    trailingIcon = {
-                        if (viewModel.textInput.isNotEmpty()) {
-                            IconButton(onClick = {
-                                viewModel.changeTextInput("")
-                                viewModel.showSuggestions = false
-                            }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
-                        }
-                    },
-                    colors = fieldColors,
-                )
+                    }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
+                }
+            },
+        )
 
-                // Popup anchored under the field; its height matches the item count.
-                Suggestions(viewModel, suggestions, focusManager)
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        // Popup anchored under the field; its height matches the item count.
+        Suggestions(viewModel, suggestions, focusManager)
     }
+
+    Spacer(modifier = Modifier.height(20.dp))
 }
+
 
 /** Dropdown of matching chord names, shown only when there is something to suggest. */
 @Composable
@@ -146,7 +140,7 @@ fun Suggestions(
         onDismissRequest = { viewModel.showSuggestions = false },
         properties = PopupProperties(focusable = false), // keeps the keyboard open
         offset = DpOffset(x = 95.dp, y = 0.dp),
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         matchingChords.forEach { chord ->
             DropdownMenuItem(

@@ -170,7 +170,6 @@ fun EditSongScreen(viewModel: SongsViewModel) {
 
         //     EXISTING STRUCTURE ELEMENTS     //
         Surface(
-            color = MaterialTheme.colorScheme.surfaceVariant,
             modifier = Modifier
                 .padding(top = 20.dp)
                 .weight(1f)
@@ -213,12 +212,6 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                             .padding(10.dp),
                         shape = RoundedCornerShape(10.dp),
                         textStyle = MaterialTheme.typography.labelLarge,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                        ),
                         singleLine = true,
                         keyboardActions = KeyboardActions(
                             onDone = {focusManager.clearFocus()}
@@ -241,12 +234,6 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                             .padding(horizontal = 10.dp),
                         shape = RoundedCornerShape(10.dp),
                         textStyle = MaterialTheme.typography.labelLarge,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
-                            focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
-                        ),
                         singleLine = true,
                         keyboardActions = KeyboardActions(
                             onDone = {focusManager.clearFocus()}
@@ -300,7 +287,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                             ) {
                                 Icon(Icons.Default.Delete,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onPrimary)
+                                )
                             }
                         }
 
@@ -414,7 +401,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                 modifier = Modifier
                     .wrapContentWidth(),
                 offset = DpOffset(12.dp, 8.dp),
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                containerColor = MaterialTheme.colorScheme.surface
             ) {
                 viewModel.sectionTypes.forEach { section ->
 

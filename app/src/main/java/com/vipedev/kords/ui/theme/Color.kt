@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
 
+val Blue50 = Color(0xFFE8F1FB)
 val Blue100 = Color(0xFFAACCEE)
 val Blue200 = Color(0xFF3385D7)
 val Blue300 = Color(0xFF113355)

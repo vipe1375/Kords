@@ -68,7 +68,7 @@ fun MainScreen(
     Scaffold (
         bottomBar = {
             NavigationBar (
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 0.dp
             ){
                 items.forEachIndexed { index, item ->
@@ -82,9 +82,9 @@ fun MainScreen(
                         label = { Text(text = item.title) },
                         icon = {
                             if (index == selectedItemIndex) {
-                                Icon(item.selectedIcon, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+                                Icon(item.selectedIcon, contentDescription = null)
                             } else {
-                                Icon(item.unselectedIcon, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+                                Icon(item.unselectedIcon, contentDescription = null)
                             }
                         }
                     )

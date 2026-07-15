@@ -69,7 +69,6 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
 
     Surface (
-        color = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier
             .padding(all = 20.dp)
             .clip(RoundedCornerShape(15.dp))
@@ -143,7 +142,6 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                 .align(Alignment.CenterStart)
                                 .padding(16.dp),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground
                         )
 
                         Row {

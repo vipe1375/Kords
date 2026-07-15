@@ -77,10 +77,6 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                 modifier = Modifier
                     .padding(vertical = 5.dp)
                     .align(Alignment.CenterStart),
-
-                color = when(enabled) {
-                    true -> MaterialTheme.colorScheme.onPrimary
-                    false -> MaterialTheme.colorScheme.scrim}
             )
 
 
@@ -92,7 +88,6 @@ fun LanguageOption(viewModel: SettingsViewModel) {
 
                 // Text of current language
                 Text(text = viewModel.getLocaleName(),
-                    color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.labelLarge)
 
                 // dropdown menu
@@ -100,7 +95,7 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                     onDismissRequest = { viewModel.changeDropdownState(false) },
                     modifier = Modifier,
                     offset = DpOffset(0.dp, 10.dp),
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    // containerColor = MaterialTheme.colorScheme.onBackground
                 ) {
 
                     // dropdown items
@@ -116,9 +111,7 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp),
-                                color = when(enabled) {
-                                    true -> MaterialTheme.colorScheme.onPrimary
-                                    false -> MaterialTheme.colorScheme.scrim}
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }

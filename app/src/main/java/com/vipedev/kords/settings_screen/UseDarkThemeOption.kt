@@ -71,8 +71,8 @@ fun UseDarkThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 5.dp),
                 color = when(useSystemTheme) {
-                    false -> MaterialTheme.colorScheme.onPrimary
-                    true -> MaterialTheme.colorScheme.scrim}
+                    false -> MaterialTheme.colorScheme.onBackground
+                    true -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)}
             )
 
             Switch(
@@ -95,8 +95,8 @@ fun UseDarkThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences
                 },
             style = MaterialTheme.typography.labelMedium,
             color = when(useSystemTheme) {
-                false -> MaterialTheme.colorScheme.onPrimary
-                true -> MaterialTheme.colorScheme.scrim}
+                false -> MaterialTheme.colorScheme.onBackground
+                true -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)}
             )
     }
 

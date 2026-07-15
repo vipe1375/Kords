@@ -2,6 +2,7 @@
 /local.properties
 .DS_Store
 /build
+/app/build
 /captures
 .idea
 gradlew
@@ -28,3 +29,5 @@ local.properties
 *.sqlite
 Introduction Statement Cheat Sheet US Letter (1).pdf
 /private
+/app/src/main/java/com/vipedev/kords/ui/theme/notes.txt
+/app/src/main/java/com/vipedev/kords/chords/database/Ukulele-Hedsound-com.sf2
