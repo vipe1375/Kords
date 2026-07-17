@@ -52,7 +52,7 @@ fun ChordScreen(viewModel: ChordsViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
 
         //          SEARCH BAR          //
@@ -61,39 +61,37 @@ fun ChordScreen(viewModel: ChordsViewModel) {
 
         //          SEARCH A CHORD BY ID SURFACE         //
 
-        Box(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center,
-        ) {
-            Row (
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ){
-                Text(
-                    text = stringResource(id = R.string.current_chord_text),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                )
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
 
-                Text(
-                    text = viewModel.currentChord.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-            }
+        ) {
+            Text(
+                text = stringResource(id = R.string.current_chord_text),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(start = 20.dp)
+            )
+
+            Text(
+                text = viewModel.currentChord.name,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+
             Text(
                 text = viewModel.alternativeNames.joinToString(separator = "-"),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 60.dp),
+                    .wrapContentWidth()
+                    .padding(start = 6.dp)
             )
+
         }
 
         Spacer(modifier = Modifier.height(15.dp))

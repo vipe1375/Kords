@@ -1,0 +1,3 @@
+## Changement & Réparations
+- superposition des noms d'accords sur la page principale retirée
+- faute d'orthographe dans les metadata
