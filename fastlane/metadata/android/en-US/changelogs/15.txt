@@ -1,0 +1,4 @@
+## Added
+- the chords in a song are now clickable to see possible fingers
+## Fixed
+- the color of the Language options in the settings

@@ -45,12 +45,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.chords.screen.ChordScreen
-import com.vipedev.kords.chords.screen.ChordsViewModel
-import com.vipedev.kords.settings_screen.SettingsScreen
-import com.vipedev.kords.settings_screen.SettingsViewModel
-import com.vipedev.kords.settings_screen.StorePreferences
-import com.vipedev.kords.songs_screen.MainSongScreen
-import com.vipedev.kords.songs_screen.SongsViewModel
+import com.vipedev.kords.chords.ChordsViewModel
+import com.vipedev.kords.settings.SettingsScreen
+import com.vipedev.kords.settings.SettingsViewModel
+import com.vipedev.kords.settings.StorePreferences
+import com.vipedev.kords.songs.screen.MainSongScreen
+import com.vipedev.kords.songs.SongsViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

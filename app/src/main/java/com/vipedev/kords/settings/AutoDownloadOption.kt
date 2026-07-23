@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.settings_screen
+package com.vipedev.kords.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,16 +40,18 @@ import com.vipedev.kords.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences) {
+fun AutoDownloadOption(dataStore: StorePreferences) {
+
+    val title = stringResource(R.string.auto_download)
+    val descriptionOn = stringResource(R.string.auto_download_on)
+    val descriptionOff = stringResource(R.string.auto_download_off)
+
+    val frac = 0.8F
 
     // scope
     val scope = rememberCoroutineScope()
 
-    val useSystemTheme = dataStore.getUseSystemTheme.collectAsState(initial = true).value!!
-
-    val title = stringResource(R.string.use_system_theme)
-    val descriptionOn = stringResource(R.string.use_system_theme_on)
-    val descriptionOff = stringResource(R.string.use_system_theme_off)
+    val savedState = dataStore.getAutoDownload.collectAsState(initial = true).value!!
 
     Column (
         modifier = Modifier.fillMaxWidth(),
@@ -58,19 +60,21 @@ fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferenc
     ){
 
         Box (
-            contentAlignment = Alignment.CenterStart,
+            contentAlignment = Alignment.CenterEnd,
             modifier = Modifier.fillMaxWidth()
         ){
-
             Text(text = title,
                 style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .fillMaxWidth(frac)
             )
 
             Switch(
-                checked = useSystemTheme,
+                checked = savedState,
                 onCheckedChange = {
-                    scope.launch { dataStore.saveUseSystemTheme(!useSystemTheme) }
+                    scope.launch { dataStore.saveAutoDownload(!savedState) }
                 },
                 enabled = true,
                 modifier = Modifier
@@ -79,14 +83,16 @@ fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferenc
             )
         }
 
-        Text(text = if (useSystemTheme) {
+        Text(
+            text = if (savedState) {
                 descriptionOn
             } else {
                 descriptionOff
             },
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.fillMaxWidth(frac)
         )
     }
 
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(20.dp))
 }

@@ -44,15 +44,13 @@ import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
-import com.vipedev.kords.chords.screen.ChordsViewModel
-import com.vipedev.kords.settings_screen.SettingsViewModel
-import com.vipedev.kords.settings_screen.StorePreferences
-import com.vipedev.kords.songs_screen.SongsViewModel
-import com.vipedev.kords.songs_screen.database.SongsDao
-import com.vipedev.kords.songs_screen.database.SongsDatabase
+import com.vipedev.kords.chords.ChordsViewModel
+import com.vipedev.kords.settings.SettingsViewModel
+import com.vipedev.kords.settings.StorePreferences
+import com.vipedev.kords.songs.SongsViewModel
+import com.vipedev.kords.songs.database.SongsDao
+import com.vipedev.kords.songs.database.SongsDatabase
 import com.vipedev.kords.ui.theme.KordsJetpackTheme
 
 

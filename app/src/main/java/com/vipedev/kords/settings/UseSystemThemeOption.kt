@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.settings_screen
+package com.vipedev.kords.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,18 +40,16 @@ import com.vipedev.kords.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun AutoDownloadOption(dataStore: StorePreferences) {
-
-    val title = stringResource(R.string.auto_download)
-    val descriptionOn = stringResource(R.string.auto_download_on)
-    val descriptionOff = stringResource(R.string.auto_download_off)
-
-    val frac = 0.8F
+fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences) {
 
     // scope
     val scope = rememberCoroutineScope()
 
-    val savedState = dataStore.getAutoDownload.collectAsState(initial = true).value!!
+    val useSystemTheme = dataStore.getUseSystemTheme.collectAsState(initial = true).value!!
+
+    val title = stringResource(R.string.use_system_theme)
+    val descriptionOn = stringResource(R.string.use_system_theme_on)
+    val descriptionOff = stringResource(R.string.use_system_theme_off)
 
     Column (
         modifier = Modifier.fillMaxWidth(),
@@ -60,21 +58,19 @@ fun AutoDownloadOption(dataStore: StorePreferences) {
     ){
 
         Box (
-            contentAlignment = Alignment.CenterEnd,
+            contentAlignment = Alignment.CenterStart,
             modifier = Modifier.fillMaxWidth()
         ){
+
             Text(text = title,
                 style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .fillMaxWidth(frac)
+                fontWeight = FontWeight.Bold
             )
 
             Switch(
-                checked = savedState,
+                checked = useSystemTheme,
                 onCheckedChange = {
-                    scope.launch { dataStore.saveAutoDownload(!savedState) }
+                    scope.launch { dataStore.saveUseSystemTheme(!useSystemTheme) }
                 },
                 enabled = true,
                 modifier = Modifier
@@ -83,16 +79,14 @@ fun AutoDownloadOption(dataStore: StorePreferences) {
             )
         }
 
-        Text(
-            text = if (savedState) {
+        Text(text = if (useSystemTheme) {
                 descriptionOn
             } else {
                 descriptionOff
             },
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.fillMaxWidth(frac)
+            style = MaterialTheme.typography.labelMedium
         )
     }
 
-    Spacer(modifier = Modifier.height(20.dp))
+    Spacer(modifier = Modifier.height(10.dp))
 }

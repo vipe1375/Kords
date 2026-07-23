@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen
+package com.vipedev.kords.songs.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
+import com.vipedev.kords.songs.SongsViewModel
 
 @Composable
 fun SongsListScreen(viewModel: SongsViewModel) {

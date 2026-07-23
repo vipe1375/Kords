@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen
+package com.vipedev.kords.songs.screen
 
 import android.content.Context
 import androidx.compose.material3.AlertDialog
@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.stringResource
 import com.vipedev.kords.R
-import com.vipedev.kords.songs_screen.database.Song
+import com.vipedev.kords.songs.SongsViewModel
 
 @Composable
 fun DeleteDialog(viewModel: SongsViewModel, context: Context) {

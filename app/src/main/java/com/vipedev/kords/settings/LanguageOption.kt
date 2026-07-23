@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.settings_screen
+package com.vipedev.kords.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,14 +27,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -95,25 +92,18 @@ fun LanguageOption(viewModel: SettingsViewModel) {
                     onDismissRequest = { viewModel.changeDropdownState(false) },
                     modifier = Modifier,
                     offset = DpOffset(0.dp, 10.dp),
-                    // containerColor = MaterialTheme.colorScheme.onBackground
+                    containerColor = MaterialTheme.colorScheme.surface
                 ) {
 
                     // dropdown items
                     languages.forEach { item ->
-                        TextButton(
+                        DropdownMenuItem(
+                            text = {Text(text = item.title)},
                             onClick = {
                                 viewModel.changeDropdownState(false)
                                 viewModel.localeSelection(context, item.id)
-
                             }
-                        ) {
-                            Text(text = item.title,
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp),
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                        )
                     }
                 }
             }

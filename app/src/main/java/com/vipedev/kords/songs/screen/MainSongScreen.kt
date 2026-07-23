@@ -16,9 +16,10 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen
+package com.vipedev.kords.songs.screen
 
 import androidx.compose.runtime.Composable
+import com.vipedev.kords.songs.SongsViewModel
 
 @Composable
 fun MainSongScreen(viewModel: SongsViewModel) {

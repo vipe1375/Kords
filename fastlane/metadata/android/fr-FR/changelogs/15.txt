@@ -1,0 +1,4 @@
+## Ajouté
+- Les accords dans une chanson sont maintenants cliquables pour voir les doigtés possibles
+## Corrigé
+- Couleur des options pour le menu Langue des paramètres

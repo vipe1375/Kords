@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.settings_screen
+package com.vipedev.kords.settings
 
 import android.app.LocaleManager
 import android.content.Context

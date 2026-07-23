@@ -16,25 +16,24 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen
+package com.vipedev.kords.songs.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -48,7 +47,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
-import com.vipedev.kords.songs_screen.database.Song
+import com.vipedev.kords.chords.database.findChord2
+import com.vipedev.kords.songs.SongsViewModel
+import com.vipedev.kords.songs.database.Song
 
 
 @Composable
@@ -158,12 +159,92 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                         .fillMaxWidth()
                 ){
                     items(chords) { chord ->
-                        Text(text = "$chord  ",
+
+                        TextButton(
+                            modifier = Modifier
+                                .wrapContentWidth(),
+                            onClick = {
+                                viewModel.chordInDialogName = chord
+                                viewModel.showChordDialog = !viewModel.showChordDialog
+                            }
+                        ) {
+                            Text(text = "$chord  ",
+                                style = MaterialTheme.typography.bodySmall,
+                                overflow = TextOverflow.Ellipsis,
+                                color = MaterialTheme.colorScheme.onBackground)
+                        }
+
+                        /*Text(text = "$chord  ",
                             style = MaterialTheme.typography.bodySmall,
-                            overflow = TextOverflow.Ellipsis)
+                            overflow = TextOverflow.Ellipsis)*/
                     }
                 }
             }
         }
+
+        if (viewModel.showChordDialog) {
+            ChordGlimpse(viewModel = viewModel)
+        }
     }
+}
+
+@Composable
+fun ChordGlimpse(viewModel: SongsViewModel) {
+    /*
+    Creates an elevated ? to show the fingers of a chord.
+    */
+
+    val chordName = viewModel.chordInDialogName
+
+    if (chordName.isBlank()) {
+        return;
+    }
+
+    var text: String;
+    val result = findChord2(chordName.lowercase())
+    val isChord = result.isNotEmpty()
+    text = if (!isChord) {
+        stringResource(R.string.no_chord_found_name)
+    }
+    else {
+        result[viewModel.chordDialogResultId].fingers
+    }
+
+    AlertDialog(
+        title = {
+            Text(text = text, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        },
+        text = {
+            Text(text = "G-C-E-A", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+        },
+        onDismissRequest = {
+            viewModel.showChordDialog = false
+            viewModel.chordDialogResultId = 0
+            viewModel.chordInDialogName = ""
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    viewModel.showChordDialog = false
+                    viewModel.chordDialogResultId = 0
+                    viewModel.chordInDialogName = ""
+                }
+            ) {
+                Text("Fermer")
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = isChord,
+                onClick = {
+                    viewModel.chordDialogResultId = (viewModel.chordDialogResultId + 1) % result.size
+                }
+            ) {
+                Text("${viewModel.chordDialogResultId+1}/${result.size}")
+            }
+        },
+        containerColor = MaterialTheme.colorScheme.surface,
+    )
+
+
 }

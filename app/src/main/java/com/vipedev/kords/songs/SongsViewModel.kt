@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen
+package com.vipedev.kords.songs
 
 import android.app.Application
 import android.content.Context
@@ -34,8 +34,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vipedev.kords.R
-import com.vipedev.kords.songs_screen.database.Song
-import com.vipedev.kords.songs_screen.database.SongsDao
+import com.vipedev.kords.songs.database.Song
+import com.vipedev.kords.songs.database.SongsDao
 import kotlinx.coroutines.launch
 
 class SongsViewModel (
@@ -72,6 +72,11 @@ class SongsViewModel (
     var sectionDropdownState by mutableStateOf(false)
 
     val struct = mutableStateMapOf<String, String>()
+
+    var showChordDialog by mutableStateOf(false)
+
+    var chordDialogResultId by mutableIntStateOf(0)
+    var chordInDialogName by mutableStateOf("")
 
     fun updateIsEditingSong(value: Boolean) {
         isEditingSong = value

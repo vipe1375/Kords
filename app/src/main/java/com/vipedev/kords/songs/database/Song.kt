@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.vipedev.kords.songs_screen.database
+package com.vipedev.kords.songs.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
