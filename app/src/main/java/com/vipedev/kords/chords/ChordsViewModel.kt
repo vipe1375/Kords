@@ -1,22 +1,33 @@
 package com.vipedev.kords.chords
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.vipedev.kords.R
+import com.vipedev.kords.Synth
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.allChords
 import com.vipedev.kords.chords.database.findChord2
 import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
+import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
 class ChordsViewModel(
     private val context: Context
 ) : ViewModel() {
+
+    private val synth = Synth()
+
+    override fun onCleared() {
+        synth.release()   // nécessite la méthode native release()
+    }
 
     // --- Chord displayed on the grid ---
     var currentChord by mutableStateOf(Chord("G", "0-2-3-2"))
@@ -41,8 +52,22 @@ class ChordsViewModel(
 
     var isScreenVisible by mutableStateOf(true)
 
+    var playSlowChord by mutableStateOf(false)
+
+    val slowChordDelay = 200.milliseconds
+    val normalChordDelay = 100.milliseconds
+
     init {
         searchChord()
+
+        synth.init()
+        val sf2 = File(context.filesDir, "sound.sf2")
+        if (!sf2.exists())
+            context.assets.open("sound.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
+
+
+        val id = synth.loadSf2(sf2.absolutePath)
+        Log.d("Synth", "sfload id=$id, exists=${sf2.exists()}, size=${sf2.length()}")
     }
 
     /**
@@ -130,5 +155,26 @@ class ChordsViewModel(
 
     fun resetChordSearched() {
         textInput = ""
+    }
+
+    fun playNote(key: Int = 60) {
+        synth.noteOn(0, key, 100)
+        Handler(Looper.getMainLooper()).postDelayed({ synth.noteOff(0, key) }, 3000)
+    }
+
+    suspend fun playChord(chord: Chord) {
+
+        val fingers = chord.fingers.split("-").map { it.toInt() }
+        val overtones = listOf<Int>(7, 0, 4, 9)
+        for (i in 0..3) {
+            playNote(fingers[i] + 60 + overtones[i])
+            if (playSlowChord) {
+                delay(slowChordDelay)
+            }
+            else {
+                delay(normalChordDelay)
+            }
+        }
+        playSlowChord = !playSlowChord
     }
 }

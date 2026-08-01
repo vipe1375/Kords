@@ -23,6 +23,20 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        externalNativeBuild {
+            cmake {
+                arguments("-DANDROID_STL=c++_shared")
+            }
+        }
+    }
+
+    ndkVersion = "30.0.15729638"
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+            version = "4.1.2"
+        }
     }
 
     buildTypes {
@@ -43,6 +57,7 @@ android {
     }
     buildFeatures {
         compose = true
+        prefab = true
     }
     packaging {
         resources {
@@ -109,5 +124,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    implementation(libs.oboe)
 
 }

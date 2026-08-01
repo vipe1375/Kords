@@ -83,4 +83,5 @@
     <string name="delete_section_dialog_text">Êtes-vous sûr.e de vouloir supprimer cette section ?</string>
     <string name="confirm_button_text">Confirmer</string>
     <string name="cancel_button_text">Annuler</string>
+    <string name="listen_chord_button">Écouter</string>
 </resources>

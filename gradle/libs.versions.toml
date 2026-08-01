@@ -14,6 +14,7 @@ lifecycleViewmodelKtx = "2.8.7"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.8.6"
 navigationComposeVersion = "2.9.0"
+oboe = "1.10.0"
 room_compiler = "2.8.4"
 roomKtx = "2.8.4"
 appcompat = "1.7.0"
@@ -55,6 +56,7 @@ androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", ve
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
+oboe = { module = "com.google.oboe:oboe", version.ref = "oboe" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

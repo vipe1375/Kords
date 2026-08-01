@@ -52,6 +52,7 @@ import com.vipedev.kords.songs.SongsViewModel
 import com.vipedev.kords.songs.database.SongsDao
 import com.vipedev.kords.songs.database.SongsDatabase
 import com.vipedev.kords.ui.theme.KordsJetpackTheme
+import java.io.File
 
 
 class MainActivity : ComponentActivity() {
@@ -69,26 +70,18 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
-
-    private var updated: Boolean = false // if chords have been updated from firebase
-
-    fun localeSelection(context: Context, localeTag: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java).applicationLocales =
-                LocaleList.forLanguageTags(localeTag)
-        } else {
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(localeTag)
-            )
-        }
-    }
-
+    private val synth = Synth()
 
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        synth.init()
+        val sf2 = File(filesDir, "sound.sf2")
+        if (!sf2.exists())
+            assets.open("sound.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
+        synth.loadSf2(sf2.absolutePath)
 
         setContent {
             // user settings
