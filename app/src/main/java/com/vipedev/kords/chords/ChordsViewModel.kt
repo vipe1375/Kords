@@ -63,9 +63,9 @@ class ChordsViewModel(
         searchChord()
 
         synth.init()
-        val sf2 = File(context.filesDir, "sound.sf2")
+        val sf2 = File(context.filesDir, "ukulele.sf2")
         if (!sf2.exists())
-            context.assets.open("sound.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
+            context.assets.open("ukulele.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
 
 
         val id = synth.loadSf2(sf2.absolutePath)

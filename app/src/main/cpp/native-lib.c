@@ -21,7 +21,7 @@ Java_com_vipedev_kords_Synth_loadSf2(JNIEnv *e, jobject o, jstring path) {
     (*e)->ReleaseStringUTFChars(e, path, p);
 
     if (id >= 0) {
-        int r = fluid_synth_program_select(synth, 0, id, 11, 24);
+        int r = fluid_synth_program_select(synth, 0, id, 0, 0);
         __android_log_print(ANDROID_LOG_DEBUG, "Synth", "select ret=%d id=%d", r, id);
     }
     return id;   // -1 = échec

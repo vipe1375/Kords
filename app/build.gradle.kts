@@ -25,7 +25,8 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments("-DANDROID_STL=c++_shared")
+                arguments(
+                    "-DANDROID_STL=c++_shared")
             }
         }
     }
@@ -125,6 +126,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(libs.oboe)
-
+    implementation("com.google.oboe:oboe:1.9.3")
 }
