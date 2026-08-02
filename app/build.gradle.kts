@@ -126,5 +126,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation("com.google.oboe:oboe:1.9.3")
+    implementation(libs.oboe)
 }

@@ -21,7 +21,7 @@ Or download the latest APK from the [Releases Section](https://github.com/vipe13
 
 ## What can I do if I spot a bug, or have an idea ?
 
-You can contact me by email at `vipe1375@disroot.org`, or leave an issue !
+You can contact me by email at `vipe1375@protonmail.com`, or leave an issue !
 
 ## Licence :
 see LICENCE.txt
