@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -40,7 +41,7 @@ import com.vipedev.kords.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences) {
+fun UseSystemThemeOption(dataStore: StorePreferences) {
 
     // scope
     val scope = rememberCoroutineScope()
@@ -51,42 +52,35 @@ fun UseSystemThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferenc
     val descriptionOn = stringResource(R.string.use_system_theme_on)
     val descriptionOff = stringResource(R.string.use_system_theme_off)
 
-    Column (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
-    ){
-
-        Box (
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier.fillMaxWidth()
-        ){
-
-            Text(text = title,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold
-            )
-
-            Switch(
-                checked = useSystemTheme,
-                onCheckedChange = {
-                    scope.launch { dataStore.saveUseSystemTheme(!useSystemTheme) }
-                },
-                enabled = true,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .scale(0.9f)
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp)
+    ) {
+        Text(text = title,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
 
         Text(text = if (useSystemTheme) {
                 descriptionOn
             } else {
                 descriptionOff
             },
-            style = MaterialTheme.typography.labelMedium
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.align(Alignment.BottomStart)
+        )
+
+        Switch(
+            checked = useSystemTheme,
+            onCheckedChange = {
+                scope.launch { dataStore.saveUseSystemTheme(!useSystemTheme) }
+            },
+            enabled = true,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .scale(0.9f)
         )
     }
-
-    Spacer(modifier = Modifier.height(10.dp))
 }

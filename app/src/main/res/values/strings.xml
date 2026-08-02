@@ -88,6 +88,7 @@
     <string name="delete_section_dialog_text">Are you sure you want to delete this section ?</string>
     <string name="confirm_button_text">Confirm</string>
     <string name="cancel_button_text">Cancel</string>
-    <string name="listen_chord_button">Play</string>
+    <string name="play_chord_button_text">Play</string>
+    <string name="playing_chord_button_text">Playing...</string>
 
 </resources>

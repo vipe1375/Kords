@@ -41,7 +41,7 @@ import com.vipedev.kords.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun UseDarkThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences) {
+fun UseDarkThemeOption(dataStore: StorePreferences) {
 
     val title = stringResource(R.string.use_dark_theme)
     val descriptionOn = stringResource(R.string.use_dark_theme_on)
@@ -54,51 +54,44 @@ fun UseDarkThemeOption(viewModel: SettingsViewModel, dataStore: StorePreferences
 
     val savedState = dataStore.getUseDarkTheme.collectAsState(initial = true).value!!
 
-
-    Column (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
-    ){
-
-        Box (
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier.fillMaxWidth()
-        ){
-
-            Text(text = title,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 5.dp),
-                color = when(useSystemTheme) {
-                    false -> MaterialTheme.colorScheme.onBackground
-                    true -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)}
-            )
-
-            Switch(
-                checked = savedState,
-                onCheckedChange = {
-                    scope.launch { dataStore.saveUseDarkTheme(!savedState) }
-                },
-                enabled = !(useSystemTheme),
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .scale(0.9f)
-            )
-        }
+    Box (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp)
+    ) {
+        Text(text = title,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.TopStart),
+            color = when(useSystemTheme) {
+                false -> MaterialTheme.colorScheme.onBackground
+                true -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)}
+        )
 
         Text(text =
-                if (savedState) {
-                    descriptionOn
-                } else {
-                    descriptionOff
-                },
+            if (savedState) {
+                descriptionOn
+            } else {
+                descriptionOff
+            },
+            modifier = Modifier
+                .align(Alignment.BottomStart),
             style = MaterialTheme.typography.labelMedium,
             color = when(useSystemTheme) {
                 false -> MaterialTheme.colorScheme.onBackground
                 true -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)}
-            )
-    }
+        )
 
-    Spacer(modifier = Modifier.height(10.dp))
+        Switch(
+            checked = savedState,
+            onCheckedChange = {
+                scope.launch { dataStore.saveUseDarkTheme(!savedState) }
+            },
+            enabled = !(useSystemTheme),
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .scale(0.9f)
+        )
+    }
 }

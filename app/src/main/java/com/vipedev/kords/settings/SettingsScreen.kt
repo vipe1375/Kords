@@ -23,10 +23,13 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Email
@@ -52,30 +55,37 @@ import com.vipedev.kords.R
 @Composable
 fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
 
+    Text(text = stringResource(id = R.string.settings_nav_item),
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 30.dp)
+    )
+
     Column(
             modifier = Modifier
-                .padding(vertical = 50.dp, horizontal = 20.dp)
-                .fillMaxWidth(),
+                .padding(top = 50.dp, start = 20.dp, end = 20.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
     ) {
-        Text(text = stringResource(id = R.string.settings_nav_item),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth())
-
         Spacer(modifier = Modifier.height(50.dp))
 
         // Appearance
         Text(text = stringResource(R.string.appearance_options_header),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold
         )
 
-        UseSystemThemeOption(viewModel = viewModel, dataStore = dataStore)
+        UseSystemThemeOption(dataStore = dataStore)
 
-        UseDarkThemeOption(viewModel = viewModel, dataStore = dataStore)
+        UseDarkThemeOption(dataStore = dataStore)
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -111,7 +121,7 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onBackground)
 
-            Text(text = "vipe1375@disroot.org",
+            Text(text = "vipe1375@protonmail.com",
                 modifier = Modifier.padding(8.dp),
                 fontFamily = FontFamily.Monospace,
                 style = MaterialTheme.typography.bodySmall,
@@ -138,66 +148,63 @@ fun SettingsScreen(dataStore: StorePreferences, viewModel: SettingsViewModel) {
             fontWeight = FontWeight.Bold
         )
 
-        Column {
-            val context = LocalContext.current
-            val gitlabIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://gitlab.com/vipe1375/kords")) }
-            val githubIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/vipe1375/kords")) }
 
-            //Gitlab
-            Row (
-                modifier = Modifier.padding(10.dp)
-            ){
-                Icon(painter = painterResource(R.drawable.gitlab_logo),
-                    modifier = Modifier
-                        .size(40.dp),
-                    contentDescription = "gitlab logo",
-                    tint = Color.Unspecified)
+        val context = LocalContext.current
+        val gitlabIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://gitlab.com/vipe1375/kords")) }
+        val githubIntent = remember { Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/vipe1375/kords")) }
 
-                TextButton(
-                    onClick = { context.startActivity(gitlabIntent) },
-                    //modifier = Modifier.padding(top = 20.dp)
-                ) {
-                    Text(text = stringResource(R.string.sourcecode_gitlab),
-                        style = MaterialTheme.typography.titleMedium,
-                        //modifier = Modifier.padding(top = 20.dp)
-                        fontWeight = FontWeight.Light,
-                        color = MaterialTheme.colorScheme.onBackground)
+        //Gitlab
+        Row (
+            modifier = Modifier.padding(10.dp)
+        ){
+            Icon(painter = painterResource(R.drawable.gitlab_logo),
+                modifier = Modifier
+                    .size(40.dp),
+                contentDescription = "gitlab logo",
+                tint = Color.Unspecified)
 
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        tint = MaterialTheme.colorScheme.onBackground)
-                }
-            }
-
-
-            // Github
-            Row (
-                modifier = Modifier.padding(10.dp)
+            TextButton(
+                onClick = { context.startActivity(gitlabIntent) },
+                //modifier = Modifier.padding(top = 20.dp)
             ) {
-                Icon(painter = painterResource(id = R.drawable.github_logo),
-                    modifier = Modifier
-                        .size(40.dp),
-                    contentDescription = "github logo",
-                    tint = MaterialTheme.colorScheme.onBackground)
-
-                TextButton(onClick = { context.startActivity(githubIntent) },
+                Text(text = stringResource(R.string.sourcecode_gitlab),
+                    style = MaterialTheme.typography.titleMedium,
                     //modifier = Modifier.padding(top = 20.dp)
-                ) {
-                    Text(text = stringResource(R.string.sourcecode_github),
-                        //modifier = Modifier.padding(top = 20.dp),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Light,
-                        color = MaterialTheme.colorScheme.onBackground)
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.onBackground)
 
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-                        contentDescription = null,
-                        modifier = Modifier.padding(horizontal = 10.dp),
-                        tint = MaterialTheme.colorScheme.onBackground)
-                }
+                Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = null,
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    tint = MaterialTheme.colorScheme.onBackground)
             }
+        }
 
 
+        // Github
+        Row (
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Icon(painter = painterResource(id = R.drawable.github_logo),
+                modifier = Modifier
+                    .size(40.dp),
+                contentDescription = "github logo",
+                tint = MaterialTheme.colorScheme.onBackground)
+
+            TextButton(onClick = { context.startActivity(githubIntent) },
+                //modifier = Modifier.padding(top = 20.dp)
+            ) {
+                Text(text = stringResource(R.string.sourcecode_github),
+                    //modifier = Modifier.padding(top = 20.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Light,
+                    color = MaterialTheme.colorScheme.onBackground)
+
+                Icon(imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = null,
+                    modifier = Modifier.padding(horizontal = 10.dp),
+                    tint = MaterialTheme.colorScheme.onBackground)
+            }
         }
     }
 }

@@ -54,8 +54,10 @@ class ChordsViewModel(
 
     var playSlowChord by mutableStateOf(false)
 
-    val slowChordDelay = 200.milliseconds
-    val normalChordDelay = 100.milliseconds
+    var isPlaying by mutableStateOf(false)
+
+    private val slowChordDelay = 200.milliseconds
+    private val normalChordDelay = 100.milliseconds
 
     init {
         searchChord()
@@ -101,6 +103,7 @@ class ChordsViewModel(
         displayFingering(fingers.joinToString("-"))
         searchResult = emptyList()
         showVisualizeButton = false
+        playSlowChord = false
     }
 
     fun changeTextInput(newText: String) {
@@ -159,11 +162,11 @@ class ChordsViewModel(
 
     fun playNote(key: Int = 60) {
         synth.noteOn(0, key, 100)
-        Handler(Looper.getMainLooper()).postDelayed({ synth.noteOff(0, key) }, 3000)
+        Handler(Looper.getMainLooper()).postDelayed({ synth.noteOff(0, key) }, 1000)
     }
 
     suspend fun playChord(chord: Chord) {
-
+        isPlaying = true
         val fingers = chord.fingers.split("-").map { it.toInt() }
         val overtones = listOf<Int>(7, 0, 4, 9)
         for (i in 0..3) {
@@ -176,5 +179,8 @@ class ChordsViewModel(
             }
         }
         playSlowChord = !playSlowChord
+
+        delay(1000.milliseconds)
+        isPlaying = false
     }
 }
