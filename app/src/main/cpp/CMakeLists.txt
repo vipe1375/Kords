@@ -3,8 +3,6 @@ project(app)
 
 find_package(oboe REQUIRED CONFIG)
 
-# FluidSynth cherche oboe via des variables classiques que le prefab ne définit pas.
-# On les reconstruit à partir de la cible oboe::oboe.
 get_target_property(OBOE_INC oboe::oboe INTERFACE_INCLUDE_DIRECTORIES)
 get_target_property(OBOE_LIB oboe::oboe IMPORTED_LOCATION)
 if(NOT OBOE_LIB)
@@ -23,6 +21,7 @@ set(enable-jack OFF CACHE BOOL "" FORCE)
 set(enable-alsa OFF CACHE BOOL "" FORCE)
 set(enable-readline OFF CACHE BOOL "" FORCE)
 
+set(GCEM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/gcem/include" CACHE PATH "" FORCE)
 add_subdirectory(fluidsynth)
 
 add_library(native-lib SHARED native-lib.c)

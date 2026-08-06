@@ -5,8 +5,6 @@
 /app/build
 /captures
 .idea
-gradlew
-gradlew.bat
 ChordsDAO.kt
 app/google-services.json
 bipbop.json
