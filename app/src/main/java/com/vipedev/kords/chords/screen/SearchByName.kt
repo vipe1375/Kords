@@ -19,7 +19,9 @@
 
 package com.vipedev.kords.chords.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +39,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
@@ -81,42 +84,48 @@ fun SearchByName(viewModel: ChordsViewModel) {
             bodyLarge = MaterialTheme.typography.labelLarge
         )
     ) {
-        SearchBarDefaults.InputField(
-            query = viewModel.textInput,
-            onQueryChange = {
-                viewModel.changeTextInput(it)
-                viewModel.showSuggestions = it.isNotBlank()
-                scope.launch { viewModel.delaySuggestions() }
-            },
-            onSearch = {
-                viewModel.searchChord()
-                viewModel.showSuggestions = false
-                focusManager.clearFocus()
-            },
-            expanded = false,
-            onExpandedChange = {},
-            modifier = Modifier
-                .width(250.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            placeholder = {
-                Text(
-                    stringResource(R.string.search_bar_text),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-            trailingIcon = {
-                if (viewModel.textInput.isNotEmpty()) {
-                    IconButton(onClick = {
-                        viewModel.changeTextInput("")
-                        viewModel.showSuggestions = false
-                    }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
-                }
-            },
-        )
+        Column(
+            //modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SearchBarDefaults.InputField(
+                query = viewModel.textInput,
+                onQueryChange = {
+                    viewModel.changeTextInput(it)
+                    viewModel.showSuggestions = it.isNotBlank()
+                    scope.launch { viewModel.delaySuggestions() }
+                },
+                onSearch = {
+                    viewModel.searchChord()
+                    viewModel.showSuggestions = false
+                    focusManager.clearFocus()
+                },
+                expanded = false,
+                onExpandedChange = {},
+                modifier = Modifier
+                    .width(250.dp)
+                    .clip(RoundedCornerShape(10.dp)),
+                placeholder = {
+                    Text(
+                        stringResource(R.string.search_bar_text),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                trailingIcon = {
+                    if (viewModel.textInput.isNotEmpty()) {
+                        IconButton(onClick = {
+                            viewModel.changeTextInput("")
+                            viewModel.showSuggestions = false
+                        }) { Icon(Icons.Default.Clear, contentDescription = "Effacer") }
+                    }
+                },
+            )
 
-        // Popup anchored under the field; its height matches the item count.
-        Suggestions(viewModel, suggestions, focusManager)
+            // Popup anchored under the field; its height matches the item count.
+            Suggestions(viewModel, suggestions, focusManager)
+        }
+
     }
 
     Spacer(modifier = Modifier.height(20.dp))
@@ -136,7 +145,7 @@ fun Suggestions(
             .width(190.dp),
         onDismissRequest = { viewModel.showSuggestions = false },
         properties = PopupProperties(focusable = false), // keeps the keyboard open
-        offset = DpOffset(x = 95.dp, y = 0.dp),
+        offset = DpOffset(x = 30.dp, y = 0.dp),
         containerColor = MaterialTheme.colorScheme.surface
     ) {
         matchingChords.forEach { chord ->
