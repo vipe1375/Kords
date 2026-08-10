@@ -83,6 +83,8 @@ class MainActivity : ComponentActivity() {
             assets.open("sound.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
         synth.loadSf2(sf2.absolutePath)
 
+        val player = ChordPlayer(synth)
+
         setContent {
             // user settings
             val dataStore = StorePreferences(LocalContext.current)
@@ -111,9 +113,9 @@ class MainActivity : ComponentActivity() {
                 )
 
                 // ViewModels
-                val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this))
+                val viewModel: ChordsViewModel = viewModel(factory = ChordsViewModelFactory( this, player))
                 val settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModelFactory(dataStore))
-                val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, application))
+                val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, application, player))
 
                 // Navigation
                 MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
@@ -123,14 +125,14 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-class ChordsViewModelFactory(private val context: Context) :
+class ChordsViewModelFactory(private val context: Context, private val player: ChordPlayer) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(context) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = ChordsViewModel(context, player) as T
 }
 
-class SongsViewModelFactory(private val db: SongsDao, private val application: Application) :
+class SongsViewModelFactory(private val db: SongsDao, private val application: Application,private val player: ChordPlayer) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, application) as T
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = SongsViewModel(db, application, player) as T
 }
 
 class SettingsViewModelFactory(private val dataStore: StorePreferences) :
