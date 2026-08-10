@@ -22,12 +22,12 @@ data class Chord(
     val name: String = "",
     val fingers: String = ""
 ) {
-
-    fun doesMatchNameQuery(query: String): Boolean {
-        return (query.lowercase() in name.lowercase())
+    fun renderName(name: String = this.name): String {
+        if (name.isBlank()) return ""
+        return name[0].uppercaseChar() + name.substring(1)
     }
 
-    fun doesMatchFingersQuery(query: String): Boolean {
-        return (query == fingers)
+    fun fingersToIntList(fingers: String = this.fingers): MutableList<Int> {
+        return fingers.split("-").map { it.toInt() } as MutableList<Int>
     }
 }

@@ -21,10 +21,11 @@ package com.vipedev.kords.chords.database
 val equivalentRoots: Map<String, String> = mapOf(
     "ab" to "g#",
     "cb" to "b",
+    "bb" to "a#",
     "b#" to "c",
     "db" to "c#",
     "eb" to "d#",
-    "fb" to "f",
+    "fb" to "e",
     "e#" to "f",
     "gb" to "f#"
 )
@@ -185,6 +186,7 @@ val chordsListC: List<Chord> = listOf(
     Chord("C", "0-0-0-3"),
     Chord("C", "0-4-0-3"),
     Chord("C", "0-4-3-3"),
+    Chord("C, ","5-4-3-3"),
     Chord("C5", "0-0-3-3"),
     Chord("C7", "0-0-0-1"),
     Chord("C7", "3-4-3-3"),
@@ -211,7 +213,8 @@ val chordsListC: List<Chord> = listOf(
     Chord("Cmaj7", "4-0-0-2"),
     Chord("Cmaj7", "0-4-0-2"),
     Chord("Csus4", "0-0-1-3"),
-    Chord("Csus2", "0-2-3-3"))
+    Chord("Csus2", "0-2-3-3"),
+    Chord("Csus2", "1-3-2-1"),)
 
 val chordsListCd: List<Chord> = listOf(
     Chord("C#", "1-1-1-4"),
@@ -393,7 +396,6 @@ val chordsListGd: List<Chord> = listOf(
     Chord("G#maj7", "1-3-3-3"),
     Chord("G#sus4", "1-3-4-4"),
     Chord("G#sus2", "1-3-4-1"),
-    Chord("Csus2", "1-3-2-1"),
 )
 
 val chordsList: List<Chord> = chordsListA + chordsListAd + chordsListB + chordsListC + chordsListCd + chordsListD + chordsListDd + chordsListE + chordsListF + chordsListFd + chordsListG + chordsListGd

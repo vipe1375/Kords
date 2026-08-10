@@ -21,20 +21,25 @@ class ChordPlayer(private val synth: Synth) {
     private val slowChordDelay = 200.milliseconds
     private val normalChordDelay = 100.milliseconds
     private var playSlow = false
+    private var lastPlayed: List<Int> = emptyList()
     private var job: Job? = null
 
     fun playChord(chord: Chord) {
         job = scope.launch {
             isPlaying = true
-            val fingers = chord.fingers.split("-").map { it.toInt() }
+            val fingers = chord.fingersToIntList()
             val overtones = listOf(7, 0, 4, 9)
+            if (fingers == lastPlayed) {
+                playSlow = !playSlow
+            }
             try {
                 for (i in 0..3) {
                     synth.noteOn(0, fingers[i] + 60 + overtones[i], 100)
                     delay(if (playSlow) slowChordDelay else normalChordDelay)
                 }
-                playSlow = !playSlow
+                // playSlow = false
                 delay(1000.milliseconds)
+                lastPlayed = fingers
             } finally {
                 isPlaying = false      // remis à false même si annulé
             }

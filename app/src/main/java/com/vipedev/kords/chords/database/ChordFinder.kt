@@ -18,6 +18,52 @@
 
 package com.vipedev.kords.chords.database
 
+/**
+ * Finds a chord (for now only from the database)
+ * @param name the name of the chord
+ * @return List<Chord> a list of chords that match the name
+ */
+fun findChord(name: String): List<Chord> {
+    return nameChordFromDatabase(name)
+}
+
+/**
+ * Finds a chord in the database.
+ * @param name the name of the chord
+ * @return List<Chord> a list of chords that match the name
+ */
+private fun nameChordFromDatabase(name: String): List<Chord> {
+    val (root, nonRootIndex) = findRoot(name)
+    val trueName = if (nonRootIndex >= name.length) root
+    else root + name.substring(nonRootIndex)
+    return chordsList.filter { it.name.lowercase() == trueName }
+}
+
+/**
+ * Finds the root of a chord from its name.
+ * @param name the name of the chord
+ * @return a pair <String, Int> with root and the index of the first character of the chord name that is not the root
+ */
+fun findRoot(name: String): Pair<String, Int> {
+    if (name.isEmpty()) return Pair("", 0)
+    if (name.length == 1) {
+        return if (name in equivalentRoots) {
+            Pair(equivalentRoots[name].toString(), 1)
+        } else { Pair(name, 1) }
+    }
+
+    // length > 2
+    val (root, index) = if (name[1] == 'b' || name[1] == '#') {
+        Pair(name.slice(0..1), 2)
+    }
+    else {
+        Pair(name.slice(0..0), 1)
+    }
+    return if (root in equivalentRoots) {
+        Pair(equivalentRoots[root].toString(), index)
+    } else { Pair(root, index) }
+}
+
 fun splitName(name: String) : MutableMap<String, String> {
     var nameCopy = name.lowercase()
     val result: MutableMap<String, String> = mutableMapOf()
@@ -81,7 +127,7 @@ fun getOptions(valid: List<List<Int>>, notes: List<Int>) : List<Pair<Int, List<I
                         val attempt = listOf(valid[0][i], valid[1][j], valid[2][k], valid[3][l])
 
                         // missing notes in the chord
-                        val mults = MutableList(12) {0}
+                        val mults = MutableList(12) { 0 }
                         for (a in 0 until 4) {
                             mults[(stringTones[a] + attempt[a]) % 12] += 1
                         }
@@ -109,55 +155,10 @@ fun getOptions(valid: List<List<Int>>, notes: List<Int>) : List<Pair<Int, List<I
 
     return options
 }
-fun findRoot(name: String): Pair<String, Int> {
-    if (name.isEmpty()) return Pair("", 0)
-    if (name.length == 1) {
-        return if (name in equivalentRoots) {
-            Pair(equivalentRoots[name].toString(), 1)
-        } else { Pair(name, 1) }
-    }
 
-    // length > 2
-    val (root, index) = if (name[1] == 'b' || name[1] == '#') {
-        Pair(name.slice(0..1), 2)
-    }
-    else {
-        Pair(name.slice(0..0), 1)
-    }
-    return if (root in equivalentRoots) {
-        Pair(equivalentRoots[root].toString(), index)
-    } else { Pair(root, index) }
-}
-fun findChord2(name: String): List<Chord> {
-    // find root of the chord
-    val (root, nonRootIndex) = findRoot(name)
 
-    val trueName = if (nonRootIndex >= name.length) {
-        root
-    }
-    else {
-        root + name.substring(nonRootIndex)
-    }
-    val results = when (root) {
-        "a"  -> chordsListA.filter { it.name.lowercase() == trueName }
-        "a#" -> chordsListAd.filter { it.name.lowercase() == trueName }
-        "b"  -> chordsListB.filter { it.name.lowercase() == trueName }
-        "c"  -> chordsListC.filter { it.name.lowercase() == trueName }
-        "c#" -> chordsListCd.filter { it.name.lowercase() == trueName }
-        "d"  -> chordsListD.filter { it.name.lowercase() == trueName }
-        "d#" -> chordsListDd.filter { it.name.lowercase() == trueName }
-        "e"  -> chordsListE.filter { it.name.lowercase() == trueName }
-        "f"  -> chordsListF.filter { it.name.lowercase() == trueName }
-        "f#" -> chordsListFd.filter { it.name.lowercase() == trueName }
-        "g"  -> chordsListG.filter { it.name.lowercase() == trueName }
-        "g#" -> chordsListGd.filter { it.name.lowercase() == trueName }
-        else -> listOf()
-    }
 
-    return results
-}
-
-fun findChord(name: String) : List<Chord> {
+private fun findChord2(name: String) : List<Chord> {
     val result: MutableList<Pair<Int, List<Int>>> = mutableListOf()
     val splitName = splitName(name)
     println("split : $splitName")
@@ -182,80 +183,6 @@ fun findChord(name: String) : List<Chord> {
             options.forEach { result.add(it) }
         }
     }
-
-    /*
-    triads.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    tetrads.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    sevens.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    reversed_1.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    reversed_2.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    reversed_3.forEach { (intervals, type) ->
-        if (type == splitName["mod"]) {
-            val notes: MutableList<Int> = intervals.map { (it + rootId) % 12 }.toMutableList() // the notes (in half tones) that should be played
-
-
-            val valid = getValidFrets(notes)
-
-            val options = getOptions(valid, notes)
-            options.forEach { result.add(it) }
-        }
-    }
-
-    */
 
     // remove duplicates, and sort by score :
     // - if the chord is high on the frets, it will have a higher score

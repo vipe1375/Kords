@@ -108,7 +108,11 @@ fun ChordScreen(viewModel: ChordsViewModel) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            VisualizeButton(viewModel)
+            VisualizeButton(
+                viewModel.showVisualizeButton,
+                viewModel.searchResult.size,
+                viewModel.visualizedIndex,
+                onClick = {viewModel.changeVisualizedChord()})
 
             PlayButton(
                 isPlaying = viewModel.player.isPlaying,

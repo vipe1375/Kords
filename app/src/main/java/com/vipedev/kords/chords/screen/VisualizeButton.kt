@@ -24,26 +24,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.ChordsViewModel
 
 @Composable
 fun VisualizeButton(
-    viewModel: ChordsViewModel
+    show: Boolean,
+    resultsSize: Int,
+    resultIndex: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     Button(
-        modifier = Modifier.padding(horizontal = 20.dp),
-        enabled = viewModel.showVisualizeButton,
-        onClick = { viewModel.changeVisualizedChord() },
+        modifier = modifier,
+        enabled = show,
+        onClick = { onClick() },
         content = {
             Text(
                 LocalContext.current.resources.getQuantityString(
                     R.plurals.visualize_button_text,
-                    viewModel.searchResult.size,       // quantity
-                    viewModel.visualizedIndex + 1,     // arg1 (1-based)
-                    viewModel.searchResult.size        // arg2
-                )
+                    resultsSize,
+                    resultIndex + 1,
+                    resultsSize
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     )

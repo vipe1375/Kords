@@ -90,5 +90,6 @@
     <string name="cancel_button_text">Cancel</string>
     <string name="play_chord_button_text">Play</string>
     <string name="playing_chord_button_text">Playing...</string>
+    <string name="close_button_text">Close</string>
 
 </resources>

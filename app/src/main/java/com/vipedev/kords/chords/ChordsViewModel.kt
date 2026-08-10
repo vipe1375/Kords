@@ -1,24 +1,20 @@
 package com.vipedev.kords.chords
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.vipedev.kords.ChordPlayer
 import com.vipedev.kords.R
 import com.vipedev.kords.Synth
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.chords.database.allChords
-import com.vipedev.kords.chords.database.findChord2
+import com.vipedev.kords.chords.database.findChord
 import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -98,7 +94,7 @@ class ChordsViewModel(
      * Called when a button is clicked on the grid.
      * @param fingers A list of strings representing the chord fingering (e.g., ["0", "2", "3", "2"]).
      * */
-    fun changeFingering(fingers: List<String>) {
+    fun changeFingering(fingers: List<Int>) {
         displayFingering(fingers.joinToString("-"))
         searchResult = emptyList()
         showVisualizeButton = false
@@ -114,7 +110,7 @@ class ChordsViewModel(
      * Called when clicking on the search button or a suggestion in the dropdown.*/
     fun searchChord() {
         showSuggestions = false
-        val result = findChord2(textInput.lowercase())
+        val result = findChord(textInput.lowercase())
 
         if (result.isNotEmpty()) {
             searchResult = result

@@ -27,11 +27,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,15 +39,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.vipedev.kords.R
-import com.vipedev.kords.chords.database.findChord2
+import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.songs.SongsViewModel
 import com.vipedev.kords.songs.database.Song
 
@@ -153,10 +156,25 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                 )
 
                 // chords
+                val scrollState = rememberScrollState()
                 LazyRow (
                     modifier = Modifier
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth()
+                        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen) // Required for blending
+                        .drawWithContent {
+                            drawContent() // Draw the actual buttons first
+                            if (scrollState.canScrollForward) {
+                                drawRect(
+                                    brush = Brush.horizontalGradient(
+                                        0.8f to Color.Black, // Fully opaque until 80% of the height
+                                        1f to Color.Transparent // Fade to transparent at the very bottom
+                                    ),
+                                    blendMode = BlendMode.DstIn // This "cuts" the content based on the brush opacity
+                                )
+                            }
+                        },
+
                 ){
                     items(chords) { chord ->
 
@@ -168,7 +186,7 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                                 viewModel.showChordDialog = !viewModel.showChordDialog
                             }
                         ) {
-                            Text(text = "$chord  ",
+                            Text(text = Chord().renderName(chord),
                                 style = MaterialTheme.typography.bodySmall,
                                 overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.onBackground)
@@ -188,63 +206,4 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
     }
 }
 
-@Composable
-fun ChordGlimpse(viewModel: SongsViewModel) {
-    /*
-    Creates an elevated ? to show the fingers of a chord.
-    */
 
-    val chordName = viewModel.chordInDialogName
-
-    if (chordName.isBlank()) {
-        return;
-    }
-
-    var text: String;
-    val result = findChord2(chordName.lowercase())
-    val isChord = result.isNotEmpty()
-    text = if (!isChord) {
-        stringResource(R.string.no_chord_found_name)
-    }
-    else {
-        result[viewModel.chordDialogResultId].fingers
-    }
-
-    AlertDialog(
-        title = {
-            Text(text = text, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-        },
-        text = {
-            Text(text = "G-C-E-A", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
-        },
-        onDismissRequest = {
-            viewModel.showChordDialog = false
-            viewModel.chordDialogResultId = 0
-            viewModel.chordInDialogName = ""
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    viewModel.showChordDialog = false
-                    viewModel.chordDialogResultId = 0
-                    viewModel.chordInDialogName = ""
-                }
-            ) {
-                Text("Fermer")
-            }
-        },
-        confirmButton = {
-            TextButton(
-                enabled = isChord,
-                onClick = {
-                    viewModel.chordDialogResultId = (viewModel.chordDialogResultId + 1) % result.size
-                }
-            ) {
-                Text("${viewModel.chordDialogResultId+1}/${result.size}")
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.surface,
-    )
-
-
-}

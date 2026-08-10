@@ -125,6 +125,8 @@ fun SearchByID(viewModel: ChordsViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
+                val fingers = currentChord.fingersToIntList()
+
                 // BUTTONS
                 for (i in 1 until 15) {
                     Box(
@@ -143,12 +145,11 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
                         Row {
                             for (j in 0 until 4) {
-                                if (currentChord.fingers.split("-")[j] == i.toString()) {
+                                if (fingers[j] == i) {
                                     // active button
                                     Button(
                                         onClick = {
-                                            val fingers = currentChord.fingers.split("-").toMutableList()
-                                            fingers[j] = "0"
+                                            fingers[j] = 0
                                             viewModel.changeFingering(fingers)
                                             viewModel.resetChordSearched()
                                         },
@@ -163,8 +164,7 @@ fun SearchByID(viewModel: ChordsViewModel) {
                                     // inactive button
                                     FilledTonalButton(
                                         onClick = {
-                                            val fingers = currentChord.fingers.split("-").toMutableList()
-                                            fingers[j] = i.toString()
+                                            fingers[j] = i
                                             viewModel.changeFingering(fingers)
                                             viewModel.resetChordSearched()
                                         },
