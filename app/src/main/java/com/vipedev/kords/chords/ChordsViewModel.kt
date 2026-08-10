@@ -9,6 +9,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vipedev.kords.ChordPlayer
 import com.vipedev.kords.R
 import com.vipedev.kords.Synth
 import com.vipedev.kords.chords.database.Chord
@@ -16,11 +18,13 @@ import com.vipedev.kords.chords.database.allChords
 import com.vipedev.kords.chords.database.findChord2
 import com.vipedev.kords.chords.database.nameChord
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 
 class ChordsViewModel(
-    private val context: Context
+    private val context: Context,
+    val player: ChordPlayer,
 ) : ViewModel() {
 
     private val synth = Synth()
@@ -53,11 +57,6 @@ class ChordsViewModel(
     var isScreenVisible by mutableStateOf(true)
 
     var playSlowChord by mutableStateOf(false)
-
-    var isPlaying by mutableStateOf(false)
-
-    private val slowChordDelay = 200.milliseconds
-    private val normalChordDelay = 100.milliseconds
 
     init {
         searchChord()
@@ -160,27 +159,7 @@ class ChordsViewModel(
         textInput = ""
     }
 
-    fun playNote(key: Int = 60) {
-        synth.noteOn(0, key, 100)
-        Handler(Looper.getMainLooper()).postDelayed({ synth.noteOff(0, key) }, 1000)
-    }
-
-    suspend fun playChord(chord: Chord) {
-        isPlaying = true
-        val fingers = chord.fingers.split("-").map { it.toInt() }
-        val overtones = listOf<Int>(7, 0, 4, 9)
-        for (i in 0..3) {
-            playNote(fingers[i] + 60 + overtones[i])
-            if (playSlowChord) {
-                delay(slowChordDelay)
-            }
-            else {
-                delay(normalChordDelay)
-            }
-        }
-        playSlowChord = !playSlowChord
-
-        delay(1000.milliseconds)
-        isPlaying = false
+    fun playChord(chord: Chord) {
+        player.playChord(chord)
     }
 }

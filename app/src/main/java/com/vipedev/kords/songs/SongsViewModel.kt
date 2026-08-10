@@ -33,14 +33,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.vipedev.kords.ChordPlayer
 import com.vipedev.kords.R
+import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.songs.database.Song
 import com.vipedev.kords.songs.database.SongsDao
 import kotlinx.coroutines.launch
 
 class SongsViewModel (
     private val dao: SongsDao,
-    application: Application
+    application: Application,
+    val player: ChordPlayer,
 ) : AndroidViewModel(application) {
 
     var isScreenVisible by mutableStateOf(false)
@@ -270,5 +273,9 @@ class SongsViewModel (
     
     private fun displayToast(context: Context, text: String) {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    }
+
+    fun playChord(chord: Chord) {
+        player.playChord(chord)
     }
 }
