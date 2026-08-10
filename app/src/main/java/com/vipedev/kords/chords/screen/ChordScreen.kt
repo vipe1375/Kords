@@ -34,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ChordScreen(viewModel: ChordsViewModel) {
+
+    // stop player when leaving screen
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.player.stop()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -96,31 +104,15 @@ fun ChordScreen(viewModel: ChordsViewModel) {
         }
 
         Spacer(modifier = Modifier.height(15.dp))
-        val scope = rememberCoroutineScope()
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
             VisualizeButton(viewModel)
 
-            Button(
-                onClick = {scope.launch { viewModel.playChord(chord = viewModel.currentChord) }},
-                modifier = Modifier.padding(horizontal = 20.dp),
-                enabled = !viewModel.isPlaying,
-                content = {
-                    if (viewModel.isPlaying) {
-                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null)
-
-                        Text(
-                            stringResource(R.string.playing_chord_button_text)
-                        )
-                    } else {
-                        Text(
-                            stringResource(R.string.play_chord_button_text)
-                        )
-                    }
-
-                }
+            PlayButton(
+                isPlaying = viewModel.player.isPlaying,
+                onPlay = { viewModel.playChord(viewModel.currentChord) }
             )
         }
 
