@@ -15,10 +15,9 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 16
-        versionName = "1.4.1"
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations.plus(listOf("en", "fr"))
 
         vectorDrawables {
             useSupportLibrary = true
@@ -29,6 +28,10 @@ android {
                     "-DANDROID_STL=c++_shared")
             }
         }
+    }
+
+    androidResources {
+        localeFilters += listOf("en", "fr")
     }
 
     ndkVersion = "30.0.15729638"
@@ -50,11 +53,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
@@ -69,6 +69,11 @@ android {
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
+    }
+}
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 
