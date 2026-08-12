@@ -24,8 +24,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments(
-                    "-DANDROID_STL=c++_shared")
+                arguments("-DANDROID_STL=c++_shared", "-DCMAKE_POLICY_VERSION_MINIMUM=3.5")
             }
         }
     }
@@ -39,7 +38,6 @@ android {
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
-            version = "4.1.2"
         }
     }
 
