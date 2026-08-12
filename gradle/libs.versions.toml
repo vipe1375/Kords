@@ -1,27 +1,26 @@
 [versions]
 agp = "9.2.1"
-datastorePreferences = "1.1.2"
-gson = "2.11.0"
-kotlin = "2.2.10"
-coreKtx = "1.15.0"
+datastorePreferences = "1.2.1"
+gson = "2.14.0"
+kotlin = "2.4.10"
+coreKtx = "1.19.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.10.0"
-composeBom = "2025.01.01"
-lifecycleViewmodelKtx = "2.8.7"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+lifecycleRuntimeKtx = "2.11.0"
+activityCompose = "1.13.0"
+composeBom = "2026.06.01"
+lifecycleViewmodelKtx = "2.11.0"
 materialIconsExtended = "1.7.8"
-navigationCompose = "2.8.6"
-navigationComposeVersion = "2.9.0"
+navigationCompose = "2.9.8"
 oboe = "1.10.0"
 room_compiler = "2.8.4"
 roomKtx = "2.8.4"
-appcompat = "1.7.0"
-runtimeLivedata = "1.7.7"
+appcompat = "1.7.1"
+runtimeLivedata = "1.11.4"
 material3 = "1.4.0"
-uiText = "1.11.3"
-foundation = "1.11.3"
+uiText = "1.11.4"
+foundation = "1.11.4"
 uiGraphics = "1.11.4"
 animationCore = "1.11.4"
 
@@ -32,7 +31,6 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-androidx-navigation-compose-v290 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room_compiler" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
