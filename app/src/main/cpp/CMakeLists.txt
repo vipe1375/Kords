@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 project(app)
 
 add_link_options("LINKER:--build-id=none")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--build-id=none")
 
 find_package(oboe REQUIRED CONFIG)
 
