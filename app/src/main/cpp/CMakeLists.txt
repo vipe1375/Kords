@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(app)
 
+add_link_options("LINKER:--build-id=none")
+
 find_package(oboe REQUIRED CONFIG)
 
 get_target_property(OBOE_INC oboe::oboe INTERFACE_INCLUDE_DIRECTORIES)
