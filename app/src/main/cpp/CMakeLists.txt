@@ -25,6 +25,7 @@ set(enable-alsa OFF CACHE BOOL "" FORCE)
 set(enable-readline OFF CACHE BOOL "" FORCE)
 
 set(GCEM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/fluidsynth/gcem/include" CACHE PATH "" FORCE)
+add_compile_options("-ffile-prefix-map=${CMAKE_SOURCE_DIR}=.")
 add_subdirectory(fluidsynth)
 
 add_library(native-lib SHARED native-lib.c)
