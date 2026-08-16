@@ -1,0 +1,7 @@
+## Version 1.4.1
+## New
+- "Play" button in the Chord page and Song page
+- new chord glimpse in the Song page
+
+## Fixed
+- crash at launch

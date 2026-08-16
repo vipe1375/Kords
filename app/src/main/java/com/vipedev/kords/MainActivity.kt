@@ -78,9 +78,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         synth.init()
-        val sf2 = File(filesDir, "sound.sf2")
+        val sf2 = File(filesDir, "ukulele.sf2")
         if (!sf2.exists())
-            assets.open("sound.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
+            assets.open("ukulele.sf2").use { i -> sf2.outputStream().use { i.copyTo(it) } }
         synth.loadSf2(sf2.absolutePath)
 
         val player = ChordPlayer(synth)

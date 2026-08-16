@@ -1,0 +1,7 @@
+## Version 1.4.1
+## Nouveautés
+- bouton "Jouer" sur la page Accords et la page Chanson
+- nouvel aperçu d'accord sur la page Chanson
+
+## Corrections
+- crash au lancement du à une mauvaise référence
