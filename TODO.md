@@ -1,4 +1,4 @@
 # TODO
 
-## Chords database
-- add calculated chords in suggestions (to be able to find by name a chord we found by ID)
+- import/export songs
+- option to choose the maximum number of chords

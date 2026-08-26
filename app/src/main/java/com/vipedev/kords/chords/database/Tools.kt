@@ -72,6 +72,7 @@ val reversed_3: Map<List<Int>, String> = mapOf(
 )
 
 val allIntervals: Map<List<Int>, String> = triads + tetrads + sevens + reversed_1 + reversed_2 + reversed_3
+val allIntervalsFromName: Map<List<Int>, String> = triads + tetrads + sevens
 
 val chordTypes: List<String> = listOf("add9", "m7b5", "maj7", "aug", "dim", "m7", "7", "m", "", "sus2", "sus4", "7sus2", "7sus4")
 
