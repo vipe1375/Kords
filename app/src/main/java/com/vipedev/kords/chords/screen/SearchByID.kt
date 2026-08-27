@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,10 +57,9 @@ import com.vipedev.kords.chords.ChordsViewModel
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun SearchByID(viewModel: ChordsViewModel) {
-    val activeButtonSize: Dp = 64.dp
-    val inactiveButtonSize: Dp = 60.dp
-    val inactiveButtonPadding: Dp = 5.dp
-    val activeButtonPadding: Dp = 4.dp
+    val slotSize = 64.dp        // emprise d'une colonne, identique dans les deux etats
+    val activeSize = 56.dp      // ce que tu avais visuellement avant
+    val inactiveSize = 52.dp
 
     val currentChord = viewModel.currentChord
     val scrollState = rememberScrollState()
@@ -145,34 +145,26 @@ fun SearchByID(viewModel: ChordsViewModel) {
 
                         Row {
                             for (j in 0 until 4) {
-                                if (fingers[j] == i) {
-                                    // active button
-                                    Button(
-                                        onClick = {
-                                            fingers[j] = 0
-                                            viewModel.changeFingering(fingers)
-                                            viewModel.resetChordSearched()
-                                        },
-                                        shape = CircleShape,
-                                        modifier = Modifier
-                                            .size(activeButtonSize)
-                                            .padding(activeButtonPadding)
-                                    ) {
-                                        Text(i.toString(), modifier = Modifier.fillMaxWidth())
-                                    }
-                                } else {
-                                    // inactive button
-                                    FilledTonalButton(
-                                        onClick = {
-                                            fingers[j] = i
-                                            viewModel.changeFingering(fingers)
-                                            viewModel.resetChordSearched()
-                                        },
-                                        shape = CircleShape,
-                                        modifier = Modifier
-                                            .size(inactiveButtonSize)
-                                            .padding(inactiveButtonPadding)
-                                    ) {
+                                Box(
+                                    modifier = Modifier.size(slotSize),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (fingers[j] == i) {
+                                        Button(
+                                            onClick = { fingers[j] = 0; viewModel.changeFingering(fingers); viewModel.resetChordSearched() },
+                                            shape = CircleShape,
+                                            contentPadding = PaddingValues(0.dp),
+                                            modifier = Modifier.size(activeSize)
+                                        ) {
+                                            Text(i.toString(), maxLines = 1, softWrap = false)
+                                        }
+                                    } else {
+                                        FilledTonalButton(
+                                            onClick = { fingers[j] = i; viewModel.changeFingering(fingers); viewModel.resetChordSearched() },
+                                            shape = CircleShape,
+                                            contentPadding = PaddingValues(0.dp),
+                                            modifier = Modifier.size(inactiveSize)
+                                        ) {}
                                     }
                                 }
                             }

@@ -58,28 +58,6 @@ val extras: Map<List<Int>, String> = mapOf(
     listOf(0, 3, 6, 9)  to "dim7",
     listOf(0, 7)        to "5"
 )
-
-val reversed_1: Map<List<Int>, String> = mapOf(
-    listOf(0, 5, 9) to "",
-    listOf(0, 5, 8) to "m",
-    listOf(0, 5, 8, 12) to "m",
-    listOf(0, 2, 6, 9) to "7",
-    listOf(0, 1, 5, 8) to "maj7",
-    listOf(0, 2, 5, 9) to "m7",
-    listOf(0, 2, 5, 8) to "m7b5",
-    listOf(0, 5, 7, 9) to "add9"
-)
-
-val reversed_2: Map<List<Int>, String> = mapOf(
-    listOf(0, 3, 8) to "",
-    listOf(0, 4, 9) to "m",
-)
-
-val reversed_3: Map<List<Int>, String> = mapOf(
-    listOf(0, 3, 6, 8) to "7"
-)
-
-val allIntervals: Map<List<Int>, String> = triads + tetrads + sevens + reversed_1 + reversed_2 + reversed_3
 val allIntervalsFromName: Map<List<Int>, String> = triads + tetrads + sevens + extras
 
 // read to create suggestions

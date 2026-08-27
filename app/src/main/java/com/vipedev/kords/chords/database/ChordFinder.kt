@@ -115,7 +115,7 @@ fun cost(attempt: List<Int>): Int {
     val min = pressed.min()
     val max = pressed.max()
 
-    if (max-min >= 4) return 100000;
+    if (max-min >= 4) return 100000
     val spacing = pressed.sumOf { it - min }
     return min + spacingCosts[spacing]
 }

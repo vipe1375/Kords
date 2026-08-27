@@ -18,9 +18,6 @@
 
 package com.vipedev.kords.chords.database
 
-import android.content.Context
-import com.vipedev.kords.R
-
 /**
  * Names a chord from its fingers, combining the database and the algorithm.
  * @param fingers the fingers of the chord ("0-0-0-3")
