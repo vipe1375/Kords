@@ -21,96 +21,34 @@ package com.vipedev.kords.chords.database
 import android.content.Context
 import com.vipedev.kords.R
 
-
-
-fun findFond(chord: List<Int>, type: String) : List<String> {
-
-    val result: MutableList<String> = mutableListOf()
-
-    when(type) {
-
-        "r1" ->
-            stringToValue.forEach { (name, id) ->
-                if (id == chord[1]%12) {
-                    result.add(name) }
-            }
-
-        "r2" ->
-            stringToValue.forEach { (name, id) ->
-                if (id == chord[2]%12) {
-                    result.add(name)
-                }
-            }
-
-        "r3" ->
-            stringToValue.forEach { (name, id) ->
-                if (id == chord[3]%12) {
-                    result.add(name)
-                }
-            }
-
-        else -> stringToValue.forEach { (name, id) ->
-            if (id == chord[0]%12) {
-                result.add(name)
-            }
-        }
-    }
-
+/**
+ * Names a chord from its fingers, combining the database and the algorithm.
+ * @param fingers the fingers of the chord ("0-0-0-3")
+ * @return the matching chords, empty if none was found
+ */
+fun nameChord(fingers: String): List<Chord> {
+    val fromDb = chordsList.filter { it.fingers == fingers }
+    val result = (fromDb + nameFromIntervals(fingers)).distinctBy { it.name }.sortedBy { it.name.length }
     return result
 }
 
-fun nameChord(context: Context, fingers: String) : String {
-    /**
-     * Names a chord
-     *
-     * @param fingers The fingers of the chord. ("0-0-0-3")
-     * @return [name] The name of the chord
-     */
+/**
+ * Names a chord by testing the 12 possible roots against the root-position intervals.
+ * Exact inverse of the name -> fingers algorithm.
+ */
+private fun nameFromIntervals(fingers: String): List<Chord> {
+    val frets = fingers.split("-").map { it.toInt() }
+    val played = frets.mapIndexed { i, f -> (stringTones[i] + f) % 12 }.toSet()
 
-    // try to name the chord using the chords database
-    val result = chordsList.filter {it.fingers == fingers}.map { it.name }
-    if (result.isNotEmpty()) {
-        if (result.size == 1) {
-            return result[0]
+    return buildList {
+        for (root in 0 until 12) {
+            allIntervalsFromName.forEach { (intervals, mod) ->
+                if (played == intervals.map { (it + root) % 12 }.toSet()) {
+                    add(Chord(sharpNames[root] + mod, fingers))
+                }
+            }
         }
-        val r = result.joinToString("-")
-        return r
     }
-
-    // no result from the database -> try to find it with the intervals
-    val bchord: List<String> = fingers.split("-")
-    val chord: MutableList<Int> = mutableListOf()
-
-    bchord.forEachIndexed { index, s ->
-        val i: Int = when (index) {
-            0 -> 7
-            1 -> 0
-            2 -> 4
-            3 -> 9
-            else -> 0
-        }
-
-        chord.add(index, s.toInt() + i)
-    }
-    chord.sort()
-
-
-    val intervals = chord.map { it - chord[0] }.distinct()
-
-
-    val chordTypes = mapOf(
-        "triad" to triads,
-        "tetrad" to tetrads,
-        "seven" to sevens,
-        "r1" to reversed_1,
-        "r2" to reversed_2,
-        "r3" to reversed_3
-    )
-    val (type, matchingMap) = chordTypes.entries.firstOrNull { it.value.containsKey(intervals) } ?: return context.getString(R.string.no_chord_found_id)
-    val fond = findFond(chord, type = type)
-    val res = fond.joinToString(" - ") { it + matchingMap[intervals] }
-    return res
-
 }
 
 

@@ -27,15 +27,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.VolumeUp
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.ChordsViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun ChordScreen(viewModel: ChordsViewModel) {
@@ -85,14 +79,14 @@ fun ChordScreen(viewModel: ChordsViewModel) {
             )
 
             Text(
-                text = viewModel.currentChord.name,
+                text = viewModel.currentChord.renderName(),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
 
             Text(
-                text = viewModel.alternativeNames.joinToString(separator = "-"),
+                text = viewModel.alternativeChords.joinToString("-") { it.renderName() },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,

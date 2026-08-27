@@ -33,7 +33,7 @@ class ChordsViewModel(
     var currentChord by mutableStateOf(Chord("G", "0-2-3-2"))
         private set
 
-    var alternativeNames by mutableStateOf<List<String>>(emptyList())
+    var alternativeChords by mutableStateOf<List<Chord>>(emptyList())
         private set
 
     // --- Search ---
@@ -77,16 +77,18 @@ class ChordsViewModel(
      */
     private fun displayFingering(fingers: String) {
 
-        val names = nameChord(context, fingers)
-            .split("-")
-            .filter { it.isNotEmpty() }
-            .sortedBy { it.length }
+        val names = nameChord(fingers)
 
-        currentChord = Chord(
-            name = names.firstOrNull() ?: context.getString(R.string.no_chord_found_name),
-            fingers = fingers
-        )
-        alternativeNames = names.drop(1)
+        if (names.isEmpty()) {
+            currentChord = Chord(
+                name = context.getString(R.string.no_chord_found_name),
+                fingers = fingers
+            )
+            return
+        }
+        currentChord = names[0]
+
+        alternativeChords = names.drop(1)
     }
 
     /**
@@ -102,7 +104,7 @@ class ChordsViewModel(
     }
 
     fun changeTextInput(newText: String) {
-        textInput = newText
+        textInput = newText.trim()
     }
 
     /**
@@ -110,7 +112,7 @@ class ChordsViewModel(
      * Called when clicking on the search button or a suggestion in the dropdown.*/
     fun searchChord() {
         showSuggestions = false
-        val result = findChord(textInput.lowercase())
+        val result = findChord(textInput)
 
         if (result.isNotEmpty()) {
             searchResult = result
@@ -123,7 +125,7 @@ class ChordsViewModel(
                 context.getString(R.string.no_chord_found_name),
                 currentChord.fingers
             )
-            alternativeNames = emptyList()
+            alternativeChords = emptyList()
             searchResult = emptyList()
             showVisualizeButton = false
         }
@@ -141,7 +143,7 @@ class ChordsViewModel(
         val query = textInput.lowercase()
         if (query.isEmpty()) return emptyList()
         return allChords
-            .filter { it.lowercase().contains(query) }
+            .filter { it.contains(query.lowercase()) }
             .sortedBy { it.length }
     }
 

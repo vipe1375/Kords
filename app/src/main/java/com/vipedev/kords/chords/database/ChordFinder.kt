@@ -25,10 +25,10 @@ package com.vipedev.kords.chords.database
  */
 fun findChord(name: String): List<Chord> {
     // test to name chords algorithmically
-    val resAlgo = nameChordAlgo(name)
-    val resDB = nameChordFromDatabase(name)
+    val resAlgo = nameChordAlgo(name.lowercase().trim())
+    val resDB = nameChordFromDatabase(name.lowercase().trim())
     val res = (resAlgo + resDB).distinct()
-    println(res)
+    // println(res)
     return res
     // return nameChordFromDatabase(name)
 }
@@ -179,13 +179,9 @@ private fun nameChordAlgo(name: String) : List<Chord> {
 
     val root: String = splitName["root"].toString()
 
-    val uppercaseRoot = root[0].uppercase() + root.substring(1)
-    // TODO: replace stringToValue (Tools.kt) with lowercase letters to avoid uppercasing and lowercasing
+    val rootId: Int = stringToValue[root] ?: return result.map { (_, _) -> Chord() }
 
-    val rootId: Int = stringToValue[uppercaseRoot] ?: return result.map { (_, _) -> Chord() }
-    // works to this point
-
-    println("[DEBUG] splitName: $splitName")
+    //println("[DEBUG] splitName: $splitName")
     allIntervalsFromName.forEach { (intervals, type) ->
         if (type == splitName["mod"]) {
             // the notes (in halftones) that should be played
@@ -205,6 +201,6 @@ private fun nameChordAlgo(name: String) : List<Chord> {
         .sortedBy { (cost, _) -> cost }
         .map { (_, fingers) -> Chord(name = name, fingers = fingers.joinToString("-")) }
 
-    println("[DEBUG] finalResults: $finalResults")
+    // println("[DEBUG] finalResults: $finalResults")
     return finalResults.subList(0, minOf(5, finalResults.size))
 }

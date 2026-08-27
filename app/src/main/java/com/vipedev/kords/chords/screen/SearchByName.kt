@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import com.vipedev.kords.R
 import com.vipedev.kords.chords.ChordsViewModel
+import com.vipedev.kords.chords.database.Chord
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,7 +152,7 @@ fun Suggestions(
         matchingChords.forEach { chord ->
             DropdownMenuItem(
                 text = { Text(
-                    chord,
+                    Chord().renderName(chord),
                     style = MaterialTheme.typography.bodySmall
                 ) },
                 onClick = {
