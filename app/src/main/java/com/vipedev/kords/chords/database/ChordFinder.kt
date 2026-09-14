@@ -199,8 +199,10 @@ private fun nameChordAlgo(name: String) : List<Chord> {
     val finalResults = result
         .distinct()
         .sortedBy { (cost, _) -> cost }
+        .filter { (cost, _) -> cost < 10000 }
         .map { (_, fingers) -> Chord(name = name, fingers = fingers.joinToString("-")) }
 
     // println("[DEBUG] finalResults: $finalResults")
-    return finalResults.subList(0, minOf(5, finalResults.size))
+    // return finalResults.subList(0, minOf(5, finalResults.size))
+    return finalResults
 }
