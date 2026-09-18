@@ -20,6 +20,7 @@ package com.vipedev.kords.songs
 
 import android.app.Application
 import android.content.Context
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.songs.database.Song
 import com.vipedev.kords.songs.database.SongsDao
+import com.vipedev.kords.songs.database.importSongFromTxt
 import kotlinx.coroutines.launch
 
 class SongsViewModel (
@@ -277,5 +279,15 @@ class SongsViewModel (
 
     fun playChord(chord: Chord) {
         player.playChord(chord)
+    }
+
+    // Dans SongViewModel
+    fun importSongFromUri(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            val song = importSongFromTxt(context, uri)
+            if (song != null) {
+                initEdition(song)
+            }
+        }
     }
 }

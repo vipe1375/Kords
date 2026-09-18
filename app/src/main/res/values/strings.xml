@@ -91,5 +91,7 @@
     <string name="play_chord_button_text">Play</string>
     <string name="playing_chord_button_text">Playing...</string>
     <string name="close_button_text">Close</string>
+    <string name="import_song_button">Import song</string>
+    <string name="create_song_button">New song</string>
 
 </resources>

@@ -20,15 +20,13 @@ package com.vipedev.kords
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.app.LocaleManager
 import android.content.Context
-import android.os.Build
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -38,9 +36,12 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.os.LocaleListCompat
+import androidx.core.content.IntentCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,6 +73,18 @@ class MainActivity : ComponentActivity() {
 
     private val synth = Synth()
 
+    private var pendingUri by mutableStateOf<Uri?>(null)
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent == null) return
+        pendingUri = when (intent.action) {
+            Intent.ACTION_VIEW -> intent.data
+            Intent.ACTION_SEND ->
+                IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+            else -> null
+        }
+    }
+
     @SuppressLint("CoroutineCreationDuringComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +97,8 @@ class MainActivity : ComponentActivity() {
         synth.loadSf2(sf2.absolutePath)
 
         val player = ChordPlayer(synth)
+
+        if (savedInstanceState == null) handleIntent(intent)
 
         setContent {
             // user settings
@@ -118,10 +133,24 @@ class MainActivity : ComponentActivity() {
                 val songsViewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(db.dao, application, player))
 
                 // Navigation
-                MainScreen(items = items, viewModel = viewModel, dataStore = dataStore, settingsViewModel = settingsViewModel, songsViewModel = songsViewModel)
+                MainScreen(
+                    items = items,
+                    viewModel = viewModel,
+                    dataStore = dataStore,
+                    settingsViewModel = settingsViewModel,
+                    songsViewModel = songsViewModel,
+                    importUri = pendingUri,
+                    onImportConsumed = { pendingUri = null }
+                )
 
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
     }
 }
 

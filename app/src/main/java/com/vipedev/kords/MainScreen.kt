@@ -19,6 +19,9 @@
 package com.vipedev.kords
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -28,8 +31,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -38,19 +44,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.vipedev.kords.chords.screen.ChordScreen
 import com.vipedev.kords.chords.ChordsViewModel
+import com.vipedev.kords.chords.screen.ChordScreen
 import com.vipedev.kords.settings.SettingsScreen
 import com.vipedev.kords.settings.SettingsViewModel
 import com.vipedev.kords.settings.StorePreferences
-import com.vipedev.kords.songs.screen.MainSongScreen
 import com.vipedev.kords.songs.SongsViewModel
+import com.vipedev.kords.songs.screen.MainSongScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -59,26 +70,45 @@ fun MainScreen(
     viewModel: ChordsViewModel,
     dataStore: StorePreferences,
     settingsViewModel: SettingsViewModel,
-    songsViewModel: SongsViewModel
+    songsViewModel: SongsViewModel,
+    selectedItemIndex: Int = 0,
+    importUri: Uri? = null,
+    onImportConsumed: () -> Unit = {}
 ) {
     var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(selectedItemIndex)
     }
 
-    Scaffold (
+    val context = LocalContext.current
+
+    LaunchedEffect(importUri) {
+        importUri?.let { uri ->
+            // Bascule sur l'onglet Chansons (même logique que ton onClick)
+            selectedItemIndex = 1
+            viewModel.isScreenVisible = false
+            songsViewModel.isScreenVisible = true
+            settingsViewModel.isScreenVisible = false
+
+            songsViewModel.importSongFromUri(context, uri)
+            onImportConsumed()
+        }
+    }
+
+    Scaffold(
         bottomBar = {
-            NavigationBar (
+            NavigationBar(
                 containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 0.dp
-            ){
+            ) {
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = (selectedItemIndex == index),
-                        onClick = {selectedItemIndex = index
-                                  viewModel.isScreenVisible = index == 0
-                                  songsViewModel.isScreenVisible = index == 1
-                                  settingsViewModel.isScreenVisible = index == 2
-                                  },
+                        onClick = {
+                            selectedItemIndex = index
+                            viewModel.isScreenVisible = index == 0
+                            songsViewModel.isScreenVisible = index == 1
+                            settingsViewModel.isScreenVisible = index == 2
+                        },
                         label = { Text(text = item.title) },
                         icon = {
                             if (index == selectedItemIndex) {
@@ -93,12 +123,51 @@ fun MainScreen(
         },
         floatingActionButton = {
             if (selectedItemIndex == 1 && !songsViewModel.isEditingSong && songsViewModel.currentSong == null) {
-                FloatingActionButton(
-                    onClick = {
-                        songsViewModel.resetCreation();
-                        songsViewModel.updateIsEditingSong(true) },
+                // État pour gérer l'affichage du menu
+                var isMenuExpanded by remember { mutableStateOf(false) }
+
+                val context = LocalContext.current
+
+                val importLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.GetContent(),
+                    onResult = { uri ->
+                        uri?.let { songsViewModel.importSongFromUri(context, it) }
+                    }
+                )
+
+                // FAB principal
+                ExtendedFloatingActionButton(
+                    onClick = { isMenuExpanded = true },
+                    icon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                    text = { Text("Ajouter") },
+                    expanded = isMenuExpanded,
+                    // onExpandedChange = { isMenuExpanded = it }
+                )
+
+                // Menu déroulant
+                DropdownMenu(
+                    expanded = isMenuExpanded,
+                    onDismissRequest = { isMenuExpanded = false },
+                    containerColor = MaterialTheme.colorScheme.surface
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = null)
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.create_song_button)) },
+                        leadingIcon = { Icon(Icons.Filled.Add, contentDescription = null) },
+                        onClick = {
+                            songsViewModel.resetCreation()
+                            songsViewModel.updateIsEditingSong(true)
+                            isMenuExpanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.import_song_button)) },
+                        leadingIcon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null) },
+                        onClick = {
+                            // Lancer l'importation ici (ex: avec rememberLauncherForActivityResult)
+                            importLauncher.launch("text/plain")
+                            isMenuExpanded = false
+                        }
+                    )
                 }
             }
         }
