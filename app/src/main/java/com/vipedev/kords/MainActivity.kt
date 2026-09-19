@@ -50,6 +50,7 @@ import com.vipedev.kords.chords.ChordsViewModel
 import com.vipedev.kords.settings.SettingsViewModel
 import com.vipedev.kords.settings.StorePreferences
 import com.vipedev.kords.songs.SongsViewModel
+import com.vipedev.kords.songs.database.MIGRATION_1_2
 import com.vipedev.kords.songs.database.SongsDao
 import com.vipedev.kords.songs.database.SongsDatabase
 import com.vipedev.kords.ui.theme.KordsJetpackTheme
@@ -67,8 +68,9 @@ class MainActivity : ComponentActivity() {
         Room.databaseBuilder(
             applicationContext,
             SongsDatabase::class.java,
-            "songs.db"
-        ).build()
+            "songs.db")
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     private val synth = Synth()

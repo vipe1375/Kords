@@ -281,7 +281,6 @@ class SongsViewModel (
         player.playChord(chord)
     }
 
-    // Dans SongViewModel
     fun importSongFromUri(context: Context, uri: Uri) {
         viewModelScope.launch {
             val song = importSongFromTxt(context, uri)

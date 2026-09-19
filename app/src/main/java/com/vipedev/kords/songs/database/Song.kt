@@ -21,6 +21,7 @@ package com.vipedev.kords.songs.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import org.json.JSONObject
 
 
 @Entity
@@ -32,32 +33,37 @@ data class Song(
 
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null
-)
+) {
+    fun toJson(): String = JSONObject().apply {
+        put("format", FILE_FORMAT)   // used to separate random json from kords json
+        put("version", FILE_VERSION) // database version
+        put("title", title)
+        put("artist", artist)
+        put("structure", SongJson.structureToObj(structure))
+    }.toString()
+
+    companion object {
+        const val FILE_FORMAT = "kords"
+        const val FILE_VERSION = 1
+
+        fun fromJson(json: String): Song {
+            val obj = JSONObject(json)
+            require(obj.optString("format") == FILE_FORMAT)
+            return Song(
+                title = obj.getString("title"),
+                artist = obj.getString("artist"),
+                structure = SongJson.structureFromObj(obj.getJSONObject("structure"))
+            )
+        }
+    }
+}
 
 object Converters {
     @TypeConverter
-    fun fromString(value: String?): Map<String, List<String>> {
-
-        val list = value?.split(":")?.filter { it.isNotBlank() }
-        val result : MutableMap<String, List<String>> = mutableMapOf()
-
-        list?.forEach { item ->
-
-            val structElt = item.split("-").filter { it.isNotBlank() }
-
-            if (structElt.isNotEmpty()) {
-                result[structElt[0]] = structElt.drop(1)
-            }
-        }
-
-        return result
-    }
+    fun fromStructure(map: Map<String, List<String>>): String = SongJson.structureToJson(map)
 
     @TypeConverter
-    fun fromList(map: Map<String, List<String>>): String {
-        return map.entries.joinToString(":") { (type, chords) ->
-            "$type-${chords.joinToString("-")}"
-        }
-    }
+    fun toStructure(value: String?): Map<String, List<String>> =
+        if (value.isNullOrBlank()) emptyMap() else SongJson.structureFromJson(value)
 }
 

@@ -21,13 +21,32 @@ package com.vipedev.kords.songs.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     entities = [Song::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Converters::class)
 abstract class SongsDatabase:RoomDatabase() {
 
     abstract val dao: SongsDao
+}
+
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        val updates = mutableListOf<Pair<Int, String>>()
+        db.query("SELECT id, structure FROM Song").use { c ->
+            while (c.moveToNext()) {
+                val old = c.getString(1)
+                if (old.trimStart().startsWith("{")) continue // déjà en JSON
+                updates += c.getInt(0) to
+                        SongJson.structureToJson(LegacyFormat.structureFromString(old))
+            }
+        }
+        updates.forEach { (id, json) ->
+            db.execSQL("UPDATE Song SET structure = ? WHERE id = ?", arrayOf<Any?>(json, id))
+        }
+    }
 }
