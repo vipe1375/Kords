@@ -53,8 +53,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,15 +72,14 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.vipedev.kords.R
 import com.vipedev.kords.songs.SongsViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun EditSongScreen(viewModel: SongsViewModel) {
 
     val focusManager = LocalFocusManager.current
-    val composableScope = rememberCoroutineScope()
-    val context = LocalContext.current
+    val context = LocalContext.current // only needed by DeleteDialog
     val lazyListState = rememberLazyListState()
+    var isSectionMenuOpen by rememberSaveable { mutableStateOf(false) } // UI-only state
 
     val animatedAlpha by animateFloatAsState(
         targetValue = if (viewModel.isScreenVisible) 1.0f else 0f,
@@ -106,54 +104,22 @@ fun EditSongScreen(viewModel: SongsViewModel) {
         ) {
             // back button
             TextButton(
-                onClick = {
-                    if (viewModel.currentSong == null) {
-                        viewModel.updateIsEditingSong(false)
-                        viewModel.resetCreation()
-                    }
-                    else {
-                        viewModel.updateIsEditingSong(false)
-                        //viewModel.resetCurrentSong()
-                    }
-
-                },
+                onClick = { viewModel.cancelEditing() },
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
 
-            val header: String = if (viewModel.currentSong == null) {stringResource(R.string.create_song_header)} else {
-                stringResource(R.string.edit_song_header)
-            }
             Text(
-                text = header,
+                text = stringResource(
+                    if (viewModel.isNewSong) R.string.create_song_header else R.string.edit_song_header
+                ),
                 modifier = Modifier.padding(20.dp)
             )
 
             // save button
             TextButton(
-                onClick = {
-                    composableScope.launch {
-                        if (viewModel.currentSong == null) {
-                            viewModel.saveSong(
-                                title = viewModel.titleField,
-                                artist = viewModel.artistField,
-                                structure = viewModel.struct,
-                                context = context
-                            )
-                        }
-
-                        else {
-                            viewModel.saveSong(
-                                title = viewModel.titleField,
-                                artist = viewModel.artistField,
-                                structure = viewModel.struct,
-                                context = context,
-                                viewModel.currentSong
-                            )
-                        }
-                    }
-                },
+                onClick = { viewModel.saveSong() },
                 modifier = Modifier.align(Alignment.CenterEnd)
             ) {
                 Icon(Icons.Default.Done, contentDescription = null)
@@ -191,7 +157,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                     //     TITLE TEXT FIELD      //
                     OutlinedTextField(
                         value = viewModel.titleField,
-                        onValueChange = { viewModel.updateTitleField(it) },
+                        onValueChange = { viewModel.titleField = it },
                         label = {
                             Text(
                                 text = stringResource(R.string.create_song_title),
@@ -213,7 +179,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                     //     ARTIST TEXT FIELD      //
                     OutlinedTextField(
                         value = viewModel.artistField,
-                        onValueChange = { viewModel.updateArtistField(it) },
+                        onValueChange = { viewModel.artistField = it },
                         label = {
                             Text(
                                 text = stringResource(R.string.create_song_artist_field),
@@ -234,34 +200,15 @@ fun EditSongScreen(viewModel: SongsViewModel) {
 
                 }
 
-                items(viewModel.struct.toList()) { (section, chords) ->
+                items(viewModel.struct.toList(), key = { it.first }) { (section, chords) ->
 
-                    if (section.isNotBlank() && chords.isNotBlank()) {
-                        var newChords by remember {
-                            mutableStateOf(chords)
-                        }
-
-                        // split section (looking like "Chorus 1") into a section name and a number
-                        // (name is always in french, no matter the app language)
-                        val sectionSplit = section.split(" ")
-                        val sectionNameEn: String = sectionSplit[0]
-                        val number = if (sectionSplit.size > 1) " ${sectionSplit[1]}" else ""
-                        val sectionName = when(sectionNameEn) {
-                            "Refrain" -> stringResource(id = R.string.section_chorus) + number
-                            "Couplet" -> stringResource(id = R.string.section_verse) + number
-                            "Pont" -> stringResource(id = R.string.section_bridge) + number
-                            "Solo" -> stringResource(id = R.string.section_solo) + number
-                            "Intro" -> stringResource(id = R.string.section_intro) + number
-                            "Outro" -> stringResource(id = R.string.section_outro) + number
-                            else -> ""
-                        }
-
+                    if (section.isNotBlank()) {
                         Box(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Text(
-                                text = sectionName,
+                                text = viewModel.getLocalizedSectionName(section),
                                 modifier = Modifier
                                     .padding(top = 20.dp, start = 20.dp),
                                 style = MaterialTheme.typography.bodyMedium,
@@ -270,11 +217,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                             )
 
                             TextButton(
-                                onClick = {
-                                    viewModel.sectionToDelete = section
-                                    viewModel.chordsToDelete = chords
-                                    viewModel.showDeleteSectionDialog = true
-                                },
+                                onClick = { viewModel.askDeleteSection(section) },
                                 modifier = Modifier.align(Alignment.CenterEnd)
                             ) {
                                 Icon(Icons.Default.Delete,
@@ -283,10 +226,9 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                             }
                         }
 
-
                         TextField(
-                            value = newChords,
-                            onValueChange = { newChords = it },
+                            value = chords,
+                            onValueChange = { viewModel.updateSection(section, it) },
                             placeholder = {
                                 Text(
                                     text = stringResource(R.string.create_song_type_chords),
@@ -304,15 +246,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                                 unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             singleLine = true,
-                            keyboardActions = KeyboardActions(onDone = {
-                                if (newChords.isNotBlank()) {
-                                    viewModel.struct[section] = newChords
-                                    focusManager.clearFocus()
-                                } else {
-                                    viewModel.showDeleteSectionDialog = true
-                                    //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
-                                }
-                            })
+                            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                         )
                     }
                 }
@@ -333,7 +267,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
 
             TextField(
                 value = viewModel.currentChords,
-                onValueChange = { viewModel.updateCurrentChords(it) },
+                onValueChange = { viewModel.currentChords = it },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.create_song_type_chords),
@@ -353,16 +287,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
                 ),
                 singleLine = true,
                 keyboardActions = KeyboardActions(onDone = {
-                    if (viewModel.currentChords.isNotBlank()) {
-                        viewModel.addStructItem()
-                        focusManager.clearFocus()
-                        println("not blank")
-                    }
-                    else {
-                        println("blank")
-                        viewModel.showDeleteSectionDialog = true
-                        //viewModel.displayToast(context = context, text = context.getString(R.string.create_song_no_chords))
-                    }
+                    if (viewModel.addStructItem()) focusManager.clearFocus()
                 })
             )
 
@@ -375,7 +300,7 @@ fun EditSongScreen(viewModel: SongsViewModel) {
 
         //     STRUCTURE TYPE DROPDOWN      //
         OutlinedButton(
-            onClick = { viewModel.updateStructDropdownState(true) },
+            onClick = { isSectionMenuOpen = true },
             modifier = Modifier
                 .padding(20.dp)
                 .wrapContentWidth()
@@ -388,37 +313,22 @@ fun EditSongScreen(viewModel: SongsViewModel) {
             Text(text = stringResource(R.string.create_song_choose_type))
 
             DropdownMenu(
-                expanded = viewModel.sectionDropdownState,
-                onDismissRequest = { viewModel.updateStructDropdownState(false) },
+                expanded = isSectionMenuOpen,
+                onDismissRequest = { isSectionMenuOpen = false },
                 modifier = Modifier
                     .wrapContentWidth(),
                 offset = DpOffset(12.dp, 8.dp),
                 containerColor = MaterialTheme.colorScheme.surface
             ) {
                 viewModel.sectionTypes.forEach { section ->
-
-                    val sectionName = when (section) {
-                        "Intro" -> stringResource(id = R.string.section_intro)
-                        "Refrain" -> stringResource(id = R.string.section_chorus)
-                        "Couplet" -> stringResource(id = R.string.section_verse)
-                        "Solo" -> stringResource(id = R.string.section_solo)
-                        "Pont" -> stringResource(id = R.string.section_bridge)
-                        "Outro" -> stringResource(id = R.string.section_outro)
-                        else-> ""
-                    }
                     DropdownMenuItem(
-                        text = {Text(text = sectionName)},
+                        text = { Text(text = viewModel.getLocalizedSectionName(section)) },
                         onClick = {
-                            //viewModel.struct[struct] = ""
-                            viewModel.updateCurrentStructType(section)
-                            viewModel.updateStructDropdownState(false)
-
+                            viewModel.currentSection = section
+                            isSectionMenuOpen = false
                         })
                 }
             }
         }
-
-        //Spacer(modifier = Modifier.height(500.dp))
-        // Text(text = stringResource(R.string.create_song_choose_type))
     }
 }

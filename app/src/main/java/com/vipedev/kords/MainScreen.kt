@@ -89,7 +89,7 @@ fun MainScreen(
             songsViewModel.isScreenVisible = true
             settingsViewModel.isScreenVisible = false
 
-            songsViewModel.importSongFromUri(context, uri)
+            songsViewModel.importSongFromUri(uri)
             onImportConsumed()
         }
     }
@@ -126,12 +126,10 @@ fun MainScreen(
                 // État pour gérer l'affichage du menu
                 var isMenuExpanded by remember { mutableStateOf(false) }
 
-                val context = LocalContext.current
-
                 val importLauncher = rememberLauncherForActivityResult(
                     contract = ActivityResultContracts.GetContent(),
                     onResult = { uri ->
-                        uri?.let { songsViewModel.importSongFromUri(context, it) }
+                        uri?.let { songsViewModel.importSongFromUri(it) }
                     }
                 )
 
@@ -154,8 +152,7 @@ fun MainScreen(
                         text = { Text(stringResource(R.string.create_song_button)) },
                         leadingIcon = { Icon(Icons.Filled.Add, contentDescription = null) },
                         onClick = {
-                            songsViewModel.resetCreation()
-                            songsViewModel.updateIsEditingSong(true)
+                            songsViewModel.startNewSong()
                             isMenuExpanded = false
                         }
                     )
@@ -164,7 +161,7 @@ fun MainScreen(
                         leadingIcon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null) },
                         onClick = {
                             // Lancer l'importation ici (ex: avec rememberLauncherForActivityResult)
-                            importLauncher.launch("text/plain")
+                            importLauncher.launch("*/*")
                             isMenuExpanded = false
                         }
                     )

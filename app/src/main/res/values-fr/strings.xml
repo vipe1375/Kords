@@ -88,4 +88,7 @@
     <string name="close_button_text">Fermer</string>
     <string name="import_song_button">Importer une chanson</string>
     <string name="create_song_button">Nouvelle chanson</string>
+    <string name="share_button">Partager</string>
+    <string name="edit_button">Modifier</string>
+    <string name="delete_button">Supprimer</string>
 </resources>

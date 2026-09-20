@@ -71,6 +71,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.vipedev.kords.R
 import com.vipedev.kords.chords.database.Chord
 import com.vipedev.kords.songs.SongsViewModel
 import com.vipedev.kords.songs.database.Song
@@ -128,17 +129,17 @@ fun DisplaySongScreen(viewModel: SongsViewModel, song: Song) {
                     // offset = DpOffset(40.dp, 8.dp),
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Share") },
+                        text = { Text(stringResource(R.string.share_button)) },
                         leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) },
                         onClick = { shareSong(context, song) }
                     )
                     DropdownMenuItem(
-                        text = { Text("Edit") },
+                        text = { Text(stringResource(R.string.edit_button)) },
                         leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
                         onClick = { viewModel.initEdition(song) }
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete") },
+                        text = { Text(stringResource(R.string.delete_button)) },
                         leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null) },
                         onClick = {
                             viewModel.songToDelete = song

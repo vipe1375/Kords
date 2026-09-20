@@ -48,10 +48,8 @@ fun DeleteDialog(viewModel: SongsViewModel, context: Context) {
                 }
                 viewModel.showDeleteSongDialog = false
             } else {
-                //viewModel.updateCurrentChords("")
-                //viewModel.updateCurrentStructType("")
                 if (viewModel.sectionToDelete != null && viewModel.chordsToDelete != null) {
-                    viewModel.struct.remove(viewModel.sectionToDelete, viewModel.chordsToDelete)
+                    viewModel.removeSection(viewModel.sectionToDelete!!)
                 }
                 viewModel.showDeleteSectionDialog = false
             }
